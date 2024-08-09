@@ -1,0 +1,16 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.admin.repository.mapper.monthpayment.PdcbMonthPaymentMapper">
+    <insert id="insertMonthPayment" parameterType="com.example.admin.domain.entity.payment.MonthPayment">
+        INSERT INTO TB_PDCB_MONTH_PAYMENT(STAT_MONTH, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT, H_STAT, I_STAT, J_STAT, K_STAT, L_STAT, M_STAT, N_STAT, P_STAT, R_STAT, T_STAT)
+        VALUES (#{statMonth}, #{aStat}, #{bStat}, #{cStat}, #{dStat}, #{eStat}, #{fStat}, #{gStat}, #{hStat}, #{iStat}, #{jStat}, #{kStat}, #{lStat}, #{mStat}, #{nStat}, #{pStat} ,#{rStat} , #{tStat})
+    </insert>
+
+
+    <select id="getMonthPaymentList" parameterType="String" resultType="com.example.admin.domain.entity.payment.MonthPayment">
+        SELECT * FROM TB_PDCB_MONTH_PAYMENT
+        WHERE STAT_MONTH LIKE concat(#{year}, '%')
+    </select>
+</mapper>

@@ -1,0 +1,23 @@
+version: "3.1"
+
+services:
+  maria :
+    image: mariadb:10.6
+    container_name: mariadb
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mariadb/conf.d:/etc/mysql/conf.d
+      - ./mariadb/data:/var/lib/mysql
+    environment:
+      - TZ="Asia/Seoul"
+      - MARIADB_ROOT_PASSWORD=1234
+      - MARIADB_USER=admin
+      - MARIADB_DATABASE=nexgrid
+      - MARIADB_PASSWORD=10#7330#
+    networks:
+      - backend
+    restart: always
+
+networks:
+  backend:

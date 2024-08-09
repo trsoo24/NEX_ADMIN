@@ -1,0 +1,16 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.admin.repository.mapper.daypayment.AdcbDayPaymentMapper">
+    <insert id="insertDayPayment" parameterType="com.example.admin.domain.entity.payment.DayPayment">
+        INSERT INTO TB_ADCB_DAY_PAYMENT(STAT_DAY, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT, H_STAT, I_STAT, J_STAT, K_STAT, L_STAT, M_STAT, N_STAT, P_STAT, R_STAT, T_STAT)
+        VALUES (#{statDay}, #{aStat}, #{bStat}, #{cStat}, #{dStat}, #{eStat}, #{fStat}, #{gStat}, #{hStat}, #{iStat}, #{jStat}, #{kStat}, #{lStat}, #{mStat}, #{nStat}, #{pStat} ,#{rStat} , #{tStat})
+    </insert>
+    
+    
+    <select id="getDayPaymentList" parameterType="String" resultType="com.example.admin.domain.entity.payment.DayPayment">
+        SELECT * FROM TB_ADCB_DAY_PAYMENT
+        WHERE STAT_DAY LIKE concat(#{date}, '%')
+    </select>
+</mapper>
