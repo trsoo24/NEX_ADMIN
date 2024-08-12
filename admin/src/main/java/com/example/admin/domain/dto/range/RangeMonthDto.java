@@ -2,36 +2,35 @@ package com.example.admin.domain.dto.range;
 
 import com.example.admin.domain.dto.range.field.AStatRange;
 import com.example.admin.domain.entity.range.RangeMonth;
-import com.google.gson.annotations.SerializedName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.lang.reflect.Field;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Builder
 public class RangeMonthDto {
-    private String aStat;
-    private Double bStat;
-    private Double cStat;
-    private Double dStat;
-    private Double eStat;
-    private Double fStat;
-    private Double gStat;
+    private String statMonth;
+    private String a_stat;
+    private Double b_stat;
+    private Double c_stat;
+    private Double d_stat;
+    private Double e_stat;
+    private Double f_stat;
+    private Double g_stat;
 
     public static RangeMonthDto toDto (RangeMonth rangeMonth) throws IllegalAccessException {
         return RangeMonthDto.builder()
-                .aStat(aStatToEnum(rangeMonth.getAStat()))
-                .bStat(rangeMonth.getBStat())
-                .cStat(rangeMonth.getCStat())
-                .dStat(rangeMonth.getDStat())
-                .eStat(rangeMonth.getEStat())
-                .fStat(rangeMonth.getFStat())
-                .gStat(rangeMonth.getGStat())
+                .statMonth(rangeMonth.getStatMonth())
+                .a_stat(aStatToEnum(rangeMonth.getAStat()))
+                .b_stat(rangeMonth.getBStat())
+                .c_stat(rangeMonth.getCStat())
+                .d_stat(rangeMonth.getDStat())
+                .e_stat(rangeMonth.getEStat())
+                .f_stat(rangeMonth.getFStat())
+                .g_stat(rangeMonth.getGStat())
                 .build();
     }
 

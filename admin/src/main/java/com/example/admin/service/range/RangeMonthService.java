@@ -1,13 +1,20 @@
 package com.example.admin.service.range;
 
+import com.example.admin.domain.dto.payment.field.MonthPaymentField;
 import com.example.admin.domain.dto.range.RangeMonthDto;
-import com.example.admin.domain.dto.range.field.AStatRange;
+import com.example.admin.domain.dto.range.field.RangeMonthField;
 import com.example.admin.domain.entity.range.RangeMonth;
 import com.example.admin.repository.mapper.range.RangeMonthMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -18,7 +25,7 @@ public class RangeMonthService {
     private final String[] A_STAT_ARRAY = {"1", "2", "3", "4", "5", "O"};
     private final Double[] AVERAGE_VALUE_ARRAY = {100000.0, 200000.0, 300000.0, 400000.0, 500000.0, 810000.0};
 
-    public Map<String, List<RangeMonthDto>> getRangeMonthList(String startDate, String endDate) throws IllegalAccessException {
+    public Map<String, List<RangeMonthDto>> getRangeMonthList(String startDate, String endDate, String dcb) throws IllegalAccessException {
         Map<String, String> paramMap = new HashMap<>(); // 요청 쿼리
         paramMap.put("startDate", startDate);
         paramMap.put("endDate", endDate);
@@ -34,7 +41,7 @@ public class RangeMonthService {
 
             RangeMonthDto dto = RangeMonthDto.toDto(rangeMonth);
 
-            if (dto.getAStat().equals("전체")) {
+            if (dto.getA_stat().equals("전체")) {
                 dtoList.add(0, dto);
             } else {
                 dtoList.add(dto);
@@ -112,5 +119,44 @@ public class RangeMonthService {
             }
         }
         return null;
+    }
+
+    public void exportExcel(String startDate, String endDate, String dcb, HttpServletResponse response) throws IllegalAccessException, IOException {
+        Map<String, List<RangeMonthDto>> rangeMonthMap = getRangeMonthList(startDate, endDate, dcb);
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("월별 통계");
+
+        sheet.createRow(0);
+
+        Field[] fields = RangeMonthDto.class.getDeclaredFields();
+        Field[] excelFields = RangeMonthField.class.getDeclaredFields();
+
+        for (int j = 0; j < rangeMonthMap.size(); j++) {
+            Row row = sheet.createRow(j + 1);
+            Field field = excelFields[j];
+
+            if (j > 0 && field.isEnumConstant()) { // 통계 column 값
+                row.createCell(0).setCellValue(((RangeMonthField) field.get(null)).getDescription());
+            }
+
+
+            for (Map.Entry<String, List<RangeMonthDto>> entry : rangeMonthMap.entrySet()) {
+                List<RangeMonthDto> objects = rangeMonthMap.get(entry.getKey());
+
+                for (int k = 0; k < objects.size(); k++) {
+                    RangeMonthDto rangeMonthDto = objects.get(k);
+                }
+            }
+
+        }
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=RangeMonth.xlsx");
+        response.setStatus(200);
+        workbook.write(response.getOutputStream());
+        response.getOutputStream().flush();
+        response.getOutputStream().close();
+        workbook.close();
     }
 }

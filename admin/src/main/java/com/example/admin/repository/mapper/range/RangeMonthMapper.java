@@ -9,6 +9,5 @@ import java.util.Map;
 @Mapper
 public interface RangeMonthMapper {
     void insertRangeMonth(RangeMonth rangeMonth);
-
     List<RangeMonth> getRangeMonthList(Map<String, String> map);
 }
