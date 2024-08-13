@@ -1,0 +1,15 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.admin.repository.mapper.range.RangeDayMapper">
+    <insert id="insertRangeDay">
+        INSERT INTO ADCB_STATS_RANGE_DAY(STAT_DAY, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT)
+        VALUES (#{statDay}, #{aStat}, #{bStat}, #{cStat}, #{dStat}, #{eStat}, #{fStat}, #{gStat})
+    </insert>
+
+    <select id="getRangeDayList" parameterType="map" resultType="com.example.admin.domain.entity.range.RangeDay">
+        SELECT STAT_DAY, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT FROM ADCB_STATS_RANGE_DAY
+        WHERE STAT_DAY BETWEEN #{startDate} AND #{endDate};
+    </select>
+</mapper>

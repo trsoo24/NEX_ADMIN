@@ -29,7 +29,7 @@ public class RangeMonthController {
     }
 
     @GetMapping("/excel")
-    public void exportRangeMonthExcel(@RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, @RequestParam("dcb") @Valid String dcb, HttpServletResponse response) throws IllegalAccessException, IOException {
+    public void exportRangeMonthExcel(@RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, @RequestParam("dcb") @Valid String dcb, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
         rangeMonthService.exportExcel(startDate, endDate, dcb, response);
     }
 }
