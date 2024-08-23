@@ -1,0 +1,33 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.admin.repository.mapper.block.BlockCtnMapper">
+    <insert id="insertBlockCtn" parameterType="com.example.admin.domain.dto.block.InsertBlockCtnDto">
+        INSERT INTO TB_BLOCK_CTN(CTN, REG_DT, MBR_ID)
+        VALUES (#{ctn}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId})
+    </insert>
+
+    <select id="existsCtn" parameterType="String" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM TB_BLOCK_CTN
+        WHERE CTN = #{ctn}
+    </select>
+
+    <select id="getAllBlockCtn" parameterType="map" resultType="com.example.admin.domain.dto.block.BlockCtnDto">
+        SELECT *
+        FROM TB_BLOCK_CTN
+        ORDER BY REG_DT
+            LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <select id="countBlockCtn">
+        SELECT COUNT(*)
+        FROM TB_BLOCK_CTN;
+    </select>
+
+    <delete id="deleteBlockCtn" parameterType="String">
+        DELETE FROM TB_BLOCK_CTN
+        WHERE CTN = #{ctn}
+    </delete>
+</mapper>

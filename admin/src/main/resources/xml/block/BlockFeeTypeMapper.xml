@@ -1,0 +1,33 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.admin.repository.mapper.block.BlockFeeTypeMapper">
+    <insert id="insertBlockFeeType" parameterType="com.example.admin.domain.dto.block.InsertBlockFeeTypeDto">
+        INSERT INTO TB_BLOCK_FEE_TYPE(FEE_TYPE_CD, REG_DT, MBR_ID, FEE_TYPE_NM)
+        VALUES (#{feeTypeCd}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{feeTypeNm})
+    </insert>
+
+    <select id="existsFeeType" parameterType="String" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM TB_BLOCK_FEE_TYPE
+        WHERE FEE_TYPE_CD = #{feeTypeCd}
+    </select>
+
+    <select id="getAllBlockFeeType" parameterType="map" resultType="com.example.admin.domain.dto.block.BlockFeeTypeDto">
+        SELECT *
+        FROM TB_BLOCK_FEE_TYPE
+        ORDER BY REG_DT
+            LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <select id="countBlockFeeType">
+        SELECT COUNT(*)
+        FROM TB_BLOCK_FEE_TYPE;
+    </select>
+
+    <delete id="deleteBlockFeeType" parameterType="String">
+        DELETE FROM TB_BLOCK_FEE_TYPE
+        WHERE FEE_TYPE_CD = #{feeTypeCd}
+    </delete>
+</mapper>
