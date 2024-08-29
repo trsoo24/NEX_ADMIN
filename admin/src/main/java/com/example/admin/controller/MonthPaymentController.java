@@ -23,12 +23,12 @@ public class MonthPaymentController {
     }
 
     @GetMapping()
-    public Map<String, List<Object>> getMonthPayment(@RequestParam("year") @Valid String year, @RequestParam("dcb") @Valid String dcb) {
+    public Map<String, List<Object>> getMonthPayment(@RequestParam("dcb") @Valid String dcb, @RequestParam("year") @Valid String year) {
         return monthPaymentService.getMonthPaymentDtoForm(year, dcb);
     }
 
     @GetMapping("/excel")
-    public void exportExcel(@RequestParam("year") String year, @RequestParam("dcb") String dcb, HttpServletResponse response) throws IOException,IllegalAccessException {
+    public void exportExcel(@RequestParam("dcb") String dcb, @RequestParam("year") String year, HttpServletResponse response) throws IOException,IllegalAccessException {
         monthPaymentService.exportMonthPaymentExcel(year, dcb, response);
     }
 }

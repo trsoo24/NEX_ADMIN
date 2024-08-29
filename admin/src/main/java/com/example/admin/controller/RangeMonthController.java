@@ -24,12 +24,12 @@ public class RangeMonthController {
     }
 
     @GetMapping()
-    public Map<String, List<RangeMonthDto>> getRangeMonth(@RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate, @RequestParam("dcb") @Valid String dcb) throws IllegalAccessException {
+    public Map<String, List<RangeMonthDto>> getRangeMonth(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate) throws IllegalAccessException {
         return rangeMonthService.getRangeMonthList(startDate, endDate, dcb);
     }
 
     @GetMapping("/excel")
-    public void exportRangeMonthExcel(@RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, @RequestParam("dcb") @Valid String dcb, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
+    public void exportRangeMonthExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
         rangeMonthService.exportExcel(startDate, endDate, dcb, response);
     }
 }

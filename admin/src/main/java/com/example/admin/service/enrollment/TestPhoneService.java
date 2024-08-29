@@ -33,7 +33,7 @@ public class TestPhoneService {
         testPhoneMapper.insertTestPhone(TestPhone.toTestPhone(dto));
     }
 
-    public Page<TestPhone> getAllTestPhones(int page, int pageSize) {
+    public Page<TestPhone> getAllTestPhones(int page, int pageSize, String dcb) {
         Map<String, Integer> map = new HashMap<>();
         map.put("offset", (page - 1) * pageSize);
         map.put("pageSize", pageSize);
@@ -44,7 +44,7 @@ public class TestPhoneService {
         return new PageImpl<>(testPhoneList, pageable, testPhoneMapper.countCtn());
     }
 
-    public void deleteTestPhone(List<String> ctnList) {
+    public void deleteTestPhone(List<String> ctnList, String dcb) {
         for (String ctn : ctnList) {
             if (testPhoneReference.existsCtn(ctn)) {
                 testPhoneMapper.deleteCtn(ctn);

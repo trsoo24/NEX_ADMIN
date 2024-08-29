@@ -27,7 +27,8 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-//	implementation 'com.okta.spring:okta-spring-boot-starter:3.0.6'
+//	implementation 'org.springframework.boot:spring-boot-starter-security'
+//	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
@@ -36,13 +37,6 @@ dependencies {
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	// KMS
-	implementation files('libs/kms-sdk-java-1.7.9-SNAPSHOT-jar-with-dependencies.jar')
-
-	// Excel
-	implementation 'org.apache.poi:poi:5.2.3'
-	implementation 'org.apache.poi:poi-ooxml:5.2.3'
-
 	// Async
 	implementation 'org.apache.httpcomponents.client5:httpclient5'
 	implementation 'com.google.code.gson:gson:2.10.1'
@@ -50,6 +44,13 @@ dependencies {
 	// Excel
 	implementation 'org.apache.poi:poi:5.2.3'
 	implementation 'org.apache.poi:poi-ooxml:5.2.3'
+
+	// okta
+//	implementation 'com.okta.spring:okta-spring-boot-starter:3.0.6'
+//	implementation "com.okta.sdk:okta-sdk-api:16.0.0"
+//	runtimeOnly "com.okta.sdk:okta-sdk-impl:16.0.0"
+	// Page 처리
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 }
 
 tasks.named('test') {

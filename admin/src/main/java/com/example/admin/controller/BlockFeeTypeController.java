@@ -24,12 +24,12 @@ public class BlockFeeTypeController {
     }
 
     @GetMapping()
-    public Page<BlockFeeTypeDto> getBlockFeeTypes(@RequestParam("page") @Valid Integer page, @RequestParam("pageSize") @Valid Integer pageSize) {
-        return blockFeeTypeService.getAllBlockFeeType(page, pageSize);
+    public Page<BlockFeeTypeDto> getBlockFeeTypes(@RequestParam("page") @Valid Integer page, @RequestParam("pageSize") @Valid Integer pageSize, @RequestParam("dcb") @Valid String dcb) {
+        return blockFeeTypeService.getAllBlockFeeType(page, pageSize, dcb);
     }
 
     @DeleteMapping()
-    public void deleteBlockFeeType(@RequestParam("feeTypeCd") List<String> feeTypeCd) {
-        blockFeeTypeService.deleteBlockFeeType(feeTypeCd);
+    public void deleteBlockFeeType(@RequestParam("feeTypeCd") List<String> feeTypeCd, @RequestParam("dcb") @Valid String dcb) {
+        blockFeeTypeService.deleteBlockFeeType(feeTypeCd, dcb);
     }
 }

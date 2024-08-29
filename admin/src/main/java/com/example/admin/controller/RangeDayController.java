@@ -22,7 +22,7 @@ public class RangeDayController {
     }
 
     @GetMapping()
-    public Map<String, List<RangeDayDto>> getRangeDayList(@RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate, @RequestParam("dcb") @Valid String dcb) throws IllegalAccessException {
+    public Map<String, List<RangeDayDto>> getRangeDayList(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate) throws IllegalAccessException {
         return rangeDayService.getRangeDayList(startDate, endDate, dcb);
     }
 }

@@ -25,7 +25,7 @@ public class BlockCtnService {
         }
     }
 
-    public Page<BlockCtnDto> getAllBlockCtn(int page, int pageSize) {
+    public Page<BlockCtnDto> getAllBlockCtn(int page, int pageSize, String dcb) {
         Map<String, Integer> map = new HashMap<>();
         map.put("offset", (page - 1) * pageSize);
         map.put("pageSize", pageSize);
@@ -36,7 +36,7 @@ public class BlockCtnService {
         return new PageImpl<>(blockCtnDtoList, pageable, blockCtnMapper.countBlockCtn());
     }
 
-    public void deleteBlockFeeType(List<String> ctnList) {
+    public void deleteBlockFeeType(List<String> ctnList, String dcb) {
         for (String ctn : ctnList) {
             if (blockCtnMapper.existsCtn(ctn)) {
                 blockCtnMapper.deleteBlockCtn(ctn);

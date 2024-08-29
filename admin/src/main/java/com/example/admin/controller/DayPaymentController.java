@@ -25,17 +25,12 @@ public class DayPaymentController {
     }
 
     @GetMapping()
-    public ResponseEntity<Map<String, List<Object>>> getDayPayments(@RequestParam("month") String month, @RequestParam("dcb") String dcb) {
+    public ResponseEntity<Map<String, List<Object>>> getDayPayments(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) {
         return ResponseEntity.ok(dayPaymentService.getDayPaymentDtoForm(month, dcb));
     }
 
     @GetMapping("/excel")
-    public void exportExcel(@RequestParam("month") String month, @RequestParam("dcb") String dcb, HttpServletResponse response) throws IOException {
+    public void exportExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException {
         dayPaymentService.exportDayPaymentExcel(month, dcb, response);
-    }
-
-    @PostMapping("/excel")
-    public void postExportExcel(@RequestBody @Valid PaymentExcelDto dto, HttpServletResponse response) throws IOException{
-        dayPaymentService.exportDayPaymentExcel2(dto, response);
     }
 }

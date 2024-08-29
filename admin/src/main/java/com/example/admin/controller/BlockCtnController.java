@@ -23,12 +23,12 @@ public class BlockCtnController {
     }
 
     @GetMapping()
-    public Page<BlockCtnDto> getBlockDtoList(@RequestParam("page") @Valid Integer page, @RequestParam("pageSize") @Valid Integer pageSize) {
-        return blockCtnService.getAllBlockCtn(page, pageSize);
+    public Page<BlockCtnDto> getBlockDtoList(@RequestParam("dcb") @Valid String dcb, @RequestParam("page") @Valid Integer page, @RequestParam("pageSize") @Valid Integer pageSize) {
+        return blockCtnService.getAllBlockCtn(page, pageSize, dcb);
     }
 
     @DeleteMapping()
-    public void deleteBlockCtn(@RequestParam("ctn") @Valid List<String> ctn) {
-        blockCtnService.deleteBlockFeeType(ctn);
+    public void deleteBlockCtn(@RequestParam("dcb") @Valid String dcb, @RequestParam("ctns") @Valid List<String> ctns) {
+        blockCtnService.deleteBlockFeeType(ctns, dcb);
     }
 }

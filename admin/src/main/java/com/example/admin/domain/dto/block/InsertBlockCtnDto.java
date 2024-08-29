@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class InsertBlockCtnDto {
     private String ctn;
     private String mbrId;
+    private String dcb;
 }

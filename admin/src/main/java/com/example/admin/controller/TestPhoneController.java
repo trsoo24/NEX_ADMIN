@@ -27,13 +27,13 @@ public class TestPhoneController {
     }
 
     @GetMapping()
-    public Page<TestPhone> getAllTestPhones(@RequestParam("page") @Valid Integer page, @RequestParam("pageSize") @Valid Integer pageSize, HttpServletRequest request) {
+    public Page<TestPhone> getAllTestPhones(@RequestParam("dcb") @Valid String dcb, @RequestParam("page") @Valid Integer page, @RequestParam("pageSize") @Valid Integer pageSize, HttpServletRequest request) {
         log.info(request.getRequestURL() + request.getQueryString());
-        return testPhoneService.getAllTestPhones(page, pageSize);
+        return testPhoneService.getAllTestPhones(page, pageSize, dcb);
     }
 
     @DeleteMapping()
-    public void dropTestPhone(@RequestParam("ctn") List<String> ctn) {
-        testPhoneService.deleteTestPhone(ctn);
+    public void dropTestPhone(@RequestParam("dcb") @Valid String dcb, @RequestParam("ctns") List<String> ctns) {
+        testPhoneService.deleteTestPhone(ctns, dcb);
     }
 }

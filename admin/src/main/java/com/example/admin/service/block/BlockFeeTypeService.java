@@ -25,7 +25,7 @@ public class BlockFeeTypeService {
         }
     }
 
-    public Page<BlockFeeTypeDto> getAllBlockFeeType(int page, int pageSize) {
+    public Page<BlockFeeTypeDto> getAllBlockFeeType(int page, int pageSize, String dcb) {
         Map<String, Integer> map = new HashMap<>();
         map.put("offset", (page - 1) * pageSize);
         map.put("pageSize", pageSize);
@@ -36,7 +36,7 @@ public class BlockFeeTypeService {
         return new PageImpl<>(blockFeeTypeDtoList, pageable, blockFeeTypeMapper.countBlockFeeType());
     }
 
-    public void deleteBlockFeeType(List<String> feeTypeCode) {
+    public void deleteBlockFeeType(List<String> feeTypeCode, String dcb) {
         for (String feeType : feeTypeCode) {
             if (blockFeeTypeMapper.existsFeeType(feeType)) {
                 blockFeeTypeMapper.deleteBlockFeeType(feeType);
