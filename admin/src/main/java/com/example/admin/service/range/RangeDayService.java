@@ -1,13 +1,23 @@
 package com.example.admin.service.range;
 
 import com.example.admin.domain.dto.range.RangeDayDto;
+import com.example.admin.domain.dto.range.RangeMonthDto;
+import com.example.admin.domain.dto.range.field.RangeDayField;
+import com.example.admin.domain.dto.range.field.RangeMonthField;
 import com.example.admin.domain.entity.range.RangeDay;
 import com.example.admin.domain.entity.range.RangeDay;
 import com.example.admin.repository.mapper.range.RangeDayMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.*;
 
 @Service
@@ -111,5 +121,65 @@ public class RangeDayService {
             }
         }
         return null;
+    }
+
+    public void exportExcel(String startDate, String endDate, String dcb, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("일별 통계");
+        sheet.createRow(0);
+        XSSFRow headerRow = sheet.createRow(1);
+        RangeDayField[] rangeDayFields = RangeDayField.values();
+        Field[] rangeDayDtoFields = RangeDayDto.class.getDeclaredFields();
+
+        for (int i = 0; i < rangeDayFields.length; i++) {
+            headerRow.createCell(i).setCellValue(rangeDayFields[i].getDescription());
+        }
+
+        int rowIndex = 2;
+        String lastStatDay = null;
+        int startMergeRowIndex = -1;
+        Map<String, List<RangeDayDto>> rangeDayMap = getRangeDayList(startDate, endDate, dcb);
+        for (Map.Entry<String, List<RangeDayDto>> entry : rangeDayMap.entrySet()) {
+            List<RangeDayDto> rangeDayDtoList = entry.getValue();
+            for (RangeDayDto dto : rangeDayDtoList) {
+                XSSFRow row = sheet.createRow(rowIndex++);
+                if (dto.getStatDay().equals(lastStatDay)) {
+                    row.createCell(0).setCellValue("");
+                } else {
+                    if (startMergeRowIndex != -1) {
+                        sheet.addMergedRegion(new CellRangeAddress(startMergeRowIndex, rowIndex - 2, 0, 0));
+                    }
+                    startMergeRowIndex = rowIndex - 1;
+                    row.createCell(0).setCellValue(dto.getStatDay());
+                    lastStatDay = dto.getStatDay();
+                }
+                for (int i = 1; i < rangeDayFields.length; i++) {
+                    Field field = rangeDayDtoFields[i];
+                    field.setAccessible(true);
+                    Object value = field.get(dto);
+                    if (value != null) {
+                        if (value instanceof Double) {
+                            row.createCell(i).setCellValue((Double) value);
+                        } else if (value instanceof String) {
+                            row.createCell(i).setCellValue((String) value);
+                        } else {
+                            row.createCell(i).setCellValue(value.toString());
+                        }
+                    } else {
+                        row.createCell(i).setCellValue("");
+                    }
+                }
+            }
+        }
+        if (startMergeRowIndex != -1) {
+            sheet.addMergedRegion(new CellRangeAddress(startMergeRowIndex, rowIndex - 1, 0, 0));
+        }
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=RangeMonth.xlsx");
+        response.setStatus(200);
+        workbook.write(response.getOutputStream());
+        response.getOutputStream().flush();
+        response.getOutputStream().close();
+        workbook.close();
     }
 }
