@@ -1,6 +1,7 @@
 package com.example.admin.service.block;
 
 import com.example.admin.domain.dto.block.BlockCtnDto;
+import com.example.admin.domain.dto.block.DeleteBlockCtnDto;
 import com.example.admin.domain.dto.block.InsertBlockCtnDto;
 import com.example.admin.repository.mapper.block.BlockCtnMapper;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,9 @@ public class BlockCtnService {
         return new PageImpl<>(blockCtnDtoList, pageable, blockCtnMapper.countBlockCtn());
     }
 
-    public void deleteBlockFeeType(List<String> ctnList, String dcb) {
+    public void deleteBlockFeeType(DeleteBlockCtnDto dto) {
+        List<String> ctnList = dto.getCtns();
+
         for (String ctn : ctnList) {
             if (blockCtnMapper.existsCtn(ctn)) {
                 blockCtnMapper.deleteBlockCtn(ctn);

@@ -1,6 +1,7 @@
 package com.example.admin.controller;
 
 import com.example.admin.domain.dto.block.BlockCtnDto;
+import com.example.admin.domain.dto.block.DeleteBlockCtnDto;
 import com.example.admin.domain.dto.block.InsertBlockCtnDto;
 import com.example.admin.service.block.BlockCtnService;
 import jakarta.validation.Valid;
@@ -28,7 +29,7 @@ public class BlockCtnController {
     }
 
     @DeleteMapping()
-    public void deleteBlockCtn(@RequestParam("dcb") @Valid String dcb, @RequestParam("ctns") @Valid List<String> ctns) {
-        blockCtnService.deleteBlockFeeType(ctns, dcb);
+    public void deleteBlockCtn(@RequestBody @Valid DeleteBlockCtnDto dto) {
+        blockCtnService.deleteBlockFeeType(dto);
     }
 }

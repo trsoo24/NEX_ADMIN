@@ -1,5 +1,8 @@
 package com.example.admin.domain.entity.member;
 
+import com.example.admin.domain.entity.member.enums.Role;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 
 @Getter
@@ -15,4 +18,6 @@ public class Member {
     private String ctn;
     private String email;
     private String lastConnectedDateTime;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

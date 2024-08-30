@@ -1,6 +1,7 @@
 package com.example.admin.service.block;
 
 import com.example.admin.domain.dto.block.BlockFeeTypeDto;
+import com.example.admin.domain.dto.block.DeleteFeeTypeDto;
 import com.example.admin.domain.dto.block.InsertBlockFeeTypeDto;
 import com.example.admin.repository.mapper.block.BlockFeeTypeMapper;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,9 @@ public class BlockFeeTypeService {
         return new PageImpl<>(blockFeeTypeDtoList, pageable, blockFeeTypeMapper.countBlockFeeType());
     }
 
-    public void deleteBlockFeeType(List<String> feeTypeCode, String dcb) {
+    public void deleteBlockFeeType(DeleteFeeTypeDto dto) {
+        List<String> feeTypeCode = dto.getFeeTypeCds();
+
         for (String feeType : feeTypeCode) {
             if (blockFeeTypeMapper.existsFeeType(feeType)) {
                 blockFeeTypeMapper.deleteBlockFeeType(feeType);

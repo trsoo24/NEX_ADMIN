@@ -129,7 +129,7 @@ public class RangeMonthService {
 
 
 
-    public void exportExcel(String startDate, String endDate, String dcb, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
+    public void exportExcel(String startDate, String endDate, String dcb, HttpServletResponse response) throws IllegalAccessException, IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("월별 통계");
         sheet.createRow(0);

@@ -1,6 +1,7 @@
 package com.example.admin.controller;
 
 import com.example.admin.domain.dto.member.MemberInfo;
+import com.example.admin.domain.dto.member.SignInDto;
 import com.example.admin.domain.dto.member.SignUpDto;
 import com.example.admin.domain.dto.member.UpdateMemberRequestDto;
 import com.example.admin.service.member.MemberService;
@@ -16,11 +17,6 @@ import java.util.List;
 @RequestMapping("/member")
 public class MemberController {
     private final MemberService memberService;
-
-    @PostMapping("/signup")
-    public void signup(@RequestBody @Valid SignUpDto signUpDto) {
-        memberService.signUp(signUpDto);
-    }
 
     @GetMapping("/info")
     public ResponseEntity<MemberInfo> getMemberInfo(@RequestParam("memberId") @Valid Integer memberId) {

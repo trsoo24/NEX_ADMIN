@@ -1,6 +1,7 @@
 package com.example.admin.controller;
 
 import com.example.admin.domain.dto.block.BlockFeeTypeDto;
+import com.example.admin.domain.dto.block.DeleteFeeTypeDto;
 import com.example.admin.domain.dto.block.InsertBlockFeeTypeDto;
 import com.example.admin.domain.entity.block.BlockFeeType;
 import com.example.admin.service.block.BlockFeeTypeService;
@@ -24,12 +25,12 @@ public class BlockFeeTypeController {
     }
 
     @GetMapping()
-    public Page<BlockFeeTypeDto> getBlockFeeTypes(@RequestParam("page") @Valid Integer page, @RequestParam("pageSize") @Valid Integer pageSize, @RequestParam("dcb") @Valid String dcb) {
+    public Page<BlockFeeTypeDto> getBlockFeeTypes(@RequestParam("dcb") @Valid String dcb, @RequestParam("page") @Valid Integer page, @RequestParam("pageSize") @Valid Integer pageSize) {
         return blockFeeTypeService.getAllBlockFeeType(page, pageSize, dcb);
     }
 
     @DeleteMapping()
-    public void deleteBlockFeeType(@RequestParam("feeTypeCd") List<String> feeTypeCd, @RequestParam("dcb") @Valid String dcb) {
-        blockFeeTypeService.deleteBlockFeeType(feeTypeCd, dcb);
+    public void deleteBlockFeeType(@RequestBody @Valid DeleteFeeTypeDto dto) {
+        blockFeeTypeService.deleteBlockFeeType(dto);
     }
 }

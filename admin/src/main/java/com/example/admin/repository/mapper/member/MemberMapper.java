@@ -2,8 +2,10 @@ package com.example.admin.repository.mapper.member;
 
 
 import com.example.admin.domain.dto.member.MemberInfo;
+import com.example.admin.domain.dto.member.SignInDto;
 import com.example.admin.domain.dto.member.SignUpDto;
 import com.example.admin.domain.dto.member.UpdateMemberRequestDto;
+import com.example.admin.domain.entity.member.Member;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -19,4 +21,6 @@ public interface MemberMapper {
     void updateMemberInfo(UpdateMemberRequestDto updateMemberRequestDto);
     void deleteMember(Integer memberId);
     List<MemberInfo> findAllMember();
+    Member findMemberByMemberName(String username);
+    MemberInfo signIn(SignInDto signInDto);
 }

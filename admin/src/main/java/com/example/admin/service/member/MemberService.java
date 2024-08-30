@@ -1,8 +1,11 @@
 package com.example.admin.service.member;
 
+import com.example.admin.config.filter.JwtTokenProvider;
 import com.example.admin.domain.dto.member.MemberInfo;
+import com.example.admin.domain.dto.member.SignInDto;
 import com.example.admin.domain.dto.member.SignUpDto;
 import com.example.admin.domain.dto.member.UpdateMemberRequestDto;
+import com.example.admin.domain.entity.member.Member;
 import com.example.admin.repository.mapper.member.MemberMapper;
 import com.example.admin.service.reference.MemberReference;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import java.util.List;
 public class MemberService {
     private final MemberMapper memberMapper;
     private final MemberReference memberReference;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public void signUp(SignUpDto signUpDto) {
         memberReference.isExistMemberName(signUpDto.getMemberName());
@@ -24,6 +28,13 @@ public class MemberService {
         memberReference.isExistMemberEmail(signUpDto.getEmail());
 
         memberMapper.createMember(signUpDto);
+    }
+
+    public MemberInfo signIn(SignInDto signInDto) {
+        MemberInfo memberInfo = memberMapper.signIn(signInDto);
+        updateLastConnectTime(memberInfo.getMemberId());
+
+        return memberInfo;
     }
 
     public void updateLastConnectTime(Integer memberId) {
@@ -49,5 +60,9 @@ public class MemberService {
 
     public List<MemberInfo> findAllMember() {
         return memberMapper.findAllMember();
+    }
+
+    public Member findMemberByMemberName(String memberName) {
+        return memberMapper.findMemberByMemberName(memberName);
     }
 }

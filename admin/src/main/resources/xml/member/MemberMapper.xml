@@ -57,4 +57,15 @@
         SELECT MEMBER_ID, POSITION, MEMBER_NAME, NAME, CTN, EMAIL, LAST_CONNECTED_DATETIME
         FROM MEMBER
     </select>
+
+    <select id="findMemberByMemberName" parameterType="String" resultType="com.example.admin.domain.entity.member.Member">
+        SELECT * FROM MEMBER
+        WHERE MEMBER_NAME = #{username}
+    </select>
+
+    <select id="signIn" parameterType="com.example.admin.domain.dto.member.SignInDto" resultType="com.example.admin.domain.dto.member.MemberInfo">
+        SELECT MEMBER_ID, POSITION, MEMBER_NAME, NAME, CTN, EMAIL, LAST_CONNECTED_DATETIME
+        FROM MEMBER
+        WHERE MEMBER_NAME = #{username} AND PASSWORD = #{password}
+    </select>
 </mapper>

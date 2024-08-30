@@ -1,6 +1,7 @@
 package com.example.admin.controller;
 
 
+import com.example.admin.domain.dto.enrollment.DeleteTestPhoneDto;
 import com.example.admin.domain.dto.enrollment.InsertTestPhoneDto;
 import com.example.admin.domain.entity.enrollment.TestPhone;
 import com.example.admin.service.enrollment.TestPhoneService;
@@ -33,7 +34,7 @@ public class TestPhoneController {
     }
 
     @DeleteMapping()
-    public void dropTestPhone(@RequestParam("dcb") @Valid String dcb, @RequestParam("ctns") List<String> ctns) {
-        testPhoneService.deleteTestPhone(ctns, dcb);
+    public void dropTestPhone(@RequestBody @Valid DeleteTestPhoneDto dto) {
+        testPhoneService.deleteTestPhone(dto);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.admin.service.enrollment;
 
+import com.example.admin.domain.dto.enrollment.DeleteTestPhoneDto;
 import com.example.admin.domain.dto.enrollment.InsertTestPhoneDto;
 import com.example.admin.domain.entity.enrollment.TestPhone;
 import com.example.admin.exception.TestPhoneException;
@@ -44,7 +45,9 @@ public class TestPhoneService {
         return new PageImpl<>(testPhoneList, pageable, testPhoneMapper.countCtn());
     }
 
-    public void deleteTestPhone(List<String> ctnList, String dcb) {
+    public void deleteTestPhone(DeleteTestPhoneDto dto) {
+        List<String> ctnList = dto.getCtns();
+
         for (String ctn : ctnList) {
             if (testPhoneReference.existsCtn(ctn)) {
                 testPhoneMapper.deleteCtn(ctn);

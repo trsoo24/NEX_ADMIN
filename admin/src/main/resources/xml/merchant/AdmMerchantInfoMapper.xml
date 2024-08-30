@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.admin.repository.mapper.merchant.AdmMerchantInfoMapper">
+    <insert id="insertAdmMerchant" parameterType="com.example.admin.domain.dto.merchant.InsertMerchantInfo">
+        INSERT INTO TB_ADM_MERCHANT_INFO(MERCHANT_NM, MERCHANT_CONTACT, STD_DT, BLOCK_YN, REG_DT, UPD_DT, UPD_ID, BLOCK_DT, BLOCK_ID)
+        VALUES (#{merchantNm}, #{merchantContact}, #{stdDt}, 'N', DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), '', null, '')
+    </insert>
+
+    <select id="existMerchant" parameterType="String" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM TB_ADM_MERCHANT_INFO
+        WHERE MERCHANT_NM = #{merchantNm}
+    </select>
+
+    <select id="selectAllMerchant" parameterType="map" resultType="com.example.admin.domain.entity.merchant.AdmMerchant">
+        SELECT *
+        FROM TB_ADM_MERCHANT_INFO
+        WHERE STR_TO_DATE(STD_DT, '%Y-%m-%d')
+                  BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+                  AND STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+    </select>
+
+    <select id="searchMerchants" parameterType="map" resultType="com.example.admin.domain.entity.merchant.AdmMerchant">
+        SELECT * FROM TB_ADM_MERCHANT_INFO
+        WHERE 1=1
+        <if test="merchantNm != null and merchantNm != ''">
+            AND MERCHANT_NM LIKE CONCAT('%', #{merchantNm}, '%')
+        </if>
+        <if test="startDate != null and endDate != null">
+            AND STR_TO_DATE(STD_DT, '%Y-%m-%d')
+            BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d')
+            AND STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+        </if>
+    </select>
+
+    <select id="countMerchant">
+        SELECT COUNT(*)
+        FROM TB_ADM_MERCHANT_INFO;
+    </select>
+</mapper>
