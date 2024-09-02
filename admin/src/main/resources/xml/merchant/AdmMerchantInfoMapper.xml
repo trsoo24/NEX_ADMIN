@@ -15,6 +15,12 @@
         WHERE MERCHANT_NM = #{merchantNm}
     </select>
 
+    <select id="selectMerchant" resultType="com.example.admin.domain.entity.merchant.AdmMerchant">
+        SELECT *
+        FROM TB_ADM_MERCHANT_INFO
+        WHERE MERCHANT_NM = #{merchantNm}
+    </select>
+
     <select id="selectAllMerchant" parameterType="map" resultType="com.example.admin.domain.entity.merchant.AdmMerchant">
         SELECT *
         FROM TB_ADM_MERCHANT_INFO
@@ -40,4 +46,14 @@
         SELECT COUNT(*)
         FROM TB_ADM_MERCHANT_INFO;
     </select>
+
+    <update id="blockMerchant" parameterType="Map">
+        UPDATE TB_ADM_MERCHANT_INFO
+        SET BLOCK_YN = 'Y',
+            UPD_DT = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),
+            BLOCK_DT = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),
+            UPD_ID = #{adminId},
+            BLOCK_ID = #{adminId}
+        WHERE MERCHANT_NM = #{merchantNm}
+    </update>
 </mapper>
