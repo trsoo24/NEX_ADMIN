@@ -3,50 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.repository.mapper.billinggrade.BillingGradeMapper">
-    <select id="getBillingGradeInfo" parameterType="String" resultType="com.example.admin.domain.dto.billing.BillingGradeDto">
-        SELECT
-        t.cust_grd_cd_txt,
-        t.cust_grd_cd_seq,
-        t.cust_grd_cd,
-        t.all_ace_cnt,
-        t.all_cnt,
-        t.all_amount,
-        t.paid_ace_cnt,
-        t.paid_cnt,
-        t.paid_amount,
-        t.unpaid_ace_cnt,
-        t.unpaid_cnt,
-        t.unpaid_amount
-        FROM (
-            SELECT
-                CASE
-                    WHEN cust_grd_cd = 'A' THEN '전체'
-                    WHEN cust_grd_cd IN ('1', '2', '3', '4', '5', '6', '7') THEN CONCAT(cust_grd_cd, '등급')
-                    ELSE '그 외'
-                END AS cust_grd_cd_txt,
-                CASE
-                    WHEN cust_grd_cd = 'A' THEN '0'
-                    WHEN cust_grd_cd = 'E' THEN '8'
-                    ELSE cust_grd_cd
-                END AS cust_grd_cd_seq,
-            cust_grd_cd,
-            all_ace_cnt,
-            all_cnt,
-            all_amount,
-            paid_ace_cnt,
-            paid_cnt,
-            paid_amount,
-            unpaid_ace_cnt,
-            unpaid_cnt,
-            unpaid_amount
-        FROM tb_grade_billing
-        <if test="searchDate != null and searchDate != ''">
-            WHERE stat_yymm = #{searchDate}
-        </if>) t
-        ORDER BY t.cust_grd_cd_seq
+    <select id="getBillingGrade" parameterType="map" resultType="com.example.admin.domain.dto.billing.BillingGradeDto">
+        SELECT CUST_GRD_CD, ALL_ACE_CNT, ALL_CNT, ALL_AMOUNT, PAID_ACE_CNT, PAID_CNT, PAID_AMOUNT, UNPAID_ACE_CNT, UNPAID_CNT, UNPAID_AMOUNT
+        FROM TB_BILLING_GRADE
+        WHERE DCB = #{dcb} AND STAT_YYMM = #{yyMm}
     </select>
 
-    <insert id="insertBillingGrade" parameterType="String">
-        INSERT INTO TB_BILLING_GRADE()
+    <insert id="insertBillingGrade" parameterType="com.example.admin.domain.entity.billing.BillingGrade">
+        INSERT INTO TB_BILLING_GRADE(CUST_GRD_CD, STAT_YYMM, REG_DT, ALL_ACE_CNT, ALL_CNT, ALL_AMOUNT, PAID_ACE_CNT, PAID_CNT, PAID_AMOUNT, UNPAID_ACE_CNT, UNPAID_CNT, UNPAID_AMOUNT, DCB)
+        VALUES (#{custGrdCd}, #{statYyMm}, #{regDt},#{allAceCnt}, #{allCnt}, #{allAmount}, #{paidAceCnt}, #{paidCnt}, #{paidAmount}, #{unpaidAceCnt}, #{unpaidCnt}, #{unpaidAmount}, #{dcb})
     </insert>
 </mapper>
