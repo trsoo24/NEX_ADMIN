@@ -1,26 +1,24 @@
 package com.example.admin.repository.mapper.member;
 
 
-import com.example.admin.domain.dto.member.MemberInfo;
 import com.example.admin.domain.dto.member.SignInDto;
-import com.example.admin.domain.dto.member.SignUpDto;
 import com.example.admin.domain.dto.member.UpdateMemberRequestDto;
 import com.example.admin.domain.entity.member.Member;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface MemberMapper {
     boolean existsMemberName(String memberName);
-    boolean existsCtn(String ctn);
     boolean existsEmail(String email);
-    void createMember(SignUpDto signUpDto);
+    void createMember(Map<String, Object> map);
     void updateLastConnectedTime(Integer memberId);
-    MemberInfo findMemberByMemberId(Integer memberId);
-    void updateMemberInfo(UpdateMemberRequestDto updateMemberRequestDto);
+    Member findMemberByMemberId(Integer memberId);
+    void updateMemberInfo(Map<String, Object> map);
     void deleteMember(Integer memberId);
-    List<MemberInfo> findAllMember();
-    Member findMemberByMemberName(String username);
-    MemberInfo signIn(SignInDto signInDto);
+    List<Member> findAllMember();
+    Member findMemberByUsername(String username);
+    Member signIn(Map<String, String> map);
 }

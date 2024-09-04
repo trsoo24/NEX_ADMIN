@@ -1,7 +1,7 @@
 package com.example.admin.service.reference;
 
 
-import com.example.admin.domain.dto.member.MemberInfo;
+import com.example.admin.domain.entity.member.Member;
 import com.example.admin.exception.MemberException;
 import com.example.admin.repository.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
@@ -26,19 +26,9 @@ public class MemberReference {
         }
     }
 
-    public void isExistMemberCtn(String ctn) {
-        if (memberMapper.existsCtn(ctn)) {
-            throw new MemberException(DUPLICATED_CTN);
-        }
-    }
-
-    public MemberInfo findMember(Integer memberId) {
-        MemberInfo memberInfo = memberMapper.findMemberByMemberId(memberId);
-
-        if (memberInfo == null) {
+    public void findMember(Integer memberId) {
+        if (memberMapper.findMemberByMemberId(memberId) == null) {
             throw new MemberException(MEMBER_NOT_FOUND);
         }
-
-        return memberInfo;
     }
 }
