@@ -2,11 +2,11 @@ package com.example.admin.repository.mapper.block;
 
 import com.example.admin.domain.dto.block.BlockFeeTypeDto;
 import com.example.admin.domain.dto.block.InsertBlockFeeTypeDto;
-import com.example.admin.domain.entity.block.BlockFeeType;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Mapper
 public interface BlockFeeTypeMapper {
@@ -14,9 +14,9 @@ public interface BlockFeeTypeMapper {
 
     boolean existsFeeType(String feeTypeCode);
 
-    List<BlockFeeTypeDto> getAllBlockFeeType(Map<String, Integer> map);
+    List<BlockFeeTypeDto> getAllBlockFeeType(Map<String, Object> map);
 
     int countBlockFeeType();
 
-    void  deleteBlockFeeType(String feeTypeCode);
+    void  deleteBlockFeeType(Map<String, String> map);
 }

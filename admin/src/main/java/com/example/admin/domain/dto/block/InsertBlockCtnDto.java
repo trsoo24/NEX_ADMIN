@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InsertBlockCtnDto {
+    private String dcb;
     private String ctn;
     private String mbrId;
-    private String dcb;
 }

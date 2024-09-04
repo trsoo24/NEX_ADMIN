@@ -4,11 +4,9 @@ import com.example.admin.domain.dto.block.BlockFeeTypeDto;
 import com.example.admin.domain.dto.block.DeleteFeeTypeDto;
 import com.example.admin.domain.dto.block.InsertBlockFeeTypeDto;
 import com.example.admin.repository.mapper.block.BlockFeeTypeMapper;
+import com.example.admin.service.FunctionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -19,6 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class BlockFeeTypeService {
     private final BlockFeeTypeMapper blockFeeTypeMapper;
+    private final FunctionUtil functionUtil;
 
     public void insertBlockFeeType(InsertBlockFeeTypeDto blockFeeTypeDto) {
         if (!existFeeType(blockFeeTypeDto.getFeeTypeCd())) {
@@ -26,23 +25,24 @@ public class BlockFeeTypeService {
         }
     }
 
-    public Page<BlockFeeTypeDto> getAllBlockFeeType(int page, int pageSize, String dcb) {
-        Map<String, Integer> map = new HashMap<>();
-        map.put("offset", (page - 1) * pageSize);
-        map.put("pageSize", pageSize);
+    public Page<BlockFeeTypeDto> getAllBlockFeeType(String dcb, String feeTypeCd, int page, int pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("dcb", dcb);
+        map.put("feeTypeCd", feeTypeCd);
 
         List<BlockFeeTypeDto> blockFeeTypeDtoList = blockFeeTypeMapper.getAllBlockFeeType(map);
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
 
-        return new PageImpl<>(blockFeeTypeDtoList, pageable, blockFeeTypeMapper.countBlockFeeType());
+        return functionUtil.toPage(blockFeeTypeDtoList, page, pageSize);
     }
 
     public void deleteBlockFeeType(DeleteFeeTypeDto dto) {
         List<String> feeTypeCode = dto.getFeeTypeCds();
-
+        Map<String, String> map = new HashMap<>();
+        map.put("dcb", dto.getDcb());
         for (String feeType : feeTypeCode) {
             if (blockFeeTypeMapper.existsFeeType(feeType)) {
-                blockFeeTypeMapper.deleteBlockFeeType(feeType);
+                map.put("feeTypeCd", feeType);
+                blockFeeTypeMapper.deleteBlockFeeType(map);
             }
         }
     }

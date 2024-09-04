@@ -14,10 +14,9 @@
         WHERE ITEMSALES_NM = #{itemsalesNm}
     </select>
 
-    <select id="getAllAdminItemSales" parameterType="map" resultType="com.example.admin.domain.entity.item.AdminItemSales">
+    <select id="getAllAdminItemSales" resultType="com.example.admin.domain.entity.item.AdminItemSales">
         SELECT *
         FROM TB_ADM_ITEM_SALES
         ORDER BY STD_DT
-            LIMIT #{pageSize} OFFSET #{offset}
     </select>
 </mapper>

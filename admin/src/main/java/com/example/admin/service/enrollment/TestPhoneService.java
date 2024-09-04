@@ -5,12 +5,10 @@ import com.example.admin.domain.dto.enrollment.InsertTestPhoneDto;
 import com.example.admin.domain.entity.enrollment.TestPhone;
 import com.example.admin.exception.TestPhoneException;
 import com.example.admin.repository.mapper.enrollment.TestPhoneMapper;
+import com.example.admin.service.FunctionUtil;
 import com.example.admin.service.reference.TestPhoneReference;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -25,6 +23,7 @@ import static com.example.admin.exception.enums.TestPhoneErrorCode.NOT_IN_DB;
 public class TestPhoneService {
     private final TestPhoneMapper testPhoneMapper;
     private final TestPhoneReference testPhoneReference;
+    private final FunctionUtil functionUtil;
 
     public void insertTestPhone(InsertTestPhoneDto dto) {
         if (testPhoneReference.existsCtn(dto.getCtn())) {
@@ -36,13 +35,10 @@ public class TestPhoneService {
 
     public Page<TestPhone> getAllTestPhones(int page, int pageSize, String dcb) {
         Map<String, Integer> map = new HashMap<>();
-        map.put("offset", (page - 1) * pageSize);
-        map.put("pageSize", pageSize);
 
-        List<TestPhone> testPhoneList = testPhoneMapper.getAllTestPhone(map);
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        List<TestPhone> testPhoneList = testPhoneMapper.getAllTestPhone();
 
-        return new PageImpl<>(testPhoneList, pageable, testPhoneMapper.countCtn());
+        return functionUtil.toPage(testPhoneList, page, pageSize);
     }
 
     public void deleteTestPhone(DeleteTestPhoneDto dto) {

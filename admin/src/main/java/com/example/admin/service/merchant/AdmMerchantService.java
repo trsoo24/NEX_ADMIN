@@ -5,6 +5,7 @@ import com.example.admin.domain.dto.merchant.InsertMerchantInfo;
 import com.example.admin.domain.dto.merchant.field.AdmMerchantInfoField;
 import com.example.admin.domain.entity.merchant.AdmMerchant;
 import com.example.admin.repository.mapper.merchant.AdmMerchantInfoMapper;
+import com.example.admin.service.FunctionUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -26,6 +27,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AdmMerchantService {
     private final AdmMerchantInfoMapper admMerchantInfoMapper;
+    private final FunctionUtil functionUtil;
 
     public void insertMerchant(InsertMerchantInfo insertMerchantInfo) {
         if (!existMerchant(insertMerchantInfo.getMerchantNm())) {
@@ -63,9 +65,7 @@ public class AdmMerchantService {
     public Page<AdmMerchant> searchMerchantToPage(String dcb, String merchantNm, String startDate, String endDate, int page, int pageSize) {
         List<AdmMerchant> admMerchantList = toMerchantList(dcb, merchantNm, startDate, endDate);
 
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
-
-        return new PageImpl<>(admMerchantList, pageable, admMerchantInfoMapper.countMerchant());
+        return functionUtil.toPage(admMerchantList, page, pageSize);
     }
 
     // 판매자 조회 엑셀 서비스 로직

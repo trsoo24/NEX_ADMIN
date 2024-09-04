@@ -4,8 +4,8 @@
 
 <mapper namespace="com.example.admin.repository.mapper.block.BlockCtnMapper">
     <insert id="insertBlockCtn" parameterType="com.example.admin.domain.dto.block.InsertBlockCtnDto">
-        INSERT INTO TB_BLOCK_CTN(CTN, REG_DT, MBR_ID)
-        VALUES (#{ctn}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId})
+        INSERT INTO TB_BLOCK_CTN(CTN, REG_DT, MBR_ID, DCB)
+        VALUES (#{ctn}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{dcb})
     </insert>
 
     <select id="existsCtn" parameterType="String" resultType="boolean">
@@ -15,10 +15,13 @@
     </select>
 
     <select id="getAllBlockCtn" parameterType="map" resultType="com.example.admin.domain.dto.block.BlockCtnDto">
-        SELECT *
+    SELECT *
         FROM TB_BLOCK_CTN
+        WHERE DCB = #{dcb}
+        <if test="ctn != null and ctn != ''">
+            AND CTN LIKE CONCAT('%', #{ctn}, '%')
+        </if>
         ORDER BY REG_DT
-            LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
     <select id="countBlockCtn">
@@ -26,8 +29,8 @@
         FROM TB_BLOCK_CTN;
     </select>
 
-    <delete id="deleteBlockCtn" parameterType="String">
+    <delete id="deleteBlockCtn" parameterType="map">
         DELETE FROM TB_BLOCK_CTN
-        WHERE CTN = #{ctn}
+        WHERE CTN = #{ctn} AND DCB = #{dcb}
     </delete>
 </mapper>

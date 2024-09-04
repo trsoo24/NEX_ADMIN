@@ -11,4 +11,5 @@ public class BlockCtnDto {
     private String ctn;
     private String regDt;
     private String mbrId;
+    private String dcb;
 }

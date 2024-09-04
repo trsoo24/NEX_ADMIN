@@ -4,8 +4,8 @@
 
 <mapper namespace="com.example.admin.repository.mapper.block.BlockFeeTypeMapper">
     <insert id="insertBlockFeeType" parameterType="com.example.admin.domain.dto.block.InsertBlockFeeTypeDto">
-        INSERT INTO TB_BLOCK_FEE_TYPE(FEE_TYPE_CD, REG_DT, MBR_ID, FEE_TYPE_NM)
-        VALUES (#{feeTypeCd}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{feeTypeNm})
+        INSERT INTO TB_BLOCK_FEE_TYPE(FEE_TYPE_CD, REG_DT, MBR_ID, FEE_TYPE_NM, DCB)
+        VALUES (#{feeTypeCd}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{feeTypeNm} #{dcb})
     </insert>
 
     <select id="existsFeeType" parameterType="String" resultType="boolean">
@@ -17,8 +17,11 @@
     <select id="getAllBlockFeeType" parameterType="map" resultType="com.example.admin.domain.dto.block.BlockFeeTypeDto">
         SELECT *
         FROM TB_BLOCK_FEE_TYPE
+        WHERE DCB = #{dcb}
+        <if test="feeTypeCd != null and feeTypeCd != ''">
+            AND FEE_TYPE_CD LIKE CONCAT('%', #{feeTypeCd}, '%')
+        </if>
         ORDER BY REG_DT
-            LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
     <select id="countBlockFeeType">
@@ -26,8 +29,8 @@
         FROM TB_BLOCK_FEE_TYPE;
     </select>
 
-    <delete id="deleteBlockFeeType" parameterType="String">
+    <delete id="deleteBlockFeeType" parameterType="map">
         DELETE FROM TB_BLOCK_FEE_TYPE
-        WHERE FEE_TYPE_CD = #{feeTypeCd}
+        WHERE FEE_TYPE_CD = #{feeTypeCd} AND DCB = #{dcb}
     </delete>
 </mapper>

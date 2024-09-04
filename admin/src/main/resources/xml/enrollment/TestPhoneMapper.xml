@@ -15,11 +15,10 @@
         WHERE CTN = #{ctn}
     </select>
 
-    <select id="getAllTestPhone" parameterType="map" resultType="com.example.admin.domain.entity.enrollment.TestPhone">
+    <select id="getAllTestPhone" resultType="com.example.admin.domain.entity.enrollment.TestPhone">
         SELECT *
         FROM TB_ENROLLMENT_PHONE
         ORDER BY REG_DT
-            LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
     <select id="countCtn" resultType="integer">

@@ -4,11 +4,9 @@ import com.example.admin.domain.dto.block.BlockCtnDto;
 import com.example.admin.domain.dto.block.DeleteBlockCtnDto;
 import com.example.admin.domain.dto.block.InsertBlockCtnDto;
 import com.example.admin.repository.mapper.block.BlockCtnMapper;
+import com.example.admin.service.FunctionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -19,6 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class BlockCtnService {
     private final BlockCtnMapper blockCtnMapper;
+    private final FunctionUtil functionUtil;
 
     public void insertBlockCtn(InsertBlockCtnDto blockCtnDto) {
         if (!existBlockCtn(blockCtnDto.getCtn())) {
@@ -26,23 +25,25 @@ public class BlockCtnService {
         }
     }
 
-    public Page<BlockCtnDto> getAllBlockCtn(int page, int pageSize, String dcb) {
-        Map<String, Integer> map = new HashMap<>();
-        map.put("offset", (page - 1) * pageSize);
-        map.put("pageSize", pageSize);
+    public Page<BlockCtnDto> getAllBlockCtn(String dcb, String ctn, int page, int pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("dcb", dcb);
+        map.put("ctn", ctn);
 
         List<BlockCtnDto> blockCtnDtoList = blockCtnMapper.getAllBlockCtn(map);
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
-
-        return new PageImpl<>(blockCtnDtoList, pageable, blockCtnMapper.countBlockCtn());
+        return functionUtil.toPage(blockCtnDtoList, page, pageSize);
     }
 
     public void deleteBlockFeeType(DeleteBlockCtnDto dto) {
         List<String> ctnList = dto.getCtns();
+        Map<String, String> map = new HashMap<>();
 
         for (String ctn : ctnList) {
             if (blockCtnMapper.existsCtn(ctn)) {
-                blockCtnMapper.deleteBlockCtn(ctn);
+                map.put("dcb", dto.getDcb());
+                map.put("ctn", ctn);
+
+                blockCtnMapper.deleteBlockCtn(map);
             }
         }
     }

@@ -12,5 +12,5 @@ public interface AdminItemSalesMapper {
 
     boolean existsItem(String itemsalesNm);
 
-    List<AdminItemSales> getAllAdminItemSales(Map<String, Integer> map);
+    List<AdminItemSales> getAllAdminItemSales();
 }

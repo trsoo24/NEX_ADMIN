@@ -12,7 +12,7 @@ public interface TestPhoneMapper {
 
     boolean existsCtn(String ctn);
 
-    List<TestPhone> getAllTestPhone(Map<String, Integer> map);
+    List<TestPhone> getAllTestPhone();
 
     int countCtn();
 

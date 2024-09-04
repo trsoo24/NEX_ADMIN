@@ -14,4 +14,5 @@ public class BlockFeeTypeDto {
     private String regDt;
     private String mbrId;
     private String feeTypeNm; // 요금제명
+    private String dcb;
 }
