@@ -2,7 +2,6 @@ package com.example.admin.controller;
 
 import com.example.admin.domain.dto.member.MemberInfo;
 import com.example.admin.domain.dto.member.SignInDto;
-import com.example.admin.domain.dto.member.SignUpDto;
 import com.example.admin.service.member.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping
 public class AuthController {
     private final MemberService memberService;
-
-    @PostMapping("/join")
-    public void signup(@RequestBody @Valid SignUpDto signUpDto) {
-        memberService.signUp(signUpDto);
-    }
 
     @PostMapping("/login")
     public ResponseEntity<MemberInfo> signin(@RequestBody @Valid SignInDto signInDto) {
