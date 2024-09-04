@@ -1,0 +1,24 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.admin.repository.mapper.block.BlockItemMapper">
+    <insert id="insertBlockItem" parameterType="com.example.admin.domain.dto.block.InsertBlockItemDto">
+        INSERT INTO TB_BLOCK_ITEM(ITEM_NM, REG_DT, REG_ID, DCB)
+        VALUES (#{item}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{dcb})
+    </insert>
+
+    <select id="getBlockItemList" parameterType="map" resultType="com.example.admin.domain.entity.block.BlockItem">
+        SELECT * FROM TB_BLOCK_ITEM
+        WHERE DCB = #{dcb}
+              <if test="itemNm != null and itemNm != ''">
+        AND ITEM_NM LIKE CONCAT('%', #{itemNm}, '%')
+        </if>
+        ORDER BY ITEM_NM
+    </select>
+
+    <delete id="deleteBlockItem" parameterType="map">
+        DELETE FROM TB_BLOCK_ITEM
+        WHERE DCB = #{dcb} AND ITEM_NO = #{itemNo}
+    </delete>
+</mapper>
