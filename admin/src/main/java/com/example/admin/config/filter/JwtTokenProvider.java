@@ -4,19 +4,24 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.admin.domain.entity.member.Member;
 import com.example.admin.exception.MemberException;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.example.admin.exception.enums.MemberErrorCode.INVALID_TOKEN;
 
@@ -25,29 +30,37 @@ import static com.example.admin.exception.enums.MemberErrorCode.INVALID_TOKEN;
 public class JwtTokenProvider {
     @Value("${jwt.secret.key}")
     private String secretKey;
-    private static final String ACCESS_TOKEN = "AccessToken";
-    private static final String AUTHORITIES_KEY = "Authorization";
-    private static final String BEARER_TYPE = "Bearer ";
-    private static final String MEMBER_NAME = "MEMBER_NAME";
-    private final Long accessTokenValidTime = 1000L * 60 * 60 * 6;
-    private final UserDetailsService userDetailsService;
+    @Value("${access.token}")
+    private String ACCESS_TOKEN;
+    @Value("${authorize.key}")
+    private String AUTHORITIES_KEY;
+    @Value("${bearer.type}")
+    private String BEARER_TYPE;
+    @Value("${username}")
+    private String USERNAME;
+    @Value("${role}")
+    private String ROLE;
+    @Value("${access.time}")
+    private Long ACCESS_TOKEN_EXPIRED_TIME;
+    private final CookieUtil cookieUtil;
 
-    public String generateAccessToken(String memberName) { // accessToken 생성
+    public String generateAccessToken(Member member) { // accessToken 생성
         Date date = new Date();
 
         return JWT.create()
                 .withSubject(ACCESS_TOKEN)
-                .withExpiresAt(new Date(date.getTime() + accessTokenValidTime))
-                .withClaim(MEMBER_NAME, memberName)
+                .withExpiresAt(new Date(date.getTime() + ACCESS_TOKEN_EXPIRED_TIME))
+                .withClaim(USERNAME, member.getUsername())
+                .withClaim(ROLE, member.getRole().getType())
                 .sign(Algorithm.HMAC256(secretKey));
     }
 
-    public String getPayloadEmail(String token) {
+    public String getUsernameByToken(String token) {
         try {
             return JWT.require(Algorithm.HMAC256(secretKey))
                     .build()
                     .verify(token)
-                    .getClaim(MEMBER_NAME)
+                    .getClaim(USERNAME)
                     .asString();
         } catch (Exception e) {
             throw new MemberException(INVALID_TOKEN);
@@ -61,10 +74,13 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthenticationByAccessToken(String access_token) {
-        String userPrincipal = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(access_token).getBody().getSubject();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(userPrincipal);
+        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(access_token).getBody();
+        String username = claims.getSubject();
+        List<GrantedAuthority> authorities = Arrays.stream(claims.get("roles").toString().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
 
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(username, "", authorities);
     }
 
     public boolean isValidToken(String token) {
@@ -80,5 +96,4 @@ public class JwtTokenProvider {
     private DecodedJWT toDecodedJwtToken(String encodedToken) {
         return JWT.require(Algorithm.HMAC256(secretKey)).build().verify(encodedToken);
     }
-
 }

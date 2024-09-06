@@ -11,8 +11,8 @@
     <select id="getBlockItemList" parameterType="map" resultType="com.example.admin.domain.entity.block.BlockItem">
         SELECT * FROM TB_BLOCK_ITEM
         WHERE DCB = #{dcb}
-              <if test="itemNm != null and itemNm != ''">
-        AND ITEM_NM LIKE CONCAT('%', #{itemNm}, '%')
+              <if test="item != null and item != ''">
+        AND ITEM_NM LIKE CONCAT('%', #{item}, '%')
         </if>
         ORDER BY ITEM_NM
     </select>

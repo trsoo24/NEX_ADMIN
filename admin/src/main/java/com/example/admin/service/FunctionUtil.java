@@ -14,8 +14,14 @@ public class FunctionUtil {
         Pageable pageable = PageRequest.of(page - 1, pageSize);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), list.size());
-        list.subList(start, end);
 
-        return new PageImpl<>(list, pageable, list.size());
+        if (start >= end) {
+            end = list.size();
+            start = (list.size() / pageSize) * pageSize;
+            pageable = PageRequest.of(list.size() / pageSize, pageSize);
+        }
+
+        List<T> ts = list.subList(start, end);
+        return new PageImpl<>(ts, pageable, list.size());
     }
 }

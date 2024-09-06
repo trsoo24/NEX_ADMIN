@@ -32,7 +32,6 @@ public class CustomFilter extends OncePerRequestFilter {
             SecurityContextHolder.clearContext();
             throw new MemberException(INVALID_TOKEN);
         }
-
         filterChain.doFilter(request, response);
     }
 }

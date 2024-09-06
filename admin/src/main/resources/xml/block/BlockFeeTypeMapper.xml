@@ -5,7 +5,7 @@
 <mapper namespace="com.example.admin.repository.mapper.block.BlockFeeTypeMapper">
     <insert id="insertBlockFeeType" parameterType="com.example.admin.domain.dto.block.InsertBlockFeeTypeDto">
         INSERT INTO TB_BLOCK_FEE_TYPE(FEE_TYPE_CD, REG_DT, MBR_ID, FEE_TYPE_NM, DCB)
-        VALUES (#{feeTypeCd}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{feeTypeNm} #{dcb})
+        VALUES (#{feeTypeCd}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{feeTypeNm}, #{dcb})
     </insert>
 
     <select id="existsFeeType" parameterType="String" resultType="boolean">
