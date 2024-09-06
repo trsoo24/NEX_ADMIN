@@ -5,6 +5,7 @@ import com.example.admin.domain.dto.member.MemberInfo;
 import com.example.admin.domain.dto.member.SignUpDto;
 import com.example.admin.domain.dto.member.UpdateMemberRequestDto;
 import com.example.admin.service.member.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,22 +25,22 @@ public class MemberController {
     }
 
     @GetMapping("/info")
-    public MemberInfo getMemberInfo(@RequestParam("username") @Valid String username) {
-        return memberService.findMemberByMemberName(username);
+    public MemberInfo getMemberInfo(HttpServletRequest request) {
+        return memberService.findMemberByRequest(request);
     }
 
     @PutMapping("/update")
-    public void updateMemberInfo(@RequestBody @Valid UpdateMemberRequestDto updateMemberRequestDto) {
-        memberService.updateMemberInfo(updateMemberRequestDto);
+    public void updateMemberInfo(HttpServletRequest request, @RequestBody @Valid UpdateMemberRequestDto updateMemberRequestDto) {
+        memberService.updateMemberInfo(request, updateMemberRequestDto);
     }
 
     @DeleteMapping
-    public void deleteMember(@RequestBody @Valid DeleteMemberDto ids) {
-        memberService.deleteMember(ids);
+    public void deleteMember(HttpServletRequest request, @RequestBody @Valid DeleteMemberDto ids) {
+        memberService.deleteMember(request, ids);
     }
 
     @PostMapping
     public void signup(@RequestBody @Valid SignUpDto signUpDto) {
-        memberService.signUp(signUpDto);
+        memberService.generateMember(signUpDto);
     }
 }

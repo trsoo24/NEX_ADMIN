@@ -22,6 +22,7 @@ public class MemberInfo {
     private String email;
     private String lastLogin;
     private String locked;
+    private String role;
 
     public MemberInfo toMemberInfo(Member member) {
         return MemberInfo.builder()
@@ -33,6 +34,7 @@ public class MemberInfo {
                 .email(member.getEmail())
                 .lastLogin(member.getLastConnectedDateTime())
                 .locked(member.getIsLocked())
+                .role(member.getRole().getType())
                 .build();
     }
 

@@ -1,5 +1,7 @@
 package com.example.admin.service.member;
 
+import com.example.admin.config.filter.CookieUtil;
+import com.example.admin.config.filter.JwtTokenProvider;
 import com.example.admin.domain.dto.member.*;
 import com.example.admin.domain.entity.member.Member;
 import com.example.admin.domain.entity.member.enums.Role;
@@ -7,6 +9,8 @@ import com.example.admin.exception.MemberException;
 import com.example.admin.repository.mapper.member.MemberMapper;
 import com.example.admin.service.FunctionUtil;
 import com.example.admin.service.reference.MemberReference;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,9 +29,10 @@ public class MemberService {
     private final MemberMapper memberMapper;
     private final MemberReference memberReference;
     private final FunctionUtil functionUtil;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public void signUp(SignUpDto signUpDto) {
-        memberReference.isExistMemberName(signUpDto.getUsername());
+    public void generateMember(SignUpDto signUpDto) {
+        memberReference.isExistUsername(signUpDto.getUsername());
         memberReference.isExistMemberEmail(signUpDto.getEmail());
 
         Map<String, Object> signUpMap = checkService(signUpDto.getServices());
@@ -41,7 +46,7 @@ public class MemberService {
         memberMapper.createMember(signUpMap);
     }
 
-    public MemberInfo signIn(SignInDto signInDto) {
+    public void signIn(SignInDto signInDto, HttpServletResponse response) {
         Map<String, String> signInMap = new HashMap<>();
         signInMap.put("username", signInDto.getUsername());
         signInMap.put("password", signInDto.getPassword());
@@ -49,10 +54,9 @@ public class MemberService {
         Member member = memberMapper.signIn(signInMap);
         updateLastConnectTime(member.getMemberId());
 
-        MemberInfo memberInfo = new MemberInfo();
-        memberInfo.toMemberInfo(member);
-
-        return memberInfo;
+        jwtTokenProvider.generateAccessToken(member.getUsername(), member.getRole().getType(), response);
+        jwtTokenProvider.generateRefreshToken(member.getUsername(), member.getRole().getType(), response);
+        response.setStatus(200);
     }
 
     private void updateLastConnectTime(Integer memberId) {
@@ -60,9 +64,10 @@ public class MemberService {
         memberMapper.updateLastConnectedTime(memberId);
     }
 
-    public void updateMemberInfo(UpdateMemberRequestDto updateMemberRequestDto) {
+    public void updateMemberInfo(HttpServletRequest request, UpdateMemberRequestDto updateMemberRequestDto) {
         //유효한 사용자인지 체크
-        memberReference.findMember(updateMemberRequestDto.getMemberId());
+        MemberInfo memberInfo = findMemberByRequest(request);
+        memberReference.findMember(memberInfo.getMemberId());
 
         Map<String, Object> requestMap = checkService(updateMemberRequestDto.getServices());
         requestMap.put("password", updateMemberRequestDto.getPassword());
@@ -71,10 +76,15 @@ public class MemberService {
         memberMapper.updateMemberInfo(requestMap);
     }
 
-    public void deleteMember(DeleteMemberDto ids) {
-        //TODO 접속한 유저가 요청한 Request 에서 memberId 와 RequestParam 의 Id 가 일치한지 확인할 것
+    public void deleteMember(HttpServletRequest request, DeleteMemberDto ids) {
+        MemberInfo memberInfo = findMemberByRequest(request);
+        String requestMemberRole = memberInfo.getRole();
+
         for (Integer id : ids.getIds()) {
-            memberMapper.deleteMember(id);
+            Member member = memberMapper.findMemberByMemberId(id);
+            if (memberReference.checkMemberRole(requestMemberRole, member.getRole().getType())) {
+                memberMapper.deleteMember(id);
+            }
         }
     }
 
@@ -90,8 +100,10 @@ public class MemberService {
         return functionUtil.toPage(memberInfoList, page, pageSize);
     }
 
-    public MemberInfo findMemberByMemberName(String username) {
+    public MemberInfo findMemberByRequest(HttpServletRequest request) {
         MemberInfo memberInfo = new MemberInfo();
+        String token = jwtTokenProvider.getAccessTokenFromRequest(request);
+        String username = jwtTokenProvider.getUsernameByToken(token);
 
         return memberInfo.toMemberInfo(memberMapper.findMemberByUsername(username));
     }
@@ -133,5 +145,9 @@ public class MemberService {
             }
         }
         throw new MemberException(UNACCEPTABLE_ROLE);
+    }
+
+    public void logOut(HttpServletRequest request, HttpServletResponse response) {
+        jwtTokenProvider.logOut(request, response);
     }
 }

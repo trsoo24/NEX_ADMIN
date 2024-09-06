@@ -22,16 +22,35 @@ public class CustomFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = String.valueOf(jwtTokenProvider.getAccessTokenFromRequest(request));
+        String accessToken = jwtTokenProvider.getAccessTokenFromRequest(request);
         try {
-            if (token != null && jwtTokenProvider.isValidToken(token)) {
-                Authentication auth = jwtTokenProvider.getAuthenticationByAccessToken(token);
+            if (accessToken != null && jwtTokenProvider.isValidToken(accessToken)) {
+                Authentication auth = jwtTokenProvider.getAuthenticationByAccessToken(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(auth);
+            } else {
+                accessToken = jwtTokenProvider.RegenerateToken(request, response);
+
+                if (jwtTokenProvider.isValidToken(accessToken)) {
+                    Authentication auth = jwtTokenProvider.getAuthenticationByAccessToken(accessToken);
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
             }
         } catch (MemberException e) {
             SecurityContextHolder.clearContext();
             throw new MemberException(INVALID_TOKEN);
         }
         filterChain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        if (request.getRequestURI().equals("/login")) {
+            return true;
+        }
+
+        if (request.getRequestURI().equals("/**")) {
+            return true;
+        }
+        return false;
     }
 }

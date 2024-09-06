@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Mapper
 public interface MemberMapper {
-    boolean existsMemberName(String memberName);
+    boolean existsUsername(String username);
     boolean existsEmail(String email);
     void createMember(Map<String, Object> map);
     void updateLastConnectedTime(Integer memberId);

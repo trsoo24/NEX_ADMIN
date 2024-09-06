@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.repository.mapper.member.MemberMapper">
-    <select id="existsMemberName" parameterType="String" resultType="boolean">
+    <select id="existsUsername" parameterType="String" resultType="boolean">
         SELECT COUNT(*) > 0
         FROM MEMBER
         WHERE USER_NAME = #{username}

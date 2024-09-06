@@ -12,20 +12,20 @@ import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/board")
 @RequiredArgsConstructor
 @Slf4j
 public class BoardController {
     private final BoardService boardService;
 
-    @GetMapping("/board")
+    @GetMapping
     public ResponseEntity<Map<Integer, BoardDto>> getAllBoards() {
         log.info("가보자고");
         return ResponseEntity.ok(boardService.getAllBoards());
     }
 
 
-    @PostMapping("/board/new")
+    @PostMapping
     public String addNewBoard(@RequestBody AddBoardDto addBoardDto) {
         return boardService.addBoard(addBoardDto);
     }
