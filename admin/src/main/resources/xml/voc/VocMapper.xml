@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.admin.repository.mapper.voc.VocMapper">
+    <insert id="insertMms" parameterType="com.example.admin.domain.entity.message.MmsInfo">
+        INSERT INTO TB_SMS_INFO(DCB, REG_DT, CTN, SMS_TYPE, CONTENT, RESULT)
+        VALUES (#{dcb}, #{regDt}, #{ctn}, #{smsType}, #{content}, #{result})
+    </insert>
+    <select id="getMmsHistoryByCtn" parameterType="map">
+        SELECT * FROM TB_SMS_INFO
+        WHERE DCB = #{dcb}
+        AND CTN LIKE CONCAT('%', #{ctn}, '%')
+    </select>
+    
+    <select id="getTryToPaymentHistory" parameterType="map">
+        
+    </select>
+    
+    <select id="getConversionHistory" parameterType="map">
+
+    </select>
+</mapper>
