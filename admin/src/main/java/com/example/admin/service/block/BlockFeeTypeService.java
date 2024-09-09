@@ -4,7 +4,7 @@ import com.example.admin.domain.dto.block.BlockFeeTypeDto;
 import com.example.admin.domain.dto.block.DeleteFeeTypeDto;
 import com.example.admin.domain.dto.block.InsertBlockFeeTypeDto;
 import com.example.admin.repository.mapper.block.BlockFeeTypeMapper;
-import com.example.admin.service.FunctionUtil;
+import com.example.admin.common.service.FunctionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;

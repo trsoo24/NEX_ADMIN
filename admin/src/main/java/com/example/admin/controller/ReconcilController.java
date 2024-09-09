@@ -1,5 +1,7 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.PageResult;
+import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.reconcil.InsertReconcilDto;
 import com.example.admin.domain.entity.reconcil.Reconcil;
 import com.example.admin.service.reconcil.ReconcilService;
@@ -17,26 +19,32 @@ public class ReconcilController {
     private final ReconcilService reconcilService;
 
     @PostMapping
-    public void insertReconcil(@RequestBody @Valid InsertReconcilDto insertReconcilDto) {
+    public StatusResult insertReconcil(@RequestBody @Valid InsertReconcilDto insertReconcilDto) {
         reconcilService.insertReconcil(insertReconcilDto);
+
+        return new StatusResult(true);
     }
 
     @GetMapping
-    public Page<Reconcil> getReconcilPage(@RequestParam @Valid String dcb,
-                                          @RequestParam @Valid String startDate,
-                                          @RequestParam @Valid String endDate,
-                                          @RequestParam @Valid String fileType,
-                                          @RequestParam @Valid int page,
-                                          @RequestParam @Valid int pageSize) {
-        return reconcilService.getReconcilPage(dcb, startDate, endDate, fileType, page, pageSize);
+    public PageResult<Reconcil> getReconcilPage(@RequestParam @Valid String dcb,
+                                                @RequestParam @Valid String startDate,
+                                                @RequestParam @Valid String endDate,
+                                                @RequestParam @Valid String fileType,
+                                                @RequestParam @Valid int page,
+                                                @RequestParam @Valid int pageSize) {
+        Page<Reconcil> reconcilPage = reconcilService.getReconcilPage(dcb, startDate, endDate, fileType, page, pageSize);
+
+        return new PageResult<>(true, reconcilPage);
     }
 
     @GetMapping("/excel")
-    public void getReconcilExcel(@RequestParam @Valid String dcb,
+    public StatusResult getReconcilExcel(@RequestParam @Valid String dcb,
                                           @RequestParam @Valid String startDate,
                                           @RequestParam @Valid String endDate,
                                           @RequestParam @Valid String fileType,
                                           HttpServletResponse response) {
         reconcilService.exportExcel(dcb, startDate, endDate, fileType, response);
+
+        return new StatusResult(true);
     }
 }

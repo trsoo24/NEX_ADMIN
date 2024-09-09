@@ -15,13 +15,18 @@ import java.io.IOException;
 
 import static com.example.admin.exception.enums.MemberErrorCode.INVALID_TOKEN;
 
-@Component
+//@Component
 @RequiredArgsConstructor
 public class CustomFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if(request.getRequestURI().equals("/**")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String accessToken = jwtTokenProvider.getAccessTokenFromRequest(request);
         try {
             if (accessToken != null && jwtTokenProvider.isValidToken(accessToken)) {
@@ -44,11 +49,11 @@ public class CustomFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        if (request.getRequestURI().equals("/login")) {
+        if (request.getRequestURI().equals("/**")) {
             return true;
         }
 
-        if (request.getRequestURI().equals("/**")) {
+        if (request.getRequestURI().equals("/login")) {
             return true;
         }
         return false;

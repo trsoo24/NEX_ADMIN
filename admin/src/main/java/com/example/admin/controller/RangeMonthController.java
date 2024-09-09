@@ -1,5 +1,7 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.MapResult;
+import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.range.RangeMonthDto;
 import com.example.admin.service.range.RangeMonthService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,12 +26,16 @@ public class RangeMonthController {
     }
 
     @GetMapping()
-    public Map<String, List<RangeMonthDto>> getRangeMonth(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate) throws IllegalAccessException {
-        return rangeMonthService.getRangeMonthList(startDate, endDate, dcb);
+    public MapResult<String, List<RangeMonthDto>> getRangeMonth(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate) throws IllegalAccessException {
+        Map<String, List<RangeMonthDto>> rangMonthDtoMap = rangeMonthService.getRangeMonthList(startDate, endDate, dcb);
+
+        return new MapResult<>(true, rangMonthDtoMap);
     }
 
     @GetMapping("/excel")
-    public void exportRangeMonthExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
+    public StatusResult exportRangeMonthExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
         rangeMonthService.exportExcel(startDate, endDate, dcb, response);
+
+        return new StatusResult(true);
     }
 }

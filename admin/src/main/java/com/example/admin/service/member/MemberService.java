@@ -7,7 +7,7 @@ import com.example.admin.domain.entity.member.Member;
 import com.example.admin.domain.entity.member.enums.Role;
 import com.example.admin.exception.MemberException;
 import com.example.admin.repository.mapper.member.MemberMapper;
-import com.example.admin.service.FunctionUtil;
+import com.example.admin.common.service.FunctionUtil;
 import com.example.admin.service.reference.MemberReference;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.admin.exception.enums.MemberErrorCode.INCORRECT_PASSWORD;
 import static com.example.admin.exception.enums.MemberErrorCode.UNACCEPTABLE_ROLE;
 @Slf4j
 @Service
@@ -30,6 +31,7 @@ public class MemberService {
     private final MemberReference memberReference;
     private final FunctionUtil functionUtil;
     private final JwtTokenProvider jwtTokenProvider;
+    private final CookieUtil cookieUtil;
 
     public void generateMember(SignUpDto signUpDto) {
         memberReference.isExistUsername(signUpDto.getUsername());
@@ -71,8 +73,15 @@ public class MemberService {
 
         Map<String, Object> requestMap = checkService(updateMemberRequestDto.getServices());
         requestMap.put("password", updateMemberRequestDto.getPassword());
-        requestMap.put("email", updateMemberRequestDto.getEmail());
-        requestMap.put("memberId", updateMemberRequestDto.getMemberId());
+        requestMap.put("team", updateMemberRequestDto.getTeam());
+        requestMap.put("username", updateMemberRequestDto.getUsername());
+
+        if (!isSuperAdminRole(request) && !updateMemberRequestDto.getRole().isEmpty()) {
+            throw new MemberException(UNACCEPTABLE_ROLE);
+        } else {
+            requestMap.put("role", updateMemberRequestDto.getRole());
+        }
+
         memberMapper.updateMemberInfo(requestMap);
     }
 
@@ -147,7 +156,25 @@ public class MemberService {
         throw new MemberException(UNACCEPTABLE_ROLE);
     }
 
+    private boolean isSuperAdminRole(HttpServletRequest request) {
+        MemberInfo memberInfo = findMemberByRequest(request);
+        String requestMemberRole = memberInfo.getRole();
+
+        return requestMemberRole.equals("SUPER_ADMIN");
+    }
+
     public void logOut(HttpServletRequest request, HttpServletResponse response) {
         jwtTokenProvider.logOut(request, response);
+    }
+
+    public void checkPassword(HttpServletRequest request, String password) {
+        String accessToken =  cookieUtil.getAccessToken(request).getValue();
+        String username = jwtTokenProvider.getUsernameByToken(accessToken);
+
+        Member member = memberMapper.findMemberByUsername(username);
+
+        if (!member.getPassword().equals(password)) {
+            throw new MemberException(INCORRECT_PASSWORD);
+        }
     }
 }

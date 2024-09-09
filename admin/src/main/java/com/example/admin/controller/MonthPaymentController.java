@@ -1,5 +1,7 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.MapResult;
+import com.example.admin.common.response.StatusResult;
 import com.example.admin.service.payment.MonthPaymentService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -18,17 +20,23 @@ public class MonthPaymentController {
     private final MonthPaymentService monthPaymentService;
 
     @PostMapping("/test")
-    public void insertMonthPayment(@RequestParam("year") @Valid String year) {
+    public StatusResult insertMonthPayment(@RequestParam("year") @Valid String year) {
         monthPaymentService.insertMonthPayment(year);
+
+        return new StatusResult(true);
     }
 
     @GetMapping()
-    public Map<String, List<Object>> getMonthPayment(@RequestParam("dcb") @Valid String dcb, @RequestParam("year") @Valid String year) {
-        return monthPaymentService.getMonthPaymentDtoForm(year, dcb);
+    public MapResult<String, List<Object>> getMonthPayment(@RequestParam("dcb") @Valid String dcb, @RequestParam("year") @Valid String year) {
+        Map<String, List<Object>> monthPaymentMap = monthPaymentService.getMonthPaymentDtoForm(year, dcb);
+
+        return new MapResult<>(true, monthPaymentMap);
     }
 
     @GetMapping("/excel")
-    public void exportExcel(@RequestParam("dcb") String dcb, @RequestParam("year") String year, HttpServletResponse response) throws IOException,IllegalAccessException {
+    public StatusResult exportExcel(@RequestParam("dcb") String dcb, @RequestParam("year") String year, HttpServletResponse response) throws IOException,IllegalAccessException {
         monthPaymentService.exportMonthPaymentExcel(year, dcb, response);
+
+        return new StatusResult(true);
     }
 }

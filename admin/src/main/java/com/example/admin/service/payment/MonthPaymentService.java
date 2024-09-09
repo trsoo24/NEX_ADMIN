@@ -82,14 +82,14 @@ public class MonthPaymentService {
     private void calculateMap(Map<String, MonthPayment> valueMap, List<MonthPayment> monthPaymentList, MonthPayment total) {
 
         for (MonthPayment monthPayment : monthPaymentList) {
-            if (valueMap.containsKey(monthPayment.getStatMonth())) {
-                MonthPayment oldMonthPayment = valueMap.get(monthPayment.getStatMonth());
+            if (valueMap.containsKey(monthPayment.getStat_month())) {
+                MonthPayment oldMonthPayment = valueMap.get(monthPayment.getStat_month());
                 oldMonthPayment.addTotalAmount(monthPayment);
 
                 // 해당 날짜 값 누적
-                valueMap.put(monthPayment.getStatMonth(), oldMonthPayment);
+                valueMap.put(monthPayment.getStat_month(), oldMonthPayment);
             } else {
-                valueMap.put(monthPayment.getStatMonth(), monthPayment);
+                valueMap.put(monthPayment.getStat_month(), monthPayment);
             }
             total.addTotalAmount(monthPayment);
         }
@@ -206,24 +206,24 @@ public class MonthPaymentService {
         double refundCount = mathCeil(100 + random.nextDouble(900));
 
         return MonthPayment.builder()
-                .statMonth(sb.toString())
-                .aStat(mathCeil(totalAmount))
-                .bStat(mathCeil(buyAmount))
-                .cStat(calculatePercent(buyCount, totalAmount))
-                .dStat(mathCeil(cancelAmount))
-                .eStat(calculatePercent(cancelAmount, totalAmount))
-                .fStat(mathCeil(refundAmount))
-                .gStat(calculatePercent(refundAmount, totalAmount))
-                .hStat(paymentCount)
-                .iStat(buyCount)
-                .jStat(calculatePercent(buyCount, paymentCount))
-                .kStat(cancelCount)
-                .lStat(calculatePercent(cancelCount, paymentCount))
-                .mStat(refundCount)
-                .nStat(calculatePercent(refundAmount, paymentCount))
-                .pStat(calculateAverage(buyAmount, buyCount))
-                .rStat(calculateAverage(cancelAmount, cancelCount))
-                .tStat(calculateAverage(refundAmount, refundCount))
+                .stat_month(sb.toString())
+                .a_stat(mathCeil(totalAmount))
+                .b_stat(mathCeil(buyAmount))
+                .c_stat(calculatePercent(buyCount, totalAmount))
+                .d_stat(mathCeil(cancelAmount))
+                .e_stat(calculatePercent(cancelAmount, totalAmount))
+                .f_stat(mathCeil(refundAmount))
+                .g_stat(calculatePercent(refundAmount, totalAmount))
+                .h_stat(paymentCount)
+                .i_stat(buyCount)
+                .j_stat(calculatePercent(buyCount, paymentCount))
+                .k_stat(cancelCount)
+                .l_stat(calculatePercent(cancelCount, paymentCount))
+                .m_stat(refundCount)
+                .n_stat(calculatePercent(refundAmount, paymentCount))
+                .p_stat(calculateAverage(buyAmount, buyCount))
+                .r_stat(calculateAverage(cancelAmount, cancelCount))
+                .t_stat(calculateAverage(refundAmount, refundCount))
                 .build();
     }
 }

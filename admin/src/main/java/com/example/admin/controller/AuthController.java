@@ -1,11 +1,13 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.member.SignInDto;
 import com.example.admin.service.member.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
@@ -16,12 +18,19 @@ public class AuthController {
     private final MemberService memberService;
 
     @PostMapping("/login")
-    public void signin(@RequestBody @Valid SignInDto signInDto, HttpServletResponse response) {
+    public StatusResult signin(@RequestBody @Valid SignInDto signInDto, HttpServletResponse response) {
         memberService.signIn(signInDto, response);
+
+        return new StatusResult(true);
     }
 
     @PostMapping("/logout")
-    public void logOut(HttpServletRequest request, HttpServletResponse response) {
+    public StatusResult logOut(HttpServletRequest request, HttpServletResponse response) {
         memberService.logOut(request, response);
+
+        StatusResult statusResult = new StatusResult();
+        statusResult.setSuccess(true);
+
+        return new StatusResult(true);
     }
 }

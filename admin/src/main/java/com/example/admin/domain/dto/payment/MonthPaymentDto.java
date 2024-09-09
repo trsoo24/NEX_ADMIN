@@ -3,8 +3,6 @@ package com.example.admin.domain.dto.payment;
 import com.example.admin.domain.entity.payment.MonthPayment;
 import lombok.*;
 
-import java.text.DecimalFormat;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -32,24 +30,24 @@ public class MonthPaymentDto {
 
     public static MonthPaymentDto toDto(MonthPayment MonthPayment) {
         return MonthPaymentDto.builder()
-                .statMonth(formatDate(MonthPayment.getStatMonth()))
-                .totalAmount(formatDouble(MonthPayment.getAStat()))
-                .buyAmount(formatDouble(MonthPayment.getBStat()))
-                .buyAmountPercent(MonthPayment.getCStat())
-                .cancelAmount(formatDouble(MonthPayment.getDStat()))
-                .cancelAmountPercent(MonthPayment.getEStat())
-                .refundAmount(formatDouble(MonthPayment.getFStat()))
-                .refundAmountPercent(MonthPayment.getGStat())
-                .paymentCount(formatDouble(MonthPayment.getHStat()))
-                .buyCount(formatDouble(MonthPayment.getIStat()))
-                .buyCountPercent(MonthPayment.getJStat())
-                .cancelCount(formatDouble(MonthPayment.getKStat()))
-                .cancelCountPercent(MonthPayment.getLStat())
-                .refundCount(formatDouble(MonthPayment.getMStat()))
-                .refundCountPercent(MonthPayment.getNStat())
-                .buyAmountAverage(formatDouble(MonthPayment.getPStat()))
-                .cancelAmountAverage(formatDouble(MonthPayment.getRStat()))
-                .refundAmountAverage(formatDouble(MonthPayment.getTStat()))
+                .statMonth(formatDate(MonthPayment.getStat_month()))
+                .totalAmount(formatDouble(MonthPayment.getA_stat()))
+                .buyAmount(formatDouble(MonthPayment.getB_stat()))
+                .buyAmountPercent(MonthPayment.getC_stat())
+                .cancelAmount(formatDouble(MonthPayment.getD_stat()))
+                .cancelAmountPercent(MonthPayment.getE_stat())
+                .refundAmount(formatDouble(MonthPayment.getF_stat()))
+                .refundAmountPercent(MonthPayment.getG_stat())
+                .paymentCount(formatDouble(MonthPayment.getH_stat()))
+                .buyCount(formatDouble(MonthPayment.getI_stat()))
+                .buyCountPercent(MonthPayment.getJ_stat())
+                .cancelCount(formatDouble(MonthPayment.getK_stat()))
+                .cancelCountPercent(MonthPayment.getL_stat())
+                .refundCount(formatDouble(MonthPayment.getM_stat()))
+                .refundCountPercent(MonthPayment.getN_stat())
+                .buyAmountAverage(formatDouble(MonthPayment.getP_stat()))
+                .cancelAmountAverage(formatDouble(MonthPayment.getR_stat()))
+                .refundAmountAverage(formatDouble(MonthPayment.getT_stat()))
                 .build();
     }
 
@@ -73,29 +71,28 @@ public class MonthPaymentDto {
 
     public static MonthPaymentDto toTotalDto(MonthPayment MonthPayment) {
         return MonthPaymentDto.builder()
-                .statMonth(formatDate(MonthPayment.getStatMonth()))
-                .totalAmount(formatDouble(MonthPayment.getAStat()))
-                .buyAmount(formatDouble(MonthPayment.getBStat()))
-                .buyAmountPercent(calculatePercent(MonthPayment.getAStat(), MonthPayment.getBStat()))
-                .cancelAmount(formatDouble(MonthPayment.getDStat()))
-                .cancelAmountPercent(calculatePercent(MonthPayment.getAStat(), MonthPayment.getDStat()))
-                .refundAmount(formatDouble(MonthPayment.getFStat()))
-                .refundAmountPercent(calculatePercent(MonthPayment.getAStat(), MonthPayment.getFStat()))
-                .paymentCount(formatDouble(MonthPayment.getHStat()))
-                .buyCount(formatDouble(MonthPayment.getIStat()))
-                .buyCountPercent(calculatePercent(MonthPayment.getIStat(), MonthPayment.getHStat()))
-                .cancelCount(formatDouble(MonthPayment.getKStat()))
-                .cancelCountPercent(calculatePercent(MonthPayment.getIStat(), MonthPayment.getKStat()))
-                .refundCount(formatDouble(MonthPayment.getMStat()))
-                .refundCountPercent(calculatePercent(MonthPayment.getIStat(), MonthPayment.getMStat()))
-                .buyAmountAverage(formatDouble(calculateAverage(MonthPayment.getBStat(), MonthPayment.getIStat())))
-                .cancelAmountAverage(formatDouble(calculateAverage(MonthPayment.getDStat(), MonthPayment.getKStat())))
-                .refundAmountAverage(formatDouble(calculateAverage(MonthPayment.getFStat(), MonthPayment.getMStat())))
+                .statMonth(formatDate(MonthPayment.getStat_month()))
+                .totalAmount(formatDouble(MonthPayment.getA_stat()))
+                .buyAmount(formatDouble(MonthPayment.getB_stat()))
+                .buyAmountPercent(calculatePercent(MonthPayment.getA_stat(), MonthPayment.getB_stat()))
+                .cancelAmount(formatDouble(MonthPayment.getD_stat()))
+                .cancelAmountPercent(calculatePercent(MonthPayment.getA_stat(), MonthPayment.getD_stat()))
+                .refundAmount(formatDouble(MonthPayment.getF_stat()))
+                .refundAmountPercent(calculatePercent(MonthPayment.getA_stat(), MonthPayment.getF_stat()))
+                .paymentCount(formatDouble(MonthPayment.getH_stat()))
+                .buyCount(formatDouble(MonthPayment.getI_stat()))
+                .buyCountPercent(calculatePercent(MonthPayment.getI_stat(), MonthPayment.getH_stat()))
+                .cancelCount(formatDouble(MonthPayment.getK_stat()))
+                .cancelCountPercent(calculatePercent(MonthPayment.getI_stat(), MonthPayment.getK_stat()))
+                .refundCount(formatDouble(MonthPayment.getM_stat()))
+                .refundCountPercent(calculatePercent(MonthPayment.getI_stat(), MonthPayment.getM_stat()))
+                .buyAmountAverage(formatDouble(calculateAverage(MonthPayment.getB_stat(), MonthPayment.getI_stat())))
+                .cancelAmountAverage(formatDouble(calculateAverage(MonthPayment.getD_stat(), MonthPayment.getK_stat())))
+                .refundAmountAverage(formatDouble(calculateAverage(MonthPayment.getF_stat(), MonthPayment.getM_stat())))
                 .build();
     }
 
     public static String formatDouble(double value) {
-        DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
-        return decimalFormat.format(value);
+        return DayPaymentDto.formatDouble(value);
     }
 }

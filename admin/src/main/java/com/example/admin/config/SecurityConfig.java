@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final CustomFilter customFilter;
+//    private final CustomFilter customFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -30,7 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/**").permitAll()
                         .requestMatchers("/join", "/login").permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterAfter(customFilter, UsernamePasswordAuthenticationFilter.class)
 //                .oauth2Login()  // TODO 추후 Okta 연동 설정 필요
         ;
 

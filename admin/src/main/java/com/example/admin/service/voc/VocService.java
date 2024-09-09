@@ -2,7 +2,7 @@ package com.example.admin.service.voc;
 
 import com.example.admin.domain.entity.message.MmsInfo;
 import com.example.admin.repository.mapper.voc.VocMapper;
-import com.example.admin.service.FunctionUtil;
+import com.example.admin.common.service.FunctionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;

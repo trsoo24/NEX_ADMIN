@@ -1,5 +1,7 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.MapResult;
+import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.range.RangeDayDto;
 import com.example.admin.service.range.RangeDayService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,17 +21,23 @@ public class RangeDayController {
     private final RangeDayService rangeDayService;
 
     @PostMapping()
-    public void insertRangeDay(@RequestParam("month") @Valid String month) {
+    public StatusResult insertRangeDay(@RequestParam("month") @Valid String month) {
         rangeDayService.insertRangeDay(month);
+
+        return new StatusResult(true);
     }
 
     @GetMapping()
-    public Map<String, List<RangeDayDto>> getRangeDayList(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate) throws IllegalAccessException {
-        return rangeDayService.getRangeDayList(startDate, endDate, dcb);
+    public MapResult<String, List<RangeDayDto>> getRangeDayList(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate) throws IllegalAccessException {
+        Map<String, List<RangeDayDto>> rangeDayDtoMap = rangeDayService.getRangeDayList(startDate, endDate, dcb);
+
+        return new MapResult<>(true, rangeDayDtoMap);
     }
 
     @GetMapping("/excel")
-    public void exportRangeDayExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
+    public StatusResult exportRangeDayExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
         rangeDayService.exportExcel(startDate, endDate, dcb, response);
+
+        return new StatusResult(true);
     }
 }

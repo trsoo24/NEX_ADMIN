@@ -1,5 +1,6 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.PageResult;
 import com.example.admin.domain.entity.message.MmsInfo;
 import com.example.admin.service.voc.VocService;
 import jakarta.validation.Valid;
@@ -15,10 +16,12 @@ public class VocController {
     private final VocService vocService;
 
     @GetMapping("/history/mms")
-    public Page<MmsInfo> getMmsHistory(@RequestParam("dcb") @Valid String dcb,
-                                       @RequestParam("ctn") @Valid String ctn,
-                                       @RequestParam("page") @Valid int page,
-                                       @RequestParam("pageSize") @Valid int pageSize) {
-        return vocService.getSmsInfoPage(dcb, ctn, page, pageSize);
+    public PageResult<MmsInfo> getMmsHistory(@RequestParam("dcb") @Valid String dcb,
+                                             @RequestParam("ctn") @Valid String ctn,
+                                             @RequestParam("page") @Valid int page,
+                                             @RequestParam("pageSize") @Valid int pageSize) {
+        Page<MmsInfo> mmsInfoPage = vocService.getSmsInfoPage(dcb, ctn, page, pageSize);
+
+        return new PageResult<>(true, mmsInfoPage);
     }
 }

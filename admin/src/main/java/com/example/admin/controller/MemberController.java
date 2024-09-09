@@ -1,5 +1,8 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.DataResult;
+import com.example.admin.common.response.PageResult;
+import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.member.DeleteMemberDto;
 import com.example.admin.domain.dto.member.MemberInfo;
 import com.example.admin.domain.dto.member.SignUpDto;
@@ -19,28 +22,45 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping
-    public Page<MemberInfo> getAllMemberInfo(@RequestParam("page") @Valid Integer page,
-                                             @RequestParam("pageSize") @Valid Integer pageSize) {
-        return memberService.findAllMember(page, pageSize);
+    public PageResult<MemberInfo> getAllMemberInfo(@RequestParam("page") @Valid Integer page,
+                                                   @RequestParam("pageSize") @Valid Integer pageSize) {
+        Page<MemberInfo> memberInfoPage = memberService.findAllMember(page, pageSize);
+
+        return new PageResult<>(true, memberInfoPage);
+    }
+
+    @GetMapping("/authentication")
+    public StatusResult authenticationMember(HttpServletRequest request, @RequestParam("password") @Valid String password) {
+        memberService.checkPassword(request, password);
+
+        return new StatusResult(true);
     }
 
     @GetMapping("/info")
-    public MemberInfo getMemberInfo(HttpServletRequest request) {
-        return memberService.findMemberByRequest(request);
+    public DataResult<MemberInfo> getMemberInfo(HttpServletRequest request) {
+        MemberInfo memberInfo = memberService.findMemberByRequest(request);
+
+        return new DataResult<>(true, memberInfo);
     }
 
-    @PutMapping("/update")
-    public void updateMemberInfo(HttpServletRequest request, @RequestBody @Valid UpdateMemberRequestDto updateMemberRequestDto) {
+    @PutMapping
+    public StatusResult updateMemberInfo(HttpServletRequest request, @RequestBody @Valid UpdateMemberRequestDto updateMemberRequestDto) {
         memberService.updateMemberInfo(request, updateMemberRequestDto);
+
+        return new StatusResult(true);
     }
 
     @DeleteMapping
-    public void deleteMember(HttpServletRequest request, @RequestBody @Valid DeleteMemberDto ids) {
+    public StatusResult deleteMember(HttpServletRequest request, @RequestBody @Valid DeleteMemberDto ids) {
         memberService.deleteMember(request, ids);
+
+        return new StatusResult(true);
     }
 
     @PostMapping
-    public void signup(@RequestBody @Valid SignUpDto signUpDto) {
+    public StatusResult signup(@RequestBody @Valid SignUpDto signUpDto) {
         memberService.generateMember(signUpDto);
+
+        return new StatusResult(true);
     }
 }

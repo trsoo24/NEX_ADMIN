@@ -5,7 +5,7 @@ import com.example.admin.domain.dto.enrollment.InsertTestPhoneDto;
 import com.example.admin.domain.entity.enrollment.TestPhone;
 import com.example.admin.exception.TestPhoneException;
 import com.example.admin.repository.mapper.enrollment.TestPhoneMapper;
-import com.example.admin.service.FunctionUtil;
+import com.example.admin.common.service.FunctionUtil;
 import com.example.admin.service.reference.TestPhoneReference;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

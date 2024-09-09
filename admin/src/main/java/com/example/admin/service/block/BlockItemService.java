@@ -4,7 +4,7 @@ import com.example.admin.domain.dto.block.DeleteBlockItemDto;
 import com.example.admin.domain.dto.block.InsertBlockItemDto;
 import com.example.admin.domain.entity.block.BlockItem;
 import com.example.admin.repository.mapper.block.BlockItemMapper;
-import com.example.admin.service.FunctionUtil;
+import com.example.admin.common.service.FunctionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;

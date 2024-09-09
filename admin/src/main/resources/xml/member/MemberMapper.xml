@@ -38,7 +38,9 @@
         UPDATE MEMBER
         <set>
             <if test="password != null and password != ''">PASSWORD = #{password},</if>
-            <if test="email != null and email != ''">EMAIL = #{email},</if>
+            <if test="team != null and team != ''">TEAM = #{team},</if>
+            <if test="username != null and username != ''">USER_NAME = #{username},</if>
+            <if test="role != null and role != ''">ROLE = #{role},</if>
             <if test="adcb != null and adcb != ''">ADCB = #{adcb},</if>
             <if test="gdcb != null and gdcb != ''">GDCB = #{gdcb},</if>
             <if test="mdcb != null and mdcb != ''">MDCB = #{mdcb},</if>

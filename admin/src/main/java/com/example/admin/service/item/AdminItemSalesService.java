@@ -3,7 +3,7 @@ package com.example.admin.service.item;
 import com.example.admin.domain.dto.item.AdminItemSaleDto;
 import com.example.admin.domain.entity.item.AdminItemSales;
 import com.example.admin.repository.mapper.item.AdminItemSalesMapper;
-import com.example.admin.service.FunctionUtil;
+import com.example.admin.common.service.FunctionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;

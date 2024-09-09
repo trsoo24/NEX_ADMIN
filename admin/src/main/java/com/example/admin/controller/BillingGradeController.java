@@ -1,10 +1,13 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.ListResult;
+import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.billing.BillingGradeDto;
 import com.example.admin.service.billing.BillingGradeService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -18,13 +21,17 @@ public class BillingGradeController {
     private final BillingGradeService billingGradeService;
 
     @GetMapping
-    public List<BillingGradeDto> getBillingGradePage(@RequestParam("dcb") @Valid String dcb, @RequestParam("year") @Valid String year) { // 등급별 결제 현황 조회
-        return billingGradeService.searchBillingGrade(dcb, year);
+    public ListResult<BillingGradeDto> getBillingGradePage(@RequestParam("dcb") @Valid String dcb, @RequestParam("year") @Valid String year) { // 등급별 결제 현황 조회
+        List<BillingGradeDto> dtoList = billingGradeService.searchBillingGrade(dcb, year);
+
+        return new ListResult<>(true, dtoList);
     }
 
     @GetMapping("/excel")
-    public void exportExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("year") @Valid String year, HttpServletResponse response) throws IOException {
+    public StatusResult exportExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("year") @Valid String year, HttpServletResponse response) throws IOException {
         billingGradeService.exportBillingGradeExcel(dcb, year, response);
+
+        return new StatusResult(true);
     }
 
     @PostMapping

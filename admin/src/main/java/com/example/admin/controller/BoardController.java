@@ -1,5 +1,7 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.MapResult;
+import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.board.AddBoardDto;
 import com.example.admin.domain.dto.board.BoardDto;
 import com.example.admin.service.board.BoardService;
@@ -19,14 +21,17 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping
-    public ResponseEntity<Map<Integer, BoardDto>> getAllBoards() {
-        log.info("가보자고");
-        return ResponseEntity.ok(boardService.getAllBoards());
+    public MapResult<Integer, BoardDto> getAllBoards() {
+        Map<Integer, BoardDto> boardDtoMap = boardService.getAllBoards();
+
+        return new MapResult<>(true, boardDtoMap);
     }
 
 
     @PostMapping
-    public String addNewBoard(@RequestBody AddBoardDto addBoardDto) {
-        return boardService.addBoard(addBoardDto);
+    public StatusResult addNewBoard(@RequestBody AddBoardDto addBoardDto) {
+        boardService.addBoard(addBoardDto);
+
+        return new StatusResult(true);
     }
 }

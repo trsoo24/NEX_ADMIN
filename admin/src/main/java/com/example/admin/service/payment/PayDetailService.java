@@ -2,9 +2,8 @@ package com.example.admin.service.payment;
 
 import com.example.admin.domain.dto.payment.PayDetailDto;
 import com.example.admin.domain.dto.payment.field.PayDetailField;
-import com.example.admin.domain.entity.merchant.AdmMerchant;
 import com.example.admin.repository.mapper.payment.PayDetailMapper;
-import com.example.admin.service.FunctionUtil;
+import com.example.admin.common.service.FunctionUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.xssf.usermodel.XSSFRow;

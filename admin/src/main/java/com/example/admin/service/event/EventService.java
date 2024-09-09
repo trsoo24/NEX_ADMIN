@@ -4,7 +4,7 @@ import com.example.admin.domain.dto.event.DeleteEventDto;
 import com.example.admin.domain.dto.event.InsertEventDto;
 import com.example.admin.domain.entity.event.Event;
 import com.example.admin.repository.mapper.event.EventMapper;
-import com.example.admin.service.FunctionUtil;
+import com.example.admin.common.service.FunctionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;

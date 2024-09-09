@@ -11,8 +11,9 @@
 
     <select id="getReconcilList" parameterType="map" resultType="com.example.admin.domain.entity.reconcil.Reconcil">
         SELECT * FROM TB_TRANSACTION_FILE
-        WHERE FILE_TYPE = #{fileType}
-        AND STR_TO_DATE(CREATE_DATE, '%Y-%m-%d')
+        WHERE <if test="fileType != null and fileType != ''">
+            FILE_TYPE = #{fileType} AND</if>
+            STR_TO_DATE(CREATE_DATE, '%Y-%m-%d')
             BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d')
             AND STR_TO_DATE(#{endDate}, '%Y-%m-%d')
         AND DCB = #{dcb}

@@ -5,16 +5,13 @@ import com.example.admin.domain.dto.merchant.InsertMerchantInfo;
 import com.example.admin.domain.dto.merchant.field.AdmMerchantInfoField;
 import com.example.admin.domain.entity.merchant.AdmMerchant;
 import com.example.admin.repository.mapper.merchant.AdmMerchantInfoMapper;
-import com.example.admin.service.FunctionUtil;
+import com.example.admin.common.service.FunctionUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

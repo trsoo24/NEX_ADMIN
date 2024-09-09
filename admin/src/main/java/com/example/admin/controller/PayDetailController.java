@@ -1,5 +1,7 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.PageResult;
+import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.payment.PayDetailDto;
 import com.example.admin.service.payment.PayDetailService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,25 +22,29 @@ public class PayDetailController {
     private final PayDetailService payDetailService;
 
     @GetMapping("/sdcb")
-    public Page<PayDetailDto> getPayDetailPage(@RequestParam("dcb") @Valid String dcb,
-                                               @RequestParam("selectedPaymentTypes") @Valid List<String> selectedPaymentTypes,
-                                               @RequestParam("startDate") @Valid String startDate,
-                                               @RequestParam("endDate") @Valid String endDate,
-                                               @RequestParam("searchType") @Valid String searchType,
-                                               @RequestParam("keywords") @Valid List<String> keywords,
-                                               @RequestParam("page") @Valid int page,
-                                               @RequestParam("pageSize") @Valid int pageSize) {
-        return payDetailService.getPayDetailPage(dcb, selectedPaymentTypes, startDate, endDate, searchType, keywords, page, pageSize);
+    public PageResult<PayDetailDto> getPayDetailPage(@RequestParam("dcb") @Valid String dcb,
+                                                     @RequestParam("selectedPaymentTypes") @Valid List<String> selectedPaymentTypes,
+                                                     @RequestParam("startDate") @Valid String startDate,
+                                                     @RequestParam("endDate") @Valid String endDate,
+                                                     @RequestParam("searchType") @Valid String searchType,
+                                                     @RequestParam("keywords") @Valid List<String> keywords,
+                                                     @RequestParam("page") @Valid int page,
+                                                     @RequestParam("pageSize") @Valid int pageSize) {
+        Page<PayDetailDto> payDetailDtoPage = payDetailService.getPayDetailPage(dcb, selectedPaymentTypes, startDate, endDate, searchType, keywords, page, pageSize);
+
+        return new PageResult<>(true, payDetailDtoPage);
     }
 
     @GetMapping("/excel/sdcb")
-    public void exportSdcbPayDetailExcel(@RequestParam("dcb") @Valid String dcb,
-                                         @RequestParam("selectedPaymentTypes") @Valid List<String> selectedPaymentTypes,
-                                         @RequestParam("startDate") @Valid String startDate,
-                                         @RequestParam("endDate") @Valid String endDate,
-                                         @RequestParam("searchType") @Valid String searchType,
-                                         @RequestParam("keywords") @Valid List<String> keywords,
-                                         HttpServletResponse response) throws IOException, IllegalAccessException {
+    public StatusResult exportSdcbPayDetailExcel(@RequestParam("dcb") @Valid String dcb,
+                                                 @RequestParam("selectedPaymentTypes") @Valid List<String> selectedPaymentTypes,
+                                                 @RequestParam("startDate") @Valid String startDate,
+                                                 @RequestParam("endDate") @Valid String endDate,
+                                                 @RequestParam("searchType") @Valid String searchType,
+                                                 @RequestParam("keywords") @Valid List<String> keywords,
+                                                 HttpServletResponse response) throws IOException, IllegalAccessException {
         payDetailService.exportExcel(dcb, selectedPaymentTypes, startDate, endDate, searchType, keywords, response);
+
+        return new StatusResult(true);
     }
 }

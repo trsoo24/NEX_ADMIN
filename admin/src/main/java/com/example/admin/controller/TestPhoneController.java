@@ -1,6 +1,8 @@
 package com.example.admin.controller;
 
 
+import com.example.admin.common.response.PageResult;
+import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.enrollment.DeleteTestPhoneDto;
 import com.example.admin.domain.dto.enrollment.InsertTestPhoneDto;
 import com.example.admin.domain.entity.enrollment.TestPhone;
@@ -23,17 +25,23 @@ public class TestPhoneController {
     private final TestPhoneService testPhoneService;
 
     @PostMapping()
-    public void insertTestPhone(@RequestBody @Valid InsertTestPhoneDto dto) {
+    public StatusResult insertTestPhone(@RequestBody @Valid InsertTestPhoneDto dto) {
         testPhoneService.insertTestPhone(dto);
+
+        return new StatusResult(true);
     }
 
     @GetMapping()
-    public Page<TestPhone> getAllTestPhones(@RequestParam("dcb") @Valid String dcb, @RequestParam("page") @Valid Integer page, @RequestParam("pageSize") @Valid Integer pageSize) {
-        return testPhoneService.getAllTestPhones(page, pageSize, dcb);
+    public PageResult<TestPhone> getAllTestPhones(@RequestParam("dcb") @Valid String dcb, @RequestParam("page") @Valid Integer page, @RequestParam("pageSize") @Valid Integer pageSize) {
+        Page<TestPhone> testPhonePage = testPhoneService.getAllTestPhones(page, pageSize, dcb);
+
+        return new PageResult<>(true, testPhonePage);
     }
 
     @DeleteMapping()
-    public void dropTestPhone(@RequestBody @Valid DeleteTestPhoneDto dto) {
+    public StatusResult dropTestPhone(@RequestBody @Valid DeleteTestPhoneDto dto) {
         testPhoneService.deleteTestPhone(dto);
+
+        return new StatusResult(true);
     }
 }

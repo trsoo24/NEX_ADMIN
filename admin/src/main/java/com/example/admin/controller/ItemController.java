@@ -1,5 +1,7 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.PageResult;
+import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.item.AdminItemSaleDto;
 import com.example.admin.domain.entity.item.AdminItemSales;
 import com.example.admin.service.item.AdminItemSalesService;
@@ -17,12 +19,16 @@ public class ItemController {
 
 
     @PostMapping()
-    public void insertAdminItem(@RequestBody @Valid AdminItemSaleDto dto) {
+    public StatusResult insertAdminItem(@RequestBody @Valid AdminItemSaleDto dto) {
         adminItemSalesService.createAdminItem(dto);
+
+        return new StatusResult(true);
     }
 
     @GetMapping()
-    public Page<AdminItemSales> getAllItems(@RequestParam("page") @Valid int page, @RequestParam("pageSize") @Valid int pageSize, @RequestParam("dcb") @Valid String dcb) {
-        return adminItemSalesService.getAllAdminItemSales(page, pageSize, dcb);
+    public PageResult<AdminItemSales> getAllItems(@RequestParam("page") @Valid int page, @RequestParam("pageSize") @Valid int pageSize, @RequestParam("dcb") @Valid String dcb) {
+        Page<AdminItemSales> adminItemSales =  adminItemSalesService.getAllAdminItemSales(page, pageSize, dcb);
+
+        return new PageResult<>(true, adminItemSales);
     }
 }

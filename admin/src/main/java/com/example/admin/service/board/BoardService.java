@@ -49,12 +49,9 @@ public class BoardService {
         }
     }
 
-    public String addBoard(AddBoardDto addBoardDto) {
+    public void addBoard(AddBoardDto addBoardDto) {
         if (!boardReference.checkDuplicatedBoard(addBoardDto)) {
             boardMapper.insertBoard(addBoardDto);
-
-            return "게시판 목록이 추가되었습니다.";
         }
-        return "게시판 목록 추가에 실패했습니다.";
     }
 }

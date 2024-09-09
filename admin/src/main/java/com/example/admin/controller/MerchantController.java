@@ -1,5 +1,7 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.PageResult;
+import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.merchant.BlockMerchantDto;
 import com.example.admin.domain.dto.merchant.InsertMerchantInfo;
 import com.example.admin.domain.entity.merchant.AdmMerchant;
@@ -21,31 +23,39 @@ public class MerchantController {
 
 
     @PostMapping
-    public void insertMerchant(@RequestBody @Valid InsertMerchantInfo dto) {
+    public StatusResult insertMerchant(@RequestBody @Valid InsertMerchantInfo dto) {
         admMerchantService.insertMerchant(dto);
+
+        return new StatusResult(true);
     }
 
     @GetMapping
-    public Page<AdmMerchant> searchAllMerchant(@RequestParam("dcb") @Valid String dcb,
-                                               @RequestParam("merchantNm") String merchantNm,
-                                               @RequestParam("startDate") @Valid String startDate,
-                                               @RequestParam("endDate") @Valid String endDate,
-                                               @RequestParam("page") @Valid int page,
-                                               @RequestParam("pageSize") @Valid int pageSize) {
-        return admMerchantService.searchMerchantToPage(dcb, merchantNm, startDate, endDate, page, pageSize);
+    public PageResult<AdmMerchant> searchAllMerchant(@RequestParam("dcb") @Valid String dcb,
+                                                     @RequestParam("merchantNm") String merchantNm,
+                                                     @RequestParam("startDate") @Valid String startDate,
+                                                     @RequestParam("endDate") @Valid String endDate,
+                                                     @RequestParam("page") @Valid int page,
+                                                     @RequestParam("pageSize") @Valid int pageSize) {
+        Page<AdmMerchant> admMerchantPage = admMerchantService.searchMerchantToPage(dcb, merchantNm, startDate, endDate, page, pageSize);
+
+        return new PageResult<>(true, admMerchantPage);
     }
 
     @GetMapping("/excel")
-    public void exportMerchantListExcel(@RequestParam("dcb") @Valid String dcb,
+    public StatusResult exportMerchantListExcel(@RequestParam("dcb") @Valid String dcb,
                                         @RequestParam("merchantNm") String merchantNm,
                                         @RequestParam("startDate") @Valid String startDate,
                                         @RequestParam("endDate") @Valid String endDate,
                                         HttpServletResponse response) throws IllegalAccessException, IOException {
         admMerchantService.exportMerchantListExcel(dcb, merchantNm, startDate, endDate, response);
+
+        return new StatusResult(true);
     }
 
     @PutMapping("/block")
-    public void blockMerchant(@RequestBody @Valid BlockMerchantDto dto) {
+    public StatusResult blockMerchant(@RequestBody @Valid BlockMerchantDto dto) {
         admMerchantService.blockMerchant(dto);
+
+        return new StatusResult(true);
     }
 }
