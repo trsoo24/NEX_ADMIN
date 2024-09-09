@@ -1,5 +1,6 @@
 package com.example.admin.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,5 +24,13 @@ public class FunctionUtil {
 
         List<T> ts = list.subList(start, end);
         return new PageImpl<>(ts, pageable, list.size());
+    }
+
+    public <T> void exportExcel(List<T> list, HttpServletResponse response) {
+
+    }
+
+    public <T> void exportExcelForDate(List<T> list, HttpServletResponse response) {
+
     }
 }

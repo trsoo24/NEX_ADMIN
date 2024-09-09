@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.admin.repository.mapper.event.EventMapper">
+    <insert id="insertEvent" parameterType="map">
+        INSERT INTO TB_EVENT_INFO(EVENT_NAME, RED_DT, RED_ID, DCB)
+        VALUES (#{eventName}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{redId}, #{dcb})
+    </insert>
+
+    <select id="getEventList" parameterType="map" resultType="com.example.admin.domain.entity.event.Event">
+        SELECT * FROM TB_EVENT_INFO
+        WHERE DCB = #{dcb}
+        <if test="eventName != null and eventName = ''">
+            AND EVENT_NAME LIKE CONCAT('%', #{eventName}, '%')
+        </if>
+        ORDER BY STR_TO_DATE(REG_DT, '%Y-%m-%d') DESC
+    </select>
+
+    <delete id="deleteEvent" parameterType="map">
+        DELETE FROM TB_EVENT_INFO
+        WHERE DCB = #{dcb}
+        AND EVENT_NAME = #{eventName}
+    </delete>
+
+    <select id="existsEvent" parameterType="map">
+        SELECT COUNT > 0
+        FROM TB_EVENT_INFO
+        WHERE DCB = #{dcb}
+        AND EVENT_NAME = #{eventName}
+    </select>
+</mapper>
