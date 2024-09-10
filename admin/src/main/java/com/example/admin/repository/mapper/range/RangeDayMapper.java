@@ -11,4 +11,6 @@ public interface RangeDayMapper {
     void insertRangeDay(RangeDay rangeDay);
 
     List<RangeDay> getRangeDayList(Map<String, String> paramMap);
+
+    List<RangeDay> getRangeDayScheduleList(Map<String, String> map);
 }

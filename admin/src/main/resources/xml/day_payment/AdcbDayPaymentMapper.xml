@@ -9,8 +9,34 @@
     </insert>
     
     
-    <select id="getDayPaymentList" parameterType="String" resultType="com.example.admin.domain.entity.payment.DayPayment">
+    <select id="getDayPaymentList" parameterType="String" resultMap="dayPaymentResultMap">
         SELECT * FROM TB_ADCB_DAY_PAYMENT
-        WHERE STAT_DAY LIKE concat(#{date}, '%')
+        WHERE STAT_DAY LIKE concat(#{month}, '%')
     </select>
+
+    <select id="getDayPayment" parameterType="String" resultMap="dayPaymentResultMap">
+        SELECT * FROM TB_ADCB_DAY_PAYMENT
+        WHERE STAT_DAY = #{month}
+    </select>
+
+    <resultMap id="dayPaymentResultMap" type="com.example.admin.domain.entity.payment.DayPayment">
+        <result column="STAT_DAY" property="stat_day"/>
+        <result column="A_STAT" property="a_stat"/>
+        <result column="B_STAT" property="b_stat"/>
+        <result column="C_STAT" property="c_stat"/>
+        <result column="D_STAT" property="d_stat"/>
+        <result column="E_STAT" property="e_stat"/>
+        <result column="F_STAT" property="f_stat"/>
+        <result column="G_STAT" property="g_stat"/>
+        <result column="H_STAT" property="h_stat"/>
+        <result column="I_STAT" property="i_stat"/>
+        <result column="J_STAT" property="j_stat"/>
+        <result column="K_STAT" property="k_stat"/>
+        <result column="L_STAT" property="l_stat"/>
+        <result column="M_STAT" property="m_stat"/>
+        <result column="N_STAT" property="n_stat"/>
+        <result column="P_STAT" property="p_stat"/>
+        <result column="R_STAT" property="r_stat"/>
+        <result column="T_STAT" property="t_stat"/>
+    </resultMap>
 </mapper>

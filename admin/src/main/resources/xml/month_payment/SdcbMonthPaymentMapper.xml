@@ -5,12 +5,38 @@
 <mapper namespace="com.example.admin.repository.mapper.monthpayment.SdcbMonthPaymentMapper">
     <insert id="insertMonthPayment" parameterType="com.example.admin.domain.entity.payment.MonthPayment">
         INSERT INTO TB_SDCB_MONTH_PAYMENT(STAT_MONTH, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT, H_STAT, I_STAT, J_STAT, K_STAT, L_STAT, M_STAT, N_STAT, P_STAT, R_STAT, T_STAT)
-        VALUES (#{statMonth}, #{aStat}, #{bStat}, #{cStat}, #{dStat}, #{eStat}, #{fStat}, #{gStat}, #{hStat}, #{iStat}, #{jStat}, #{kStat}, #{lStat}, #{mStat}, #{nStat}, #{pStat} ,#{rStat} , #{tStat})
+        VALUES (#{stat_month}, #{a_stat}, #{b_stat}, #{c_stat}, #{d_stat}, #{e_stat}, #{f_stat}, #{g_stat}, #{h_stat}, #{i_stat}, #{j_stat}, #{k_stat}, #{l_stat}, #{m_stat}, #{n_stat}, #{p_stat} ,#{r_stat} , #{t_stat})
     </insert>
 
 
-    <select id="getMonthPaymentList" parameterType="String" resultType="com.example.admin.domain.entity.payment.MonthPayment">
+    <select id="getMonthPaymentList" parameterType="String" resultMap="monthPaymentResultMap">
         SELECT * FROM TB_SDCB_MONTH_PAYMENT
         WHERE STAT_MONTH LIKE concat(#{year}, '%')
     </select>
+
+    <select id="getMonthPayment" parameterType="String" resultMap="monthPaymentResultMap">
+        SELECT * FROM TB_SDCB_MONTH_PAYMENT
+        WHERE STAT_MONTH = #{year}
+    </select>
+
+    <resultMap id="monthPaymentResultMap" type="com.example.admin.domain.entity.payment.MonthPayment">
+        <result column="STAT_MONTH" property="stat_month"/>
+        <result column="A_STAT" property="a_stat"/>
+        <result column="B_STAT" property="b_stat"/>
+        <result column="C_STAT" property="c_stat"/>
+        <result column="D_STAT" property="d_stat"/>
+        <result column="E_STAT" property="e_stat"/>
+        <result column="F_STAT" property="f_stat"/>
+        <result column="G_STAT" property="g_stat"/>
+        <result column="H_STAT" property="h_stat"/>
+        <result column="I_STAT" property="i_stat"/>
+        <result column="J_STAT" property="j_stat"/>
+        <result column="K_STAT" property="k_stat"/>
+        <result column="L_STAT" property="l_stat"/>
+        <result column="M_STAT" property="m_stat"/>
+        <result column="N_STAT" property="n_stat"/>
+        <result column="P_STAT" property="p_stat"/>
+        <result column="R_STAT" property="r_stat"/>
+        <result column="T_STAT" property="t_stat"/>
+    </resultMap>
 </mapper>

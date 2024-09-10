@@ -30,13 +30,29 @@ public class MonthPaymentService {
     private final PdcbMonthPaymentMapper pdcbMonthPaymentMapper;
     private final SdcbMonthPaymentMapper sdcbMonthPaymentMapper;
 
+    public MonthPayment getMonthPayment(String dcb, String year) {
+        MonthPayment monthPayment = new MonthPayment();
+        switch (dcb.toLowerCase()) {
+            case "adcb" -> monthPayment = adcbMonthPaymentMapper.getMonthPayment(year);
+            case "gdcb" -> monthPayment = gdcbMonthPaymentMapper.getMonthPayment(year);
+            case "mdcb" -> monthPayment = mdcbMonthPaymentMapper.getMonthPayment(year);
+            case "msdcb" -> monthPayment = msdcbMonthPaymentMapper.getMonthPayment(year);
+            case "ndcb" -> monthPayment = ndcbMonthPaymentMapper.getMonthPayment(year);
+            case "pdcb" -> monthPayment = pdcbMonthPaymentMapper.getMonthPayment(year);
+            case "sdcb" -> monthPayment = sdcbMonthPaymentMapper.getMonthPayment(year);
+        }
+
+        return monthPayment;
+    }
+
     public Map<String, List<Object>> getMonthPaymentDtoForm(String date, String dcb) {
         log.info("MonthPayment 조회 API");
         Map<String, MonthPayment> valueMap = new LinkedHashMap<>();
         Map<String, List<Object>> dtoMap = new LinkedHashMap<>();
 
         MonthPayment total = MonthPayment.toTotal();
-        getMonthPaymentList(valueMap, date, dcb, total);
+        List<MonthPayment> monthPaymentList = getMonthPaymentList(date, dcb);
+        calculateMap(valueMap, monthPaymentList, total);
 
         List<MonthPaymentDto> monthPaymentDtoList = generateDtoList(valueMap, total);
 
@@ -45,12 +61,12 @@ public class MonthPaymentService {
         return dtoMap;
     }
 
-    private void getMonthPaymentList(Map<String, MonthPayment> valueMap, String year, String dcb, MonthPayment total) {
+    private List<MonthPayment> getMonthPaymentList(String year, String dcb) {
         // TODO DCB 조건값 추가
         String[] dcbArr = dcb.split(",");
+        List<MonthPayment> monthPaymentList = new ArrayList<>();
 
         for (String idx : dcbArr) {
-            List<MonthPayment> monthPaymentList = new ArrayList<>();
             switch (idx.toLowerCase()) {
                 case "adcb" -> monthPaymentList = adcbMonthPaymentMapper.getMonthPaymentList(year);
                 case "gdcb" -> monthPaymentList = gdcbMonthPaymentMapper.getMonthPaymentList(year);
@@ -60,9 +76,9 @@ public class MonthPaymentService {
                 case "pdcb" -> monthPaymentList = pdcbMonthPaymentMapper.getMonthPaymentList(year);
                 case "sdcb" -> monthPaymentList = sdcbMonthPaymentMapper.getMonthPaymentList(year);
             }
-
-            calculateMap(valueMap, monthPaymentList, total);
         }
+
+        return monthPaymentList;
     }
 
     private List<MonthPaymentDto> generateDtoList(Map<String, MonthPayment> valueMap, MonthPayment total) {

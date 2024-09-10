@@ -21,6 +21,7 @@ import java.util.*;
 public class PayDetailService {
     private final PayDetailMapper payDetailMapper;
     private final FunctionUtil functionUtil;
+
     public Page<PayDetailDto> getPayDetailPage(String dcb, List<String> selectedPaymentTypes,
                                                String startDate, String endDate,
                                                String searchType, List<String> keywords,

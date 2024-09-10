@@ -12,7 +12,8 @@ public class Event {
 //    private String fileName; // 원본 파일명
 //    private String url; // 이벤트 제공 URL
     private String regDt;
-    private String redId;
+    private String regId;
     private String updDt;
     private String updId;
+    private String dcb;
 }

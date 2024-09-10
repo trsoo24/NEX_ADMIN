@@ -10,51 +10,51 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RangeDay {
-    private String statDay;
-    private String aStat;
-    private Double bStat;
-    private Double cStat;
-    private Double dStat;
-    private Double eStat;
-    private Double fStat;
-    private Double gStat;
+    private String stat_day;
+    private String a_stat;
+    private Double b_stat;
+    private Double c_stat;
+    private Double d_stat;
+    private Double e_stat;
+    private Double f_stat;
+    private Double g_stat;
 
     public void calculateFStat() {
-        this.fStat = this.dStat - this.eStat;
+        this.f_stat = this.d_stat - this.e_stat;
     }
 
     public void addValue(double value) {
-        this.bStat++;
-        this.cStat++;
+        this.b_stat++;
+        this.c_stat++;
         if (value >= 0) {
-            this.dStat += value;
+            this.d_stat += value;
         } else {
-            this.eStat += value;
+            this.e_stat += value;
         }
-        this.fStat += value;
+        this.f_stat += value;
     }
 
     public void calculateGStat() {
-        this.gStat = this.dStat / this.bStat;
+        this.g_stat = this.d_stat / this.b_stat;
     }
 
     public void roundDFG() {
-        this.dStat = (double) Math.round(this.dStat);
-        this.fStat = (double) Math.round(this.fStat);
-        this.gStat = (double) Math.round(this.gStat);
+        this.d_stat = (double) Math.round(this.d_stat);
+        this.f_stat = (double) Math.round(this.f_stat);
+        this.g_stat = (double) Math.round(this.g_stat);
     }
 
     public static RangeDay setDefault(String date, String aStat) {
         double def = 0;
         return RangeDay.builder()
-                .statDay(date)
-                .aStat(aStat)
-                .bStat(def)
-                .cStat(def)
-                .dStat(def)
-                .eStat(def)
-                .fStat(def)
-                .gStat(def)
+                .stat_day(date)
+                .a_stat(aStat)
+                .b_stat(def)
+                .c_stat(def)
+                .d_stat(def)
+                .e_stat(def)
+                .f_stat(def)
+                .g_stat(def)
                 .build();
     }
 }

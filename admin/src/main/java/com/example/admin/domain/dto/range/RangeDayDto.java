@@ -2,7 +2,6 @@ package com.example.admin.domain.dto.range;
 
 import com.example.admin.domain.dto.range.field.AStatRange;
 import com.example.admin.domain.entity.range.RangeDay;
-import com.example.admin.domain.entity.range.RangeDay;
 import lombok.*;
 
 import java.lang.reflect.Field;
@@ -13,7 +12,7 @@ import java.lang.reflect.Field;
 @ToString
 @Builder
 public class RangeDayDto {
-    private String statDay;
+    private String stat_day;
     private String a_stat;
     private Double b_stat;
     private Double c_stat;
@@ -24,14 +23,14 @@ public class RangeDayDto {
 
     public static RangeDayDto toDto (RangeDay rangeDay) throws IllegalAccessException {
         return RangeDayDto.builder()
-                .statDay(rangeDay.getStatDay())
-                .a_stat(aStatToEnum(rangeDay.getAStat()))
-                .b_stat(rangeDay.getBStat())
-                .c_stat(rangeDay.getCStat())
-                .d_stat(rangeDay.getDStat())
-                .e_stat(rangeDay.getEStat())
-                .f_stat(rangeDay.getFStat())
-                .g_stat(rangeDay.getGStat())
+                .stat_day(rangeDay.getStat_day())
+                .a_stat(aStatToEnum(rangeDay.getA_stat()))
+                .b_stat(rangeDay.getB_stat())
+                .c_stat(rangeDay.getC_stat())
+                .d_stat(rangeDay.getD_stat())
+                .e_stat(rangeDay.getE_stat())
+                .f_stat(rangeDay.getF_stat())
+                .g_stat(rangeDay.getG_stat())
                 .build();
     }
 
@@ -39,7 +38,7 @@ public class RangeDayDto {
         Field[] enumFields = AStatRange.class.getDeclaredFields();
 
         for (Field enumField : enumFields) {
-            if (((AStatRange) enumField.get(null)).getAStat().equals(aStat)) {
+            if (((AStatRange) enumField.get(null)).getA_stat().equals(aStat)) {
                 return ((AStatRange) enumField.get(null)).getRange();
             }
         }

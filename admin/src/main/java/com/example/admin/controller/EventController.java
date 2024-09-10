@@ -4,8 +4,10 @@ import com.example.admin.common.response.PageResult;
 import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.event.DeleteEventDto;
 import com.example.admin.domain.dto.event.InsertEventDto;
+import com.example.admin.domain.dto.event.UpdateEventDto;
 import com.example.admin.domain.entity.event.Event;
 import com.example.admin.service.event.EventService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,8 +21,8 @@ public class EventController {
     private final EventService eventService;
 
     @PostMapping("/gdcb")
-    public StatusResult insertEvent(@RequestBody @Valid InsertEventDto dto) {
-        eventService.insertEvent(dto);
+    public StatusResult insertEvent(HttpServletRequest request, @RequestBody @Valid InsertEventDto dto) {
+        eventService.insertEvent(request, dto);
 
         return new StatusResult(true);
     }
@@ -36,8 +38,15 @@ public class EventController {
     }
 
     @DeleteMapping("/gdcb")
-    public StatusResult deletePage(DeleteEventDto dto) {
+    public StatusResult deletePage(@RequestBody @Valid DeleteEventDto dto) {
         eventService.deleteEvent(dto);
+
+        return new StatusResult(true);
+    }
+
+    @PutMapping
+    public StatusResult updateEvent(HttpServletRequest request, @RequestBody @Valid UpdateEventDto dto) {
+        eventService.updateEvent(request, dto);
 
         return new StatusResult(true);
     }

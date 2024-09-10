@@ -24,7 +24,15 @@ public class RangeDayService {
     private final String[] A_STAT_ARRAY = {"1", "2", "3", "4", "5", "O"};
     private final Double[] AVERAGE_VALUE_ARRAY = {100000.0, 200000.0, 300000.0, 400000.0, 500000.0, 810000.0};
 
-    public Map<String, List<RangeDayDto>> getRangeDayList(String startDate, String endDate, String dcb) throws IllegalAccessException {
+    public List<RangeDay> getRangeDayList(String day, String dcb) {
+        Map<String, String> paramMap = new HashMap<>(); // 요청 쿼리
+        paramMap.put("day", day);
+        paramMap.put("dcb", dcb);
+
+        return rangeDayMapper.getRangeDayScheduleList(paramMap);
+    }
+
+    public Map<String, List<RangeDayDto>> getRangeDayMap(String startDate, String endDate, String dcb) throws IllegalAccessException {
         Map<String, String> paramMap = new HashMap<>(); // 요청 쿼리
         paramMap.put("startDate", startDate);
         paramMap.put("endDate", endDate);
@@ -34,8 +42,8 @@ public class RangeDayService {
 
         for (RangeDay rangeDay : rangeDayList) {
             List<RangeDayDto> dtoList = new ArrayList<>();
-            if (responseMap.containsKey(rangeDay.getStatDay())) {
-                dtoList = responseMap.get(rangeDay.getStatDay());
+            if (responseMap.containsKey(rangeDay.getStat_day())) {
+                dtoList = responseMap.get(rangeDay.getStat_day());
             }
 
             RangeDayDto dto = RangeDayDto.toDto(rangeDay);
@@ -45,7 +53,7 @@ public class RangeDayService {
             } else {
                 dtoList.add(dto);
             }
-            responseMap.put(rangeDay.getStatDay(), dtoList);
+            responseMap.put(rangeDay.getStat_day(), dtoList);
         }
         return responseMap;
     }
@@ -113,7 +121,7 @@ public class RangeDayService {
 
     private RangeDay findRangeDay(String date, String aStat, List<RangeDay> rangeDayList) {
         for (RangeDay rangeDay : rangeDayList) {
-            if (rangeDay.getStatDay().equals(date) && rangeDay.getAStat().equals(aStat)) {
+            if (rangeDay.getStat_day().equals(date) && rangeDay.getA_stat().equals(aStat)) {
                 return rangeDay;
             }
         }
@@ -135,20 +143,20 @@ public class RangeDayService {
         int rowIndex = 2;
         String lastStatDay = null;
         int startMergeRowIndex = -1;
-        Map<String, List<RangeDayDto>> rangeDayMap = getRangeDayList(startDate, endDate, dcb);
+        Map<String, List<RangeDayDto>> rangeDayMap = getRangeDayMap(startDate, endDate, dcb);
         for (Map.Entry<String, List<RangeDayDto>> entry : rangeDayMap.entrySet()) {
             List<RangeDayDto> rangeDayDtoList = entry.getValue();
             for (RangeDayDto dto : rangeDayDtoList) {
                 XSSFRow row = sheet.createRow(rowIndex++);
-                if (dto.getStatDay().equals(lastStatDay)) {
+                if (dto.getStat_day().equals(lastStatDay)) {
                     row.createCell(0).setCellValue("");
                 } else {
                     if (startMergeRowIndex != -1) {
                         sheet.addMergedRegion(new CellRangeAddress(startMergeRowIndex, rowIndex - 2, 0, 0));
                     }
                     startMergeRowIndex = rowIndex - 1;
-                    row.createCell(0).setCellValue(dto.getStatDay());
-                    lastStatDay = dto.getStatDay();
+                    row.createCell(0).setCellValue(dto.getStat_day());
+                    lastStatDay = dto.getStat_day();
                 }
                 for (int i = 1; i < rangeDayFields.length; i++) {
                     Field field = rangeDayDtoFields[i];

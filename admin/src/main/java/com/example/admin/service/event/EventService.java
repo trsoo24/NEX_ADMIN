@@ -1,10 +1,14 @@
 package com.example.admin.service.event;
 
+import com.example.admin.config.filter.CookieUtil;
+import com.example.admin.config.filter.JwtTokenProvider;
 import com.example.admin.domain.dto.event.DeleteEventDto;
 import com.example.admin.domain.dto.event.InsertEventDto;
+import com.example.admin.domain.dto.event.UpdateEventDto;
 import com.example.admin.domain.entity.event.Event;
 import com.example.admin.repository.mapper.event.EventMapper;
 import com.example.admin.common.service.FunctionUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -18,12 +22,18 @@ import java.util.Map;
 public class EventService {
     private final EventMapper eventMapper;
     private final FunctionUtil functionUtil;
+    private final CookieUtil cookieUtil;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public void insertEvent(InsertEventDto dto) {
+    public void insertEvent(HttpServletRequest request, InsertEventDto dto) {
+//        String token = cookieUtil.getAccessToken(request).getValue();
+//        String username = jwtTokenProvider.getUsernameByToken(token);
+
         Map<String, String> map = new HashMap<>();
         map.put("eventName", dto.getEventName());
-        // cookie 에서 token 으로 값 넣기
         map.put("regId", "");
+        // cookie 에서 token 으로 값 넣기
+//        map.put("regId", username);
         map.put("dcb", dto.getDcb());
 
         eventMapper.insertEvent(map);
@@ -34,19 +44,13 @@ public class EventService {
     }
 
     public void deleteEvent(DeleteEventDto dto) {
-        for (String eventName : dto.getEvents()) {
+        for (String eventName : dto.getEventNames()) {
             Map<String, String> map = new HashMap<>();
             map.put("eventName", eventName);
             map.put("dcb", dto.getDcb());
 
-            if (existsEvent(map)) {
-                eventMapper.deleteEvent(map);
-            }
+            eventMapper.deleteEvent(map);
         }
-    }
-
-    private boolean existsEvent(Map<String, String> map) {
-        return eventMapper.existsEvent(map);
     }
 
     private List<Event> getEventList(String dcb, String eventName) {
@@ -55,5 +59,16 @@ public class EventService {
         map.put("dcb", dcb);
 
         return eventMapper.getEventList(map);
+    }
+
+    public void updateEvent(HttpServletRequest request, UpdateEventDto updateEventDto) {
+        String token = cookieUtil.getAccessToken(request).getValue();
+        String username = jwtTokenProvider.getUsernameByToken(token);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("eventName", updateEventDto.getEventName());
+        map.put("username", username);
+
+        eventMapper.updateEvent(map);
     }
 }

@@ -9,4 +9,5 @@ import java.util.List;
 public interface MdcbDayPaymentMapper {
     void insertDayPayment(DayPayment dayPayment);
     List<DayPayment> getDayPaymentList(String date);
+    DayPayment getDayPayment(String month);
 }

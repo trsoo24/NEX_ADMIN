@@ -5,14 +5,14 @@
 
 <mapper namespace="com.example.admin.repository.mapper.event.EventMapper">
     <insert id="insertEvent" parameterType="map">
-        INSERT INTO TB_EVENT_INFO(EVENT_NAME, RED_DT, RED_ID, DCB)
-        VALUES (#{eventName}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{redId}, #{dcb})
+        INSERT INTO TB_EVENT_INFO(EVENT_NAME, REG_DT, REG_ID, DCB)
+        VALUES (#{eventName}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{regId}, #{dcb})
     </insert>
 
     <select id="getEventList" parameterType="map" resultType="com.example.admin.domain.entity.event.Event">
         SELECT * FROM TB_EVENT_INFO
         WHERE DCB = #{dcb}
-        <if test="eventName != null and eventName = ''">
+        <if test="eventName != null and eventName != ''">
             AND EVENT_NAME LIKE CONCAT('%', #{eventName}, '%')
         </if>
         ORDER BY STR_TO_DATE(REG_DT, '%Y-%m-%d') DESC
@@ -23,11 +23,12 @@
         WHERE DCB = #{dcb}
         AND EVENT_NAME = #{eventName}
     </delete>
-
-    <select id="existsEvent" parameterType="map">
-        SELECT COUNT > 0
-        FROM TB_EVENT_INFO
-        WHERE DCB = #{dcb}
-        AND EVENT_NAME = #{eventName}
-    </select>
+    
+    <update id="updateEvent" parameterType="map">
+        UPDATE TB_EVENT_INFO
+        SET <if test="eventName != null and eventName != ''">
+                EVENT_NAME = #{eventName} AND
+            </if> UPD_DT = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+        AND UPD_ID = #{updId}
+    </update>
 </mapper>

@@ -1,0 +1,29 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.admin.repository.mapper.item.ProductInfoMapper">
+    <insert id="insertProductInfo" parameterType="com.example.admin.domain.entity.item.Product">
+        INSERT INTO TB_PRODUCT(PRODUCT_NAME, STD_DT, PRICE, SELLER_COMPANY, SELLER_NAME, BLOCK_YN, REG_DT, REG_ID, UPD_DT, UPD_ID, BLOCK_DT, BLOCK_ID, DCB)
+        VALUES (#{productName}, #{stdDt}, #{price}, #{sellerCompany}, #{sellerName}, #{blockYn}, STR_TO_DATE(#{regDt}, '%Y-%m-%d'), #{regId}, STR_TO_DATE(#{updDt}, '%Y-%m-%d'), #{updId}, STR_TO_DATE(#{blockDt}, '%Y-%m-%d'), #{blockId}, #{dcb})
+    </insert>
+
+
+    <select id="existsProduct" parameterType="String" resultType="com.example.admin.domain.entity.payment.MonthPayment">
+        SELECT COUNT(*) FROM TB_PRODUCT
+        WHERE PRODUCT_NAME = #{productName}
+    </select>
+
+    <select id="getAllProductInfo" parameterType="map" resultType="com.example.admin.domain.dto.item.ProductInfo">
+        SELECT PRODUCT_NAME, SELLER_COMPANY, STD_DT
+        FROM TB_PRODUCT
+        WHERE
+        <if test="productName != null and productName != ''">
+            PRODUCT_NAME LIKE CONCAT('%', #{productName}, '%') AND
+        </if>
+            STD_DT BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d') AND STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+        <if test="stdDt != null and stdDt != ''">
+            ORDER BY STD_DT
+        </if>
+    </select>
+</mapper>

@@ -10,5 +10,7 @@ import java.util.List;
 public interface AdcbDayPaymentMapper {
     void insertDayPayment(DayPayment dayPayment);
 
-    List<DayPayment> getDayPaymentList(String date);
+    List<DayPayment> getDayPaymentList(String month);
+
+    DayPayment getDayPayment(String month);
 }

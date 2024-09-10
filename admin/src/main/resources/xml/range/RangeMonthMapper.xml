@@ -5,11 +5,27 @@
 <mapper namespace="com.example.admin.repository.mapper.range.RangeMonthMapper">
     <insert id="insertRangeMonth">
         INSERT INTO ADCB_STATS_RANGE_MONTH(STAT_MONTH, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT)
-        VALUES (#{statMonth}, #{aStat}, #{bStat}, #{cStat}, #{dStat}, #{eStat}, #{fStat}, #{gStat})
+        VALUES (#{stat_month}, #{a_stat}, #{b_stat}, #{c_stat}, #{d_stat}, #{e_stat}, #{f_stat}, #{g_stat})
     </insert>
 
-    <select id="getRangeMonthList" parameterType="map" resultType="com.example.admin.domain.entity.range.RangeMonth">
-        SELECT STAT_MONTH, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT FROM ADCB_STATS_RANGE_MONTH
+    <select id="getRangeMonthList" parameterType="map" resultMap="rangeMonthMap">
+        SELECT * FROM ADCB_STATS_RANGE_MONTH
         WHERE STAT_MONTH BETWEEN #{startDate} AND #{endDate};
     </select>
+
+    <select id="getRangeMonthScheduleList" parameterType="map" resultMap="rangeMonthMap">
+        SELECT * FROM ADCB_STATS_RANGE_MONTH
+        WHERE STAT_MONTH = #{month};
+    </select>
+
+    <resultMap id="rangeMonthMap" type="com.example.admin.domain.entity.range.RangeMonth">
+        <result column="STAT_MONTH" property="stat_month"/>
+        <result column="A_STAT" property="a_stat"/>
+        <result column="B_STAT" property="b_stat"/>
+        <result column="C_STAT" property="c_stat"/>
+        <result column="D_STAT" property="d_stat"/>
+        <result column="E_STAT" property="e_stat"/>
+        <result column="F_STAT" property="f_stat"/>
+        <result column="G_STAT" property="g_stat"/>
+    </resultMap>
 </mapper>

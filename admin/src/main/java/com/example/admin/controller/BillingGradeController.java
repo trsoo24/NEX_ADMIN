@@ -3,6 +3,7 @@ package com.example.admin.controller;
 import com.example.admin.common.response.ListResult;
 import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.billing.BillingGradeDto;
+import com.example.admin.domain.entity.billing.BillingGrade;
 import com.example.admin.service.billing.BillingGradeService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -26,6 +27,12 @@ public class BillingGradeController {
 
         return new ListResult<>(true, dtoList);
     }
+
+    @GetMapping("/2")
+    public List<BillingGrade> getBillingGradeList(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) { // 등급별 결제 현황 조회
+        return billingGradeService.getBillingGrade(dcb, month);
+    }
+
 
     @GetMapping("/excel")
     public StatusResult exportExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("year") @Valid String year, HttpServletResponse response) throws IOException {

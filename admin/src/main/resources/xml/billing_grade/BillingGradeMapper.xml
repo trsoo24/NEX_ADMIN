@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.repository.mapper.billinggrade.BillingGradeMapper">
-    <select id="getBillingGrade" parameterType="map" resultType="com.example.admin.domain.dto.billing.BillingGradeDto">
+    <select id="getBillingGradeDto" parameterType="map" resultType="com.example.admin.domain.dto.billing.BillingGradeDto">
         SELECT CUST_GRD_CD, ALL_ACE_CNT, ALL_CNT, ALL_AMOUNT, PAID_ACE_CNT, PAID_CNT, PAID_AMOUNT, UNPAID_ACE_CNT, UNPAID_CNT, UNPAID_AMOUNT
         FROM TB_BILLING_GRADE
         WHERE DCB = #{dcb} AND STAT_YYMM = #{yyMm}
@@ -13,4 +13,9 @@
         INSERT INTO TB_BILLING_GRADE(CUST_GRD_CD, STAT_YYMM, REG_DT, ALL_ACE_CNT, ALL_CNT, ALL_AMOUNT, PAID_ACE_CNT, PAID_CNT, PAID_AMOUNT, UNPAID_ACE_CNT, UNPAID_CNT, UNPAID_AMOUNT, DCB)
         VALUES (#{custGrdCd}, #{statYyMm}, #{regDt},#{allAceCnt}, #{allCnt}, #{allAmount}, #{paidAceCnt}, #{paidCnt}, #{paidAmount}, #{unpaidAceCnt}, #{unpaidCnt}, #{unpaidAmount}, #{dcb})
     </insert>
+
+    <select id="getBillingGrade" parameterType="map" resultType="com.example.admin.domain.entity.billing.BillingGrade">
+        SELECT * FROM TB_BILLING_GRADE
+        WHERE DCB = #{dcb} AND STAT_YYMM = #{yyMm}
+    </select>
 </mapper>

@@ -10,7 +10,6 @@ import java.util.Map;
 public interface EventMapper {
     void insertEvent(Map<String, String> map);
     List<Event> getEventList(Map<String, String> map);
-
+    void updateEvent(Map<String, String> map);
     void deleteEvent(Map<String, String> map);
-    boolean existsEvent(Map<String, String> map);
 }

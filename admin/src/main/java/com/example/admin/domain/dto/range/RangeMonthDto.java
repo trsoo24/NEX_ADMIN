@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
 @ToString
 @Builder
 public class RangeMonthDto {
-    private String statMonth;
+    private String stat_month;
     private String a_stat;
     private Double b_stat;
     private Double c_stat;
@@ -23,14 +23,14 @@ public class RangeMonthDto {
 
     public static RangeMonthDto toDto (RangeMonth rangeMonth) throws IllegalAccessException {
         return RangeMonthDto.builder()
-                .statMonth(rangeMonth.getStatMonth())
-                .a_stat(aStatToEnum(rangeMonth.getAStat()))
-                .b_stat(rangeMonth.getBStat())
-                .c_stat(rangeMonth.getCStat())
-                .d_stat(rangeMonth.getDStat())
-                .e_stat(rangeMonth.getEStat())
-                .f_stat(rangeMonth.getFStat())
-                .g_stat(rangeMonth.getGStat())
+                .stat_month(rangeMonth.getStat_month())
+                .a_stat(aStatToEnum(rangeMonth.getA_stat()))
+                .b_stat(rangeMonth.getB_stat())
+                .c_stat(rangeMonth.getC_stat())
+                .d_stat(rangeMonth.getD_stat())
+                .e_stat(rangeMonth.getE_stat())
+                .f_stat(rangeMonth.getF_stat())
+                .g_stat(rangeMonth.getG_stat())
                 .build();
     }
 
@@ -38,7 +38,7 @@ public class RangeMonthDto {
         Field[] enumFields = AStatRange.class.getDeclaredFields();
 
         for (Field enumField : enumFields) {
-            if (((AStatRange) enumField.get(null)).getAStat().equals(aStat)) {
+            if (((AStatRange) enumField.get(null)).getA_stat().equals(aStat)) {
                 return ((AStatRange) enumField.get(null)).getRange();
             }
         }

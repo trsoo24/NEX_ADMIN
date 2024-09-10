@@ -10,4 +10,5 @@ public interface MdcbMonthPaymentMapper {
     void insertMonthPayment(MonthPayment monthPayment);
 
     List<MonthPayment> getMonthPaymentList(String year);
+    MonthPayment getMonthPayment(String year);
 }

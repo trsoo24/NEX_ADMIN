@@ -1,7 +1,6 @@
 package com.example.admin.service.billing;
 
 import com.example.admin.domain.dto.billing.BillingGradeDto;
-import com.example.admin.domain.dto.billing.field.BillingGradeField;
 import com.example.admin.domain.entity.billing.BillingGrade;
 import com.example.admin.repository.mapper.billinggrade.BillingGradeMapper;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,6 +25,14 @@ public class BillingGradeService {
     private final String[] categories = {"전체", "정상", "연체"};
     private final String[] descriptions = {"청구 대상(명)", "청구 건수(건)", "청구액(원)"};
 
+    public List<BillingGrade> getBillingGrade(String dcb, String yyMm) {
+        Map<String, String> requestMap = new HashMap<String, String>();
+        requestMap.put("dcb", dcb.toUpperCase());
+        requestMap.put("yyMm", yyMm);
+
+        return billingGradeMapper.getBillingGrade(requestMap);
+    }
+
     // 등급별 월별 청구 현황 조회
     public List<BillingGradeDto> searchBillingGrade(String dcb, String yyMm) {
         List<BillingGradeDto> billingGradeDtoList = sortList(getBillingGradeList(dcb, yyMm));
@@ -47,7 +54,7 @@ public class BillingGradeService {
         Map<String, String> requestMap = new HashMap<String, String>();
         requestMap.put("dcb", dcb.toUpperCase());
         requestMap.put("yyMm", yyMm);
-        return billingGradeMapper.getBillingGrade(requestMap);
+        return billingGradeMapper.getBillingGradeDto(requestMap);
     }
 
     // 등급별 월 청구 현황 엑셀 생성

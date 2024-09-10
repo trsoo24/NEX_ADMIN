@@ -11,5 +11,5 @@ import java.util.List;
 @AllArgsConstructor
 public class DeleteEventDto {
     private String dcb;
-    private List<String> events;
+    private List<String> eventNames;
 }

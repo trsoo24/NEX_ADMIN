@@ -37,13 +37,20 @@ public class DayPaymentService {
     private final CookieUtil cookieUtil;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public List<DayPayment> getDayPaymentDtoList(String dcb, String month) {
-        Map<String, DayPayment> valueMap = new LinkedHashMap<>();
+    public DayPayment getDayPayment(String dcb, String month) {
+        DayPayment dayPayment = new DayPayment();
 
-        DayPayment total = DayPayment.toTotal();
-        getDayPaymentList(valueMap, month, dcb, total);
+        switch (dcb.toLowerCase()) {
+            case "adcb" -> dayPayment = adcbDayPaymentMapper.getDayPayment(month);
+            case "gdcb" -> dayPayment = gdcbDayPaymentMapper.getDayPayment(month);
+            case "mdcb" -> dayPayment = mdcbDayPaymentMapper.getDayPayment(month);
+            case "msdcb" -> dayPayment = msdcbDayPaymentMapper.getDayPayment(month);
+            case "ndcb" -> dayPayment = ndcbDayPaymentMapper.getDayPayment(month);
+            case "pdcb" -> dayPayment = pdcbDayPaymentMapper.getDayPayment(month);
+            case "sdcb" -> dayPayment = sdcbDayPaymentMapper.getDayPayment(month);
+        }
 
-        return new ArrayList<>(valueMap.values());
+        return dayPayment;
     }
 
     public Map<String, List<Object>> getDayPaymentDtoForm(String dcb, String month) {
@@ -52,7 +59,10 @@ public class DayPaymentService {
        Map<String, List<Object>> dtoMap = new LinkedHashMap<>();
 
        DayPayment total = DayPayment.toTotal();
-       getDayPaymentList(valueMap, month, dcb, total);
+       List<DayPayment> dayPaymentList = getDayPaymentList(month, dcb);
+
+       calculateMap(valueMap, dayPaymentList, total);
+
 
        List<DayPaymentDto> dayPaymentDtoList = generateDtoList(valueMap, total);
 
@@ -61,7 +71,7 @@ public class DayPaymentService {
        return dtoMap;
     }
 
-    private void getDayPaymentList(Map<String, DayPayment> valueMap, String month, String dcb, DayPayment total) {
+    private List<DayPayment> getDayPaymentList(String month, String dcb) {
         log.info("getDayPaymentList");
 
         List<DayPayment> dayPaymentList = new ArrayList<>();
@@ -76,7 +86,7 @@ public class DayPaymentService {
             case "sdcb" -> dayPaymentList = sdcbDayPaymentMapper.getDayPaymentList(month);
         }
 
-        calculateMap(valueMap, dayPaymentList, total);
+        return dayPaymentList;
     }
 
     private List<DayPaymentDto> generateDtoList(Map<String, DayPayment> valueMap, DayPayment total) {
@@ -250,7 +260,8 @@ public class DayPaymentService {
 
         Map<String, DayPayment> valueMap = new LinkedHashMap<>();
         DayPayment total = DayPayment.toTotal();
-        getDayPaymentList(valueMap, month, dcb, total);
+        List<DayPayment> dayPaymentList = getDayPaymentList(month, dcb);
+        calculateMap(valueMap, dayPaymentList, total);
 
         List<DayPaymentDto> dayPaymentDtoList = generateDtoList(valueMap, total);
 

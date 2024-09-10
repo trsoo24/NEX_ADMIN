@@ -26,7 +26,14 @@ public class RangeMonthService {
     private final String[] A_STAT_ARRAY = {"1", "2", "3", "4", "5", "O"};
     private final Double[] AVERAGE_VALUE_ARRAY = {100000.0, 200000.0, 300000.0, 400000.0, 500000.0, 810000.0};
 
-    public Map<String, List<RangeMonthDto>> getRangeMonthList(String startDate, String endDate, String dcb) throws IllegalAccessException {
+    public List<RangeMonth> getRangeMonthList(String month, String dcb) {
+        Map<String, String> paramMap = new HashMap<>(); // 요청 쿼리
+        paramMap.put("month", month);
+        paramMap.put("dcb", dcb);
+
+        return rangeMonthMapper.getRangeMonthScheduleList(paramMap);
+    }
+    public Map<String, List<RangeMonthDto>> getRangeMonthMap(String startDate, String endDate, String dcb) throws IllegalAccessException {
         Map<String, String> paramMap = new HashMap<>(); // 요청 쿼리
         paramMap.put("startDate", startDate);
         paramMap.put("endDate", endDate);
@@ -36,8 +43,8 @@ public class RangeMonthService {
 
         for (RangeMonth rangeMonth : rangeMonthList) {
             List<RangeMonthDto> dtoList = new ArrayList<>();
-            if (responseMap.containsKey(rangeMonth.getStatMonth())) {
-                dtoList = responseMap.get(rangeMonth.getStatMonth());
+            if (responseMap.containsKey(rangeMonth.getStat_month())) {
+                dtoList = responseMap.get(rangeMonth.getStat_month());
             }
 
             RangeMonthDto dto = RangeMonthDto.toDto(rangeMonth);
@@ -47,7 +54,7 @@ public class RangeMonthService {
             } else {
                 dtoList.add(dto);
             }
-            responseMap.put(rangeMonth.getStatMonth(), dtoList);
+            responseMap.put(rangeMonth.getStat_month(), dtoList);
         }
         return responseMap;
     }
@@ -115,7 +122,7 @@ public class RangeMonthService {
 
     private RangeMonth findRangeMonth(String year, String aStat, List<RangeMonth> rangeMonthList) {
         for (RangeMonth rangeMonth : rangeMonthList) {
-            if (rangeMonth.getStatMonth().equals(year) && rangeMonth.getAStat().equals(aStat)) {
+            if (rangeMonth.getStat_month().equals(year) && rangeMonth.getA_stat().equals(aStat)) {
                 return rangeMonth;
             }
         }
@@ -138,20 +145,20 @@ public class RangeMonthService {
         int rowIndex = 2;
         String lastStatMonth = null;
         int startMergeRowIndex = -1;
-        Map<String, List<RangeMonthDto>> rangeMonthMap = getRangeMonthList(startDate, endDate, dcb);
+        Map<String, List<RangeMonthDto>> rangeMonthMap = getRangeMonthMap(startDate, endDate, dcb);
         for (Map.Entry<String, List<RangeMonthDto>> entry : rangeMonthMap.entrySet()) {
             List<RangeMonthDto> rangeMonthDtoList = entry.getValue();
             for (RangeMonthDto dto : rangeMonthDtoList) {
                 XSSFRow row = sheet.createRow(rowIndex++);
-                if (dto.getStatMonth().equals(lastStatMonth)) {
+                if (dto.getStat_month().equals(lastStatMonth)) {
                     row.createCell(0).setCellValue("");
                 } else {
                     if (startMergeRowIndex != -1) {
                         sheet.addMergedRegion(new CellRangeAddress(startMergeRowIndex, rowIndex - 2, 0, 0));
                     }
                     startMergeRowIndex = rowIndex - 1;
-                    row.createCell(0).setCellValue(dto.getStatMonth());
-                    lastStatMonth = dto.getStatMonth();
+                    row.createCell(0).setCellValue(dto.getStat_month());
+                    lastStatMonth = dto.getStat_month();
                 }
                 for (int i = 1; i < rangeMonthDtoFields.length; i++) {
                     Field field = rangeMonthDtoFields[i];

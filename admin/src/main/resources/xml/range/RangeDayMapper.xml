@@ -5,11 +5,27 @@
 <mapper namespace="com.example.admin.repository.mapper.range.RangeDayMapper">
     <insert id="insertRangeDay">
         INSERT INTO ADCB_STATS_RANGE_DAY(STAT_DAY, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT)
-        VALUES (#{statDay}, #{aStat}, #{bStat}, #{cStat}, #{dStat}, #{eStat}, #{fStat}, #{gStat})
+        VALUES (#{stat_day}, #{a_stat}, #{b_stat}, #{c_stat}, #{d_stat}, #{e_stat}, #{f_stat}, #{g_stat})
     </insert>
 
-    <select id="getRangeDayList" parameterType="map" resultType="com.example.admin.domain.entity.range.RangeDay">
-        SELECT STAT_DAY, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT FROM ADCB_STATS_RANGE_DAY
+    <select id="getRangeDayList" parameterType="map" resultMap="rangeDayMap">
+        SELECT * FROM ADCB_STATS_RANGE_DAY
         WHERE STAT_DAY BETWEEN #{startDate} AND #{endDate};
     </select>
+
+    <select id="getRangeDayScheduleList" parameterType="map" resultMap="rangeDayMap">
+        SELECT * FROM ADCB_STATS_RANGE_DAY
+        WHERE STAT_DAY = #{day};
+    </select>
+
+    <resultMap id="rangeDayMap" type="com.example.admin.domain.entity.range.RangeDay">
+        <result column="STAT_DAY" property="stat_day"/>
+        <result column="A_STAT" property="a_stat"/>
+        <result column="B_STAT" property="b_stat"/>
+        <result column="C_STAT" property="c_stat"/>
+        <result column="D_STAT" property="d_stat"/>
+        <result column="E_STAT" property="e_stat"/>
+        <result column="F_STAT" property="f_stat"/>
+        <result column="G_STAT" property="g_stat"/>
+    </resultMap>
 </mapper>

@@ -1,17 +1,15 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.DataResult;
 import com.example.admin.common.response.ListResult;
 import com.example.admin.common.response.MapResult;
 import com.example.admin.common.response.StatusResult;
-import com.example.admin.domain.dto.payment.DayPaymentDto;
-import com.example.admin.domain.dto.payment.PaymentExcelDto;
 import com.example.admin.domain.entity.payment.DayPayment;
 import com.example.admin.service.payment.DayPaymentService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -40,10 +38,8 @@ public class DayPaymentController {
     }
 
     @GetMapping("/2")
-    public ListResult<DayPayment> getDayPayments2(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) {
-        List<DayPayment> dayPaymentList = dayPaymentService.getDayPaymentDtoList(dcb, month);
-
-        return new ListResult<>(true, dayPaymentList);
+    public DayPayment getDayPayments2(@RequestParam("dcb") @Valid String dcb, @RequestParam("day") @Valid String day) {
+        return dayPaymentService.getDayPayment(dcb, day);
     }
 
     @GetMapping("/excel")

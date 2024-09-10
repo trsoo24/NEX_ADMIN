@@ -10,4 +10,6 @@ public interface GdcbDayPaymentMapper {
     void insertDayPayment(DayPayment dayPayment);
 
     List<DayPayment> getDayPaymentList(String date);
+
+    DayPayment getDayPayment(String month);
 }

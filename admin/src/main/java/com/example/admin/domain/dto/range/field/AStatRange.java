@@ -13,11 +13,11 @@ public enum AStatRange {
     G("O", "50 만원 이상"),
     ;
 
-    private final String aStat;
+    private final String a_stat;
     private final String range;
 
-    AStatRange(String aStat, String range) {
-        this.aStat = aStat;
+    AStatRange(String a_stat, String range) {
+        this.a_stat = a_stat;
         this.range = range;
     }
 }

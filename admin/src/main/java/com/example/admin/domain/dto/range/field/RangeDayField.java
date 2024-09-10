@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum RangeDayField {
-    statDay("기간"),
+    stat_day("기간"),
     a_stat("결제 구간"),
     b_stat("결제자 수"),
     c_stat("전체 결제 건수"),

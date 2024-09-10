@@ -1,8 +1,10 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.ListResult;
 import com.example.admin.common.response.MapResult;
 import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.range.RangeMonthDto;
+import com.example.admin.domain.entity.range.RangeMonth;
 import com.example.admin.service.range.RangeMonthService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -26,10 +28,15 @@ public class RangeMonthController {
     }
 
     @GetMapping()
-    public MapResult<String, List<RangeMonthDto>> getRangeMonth(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate) throws IllegalAccessException {
-        Map<String, List<RangeMonthDto>> rangMonthDtoMap = rangeMonthService.getRangeMonthList(startDate, endDate, dcb);
+    public MapResult<String, List<RangeMonthDto>> getRangeMonthMap(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate) throws IllegalAccessException {
+        Map<String, List<RangeMonthDto>> rangMonthDtoMap = rangeMonthService.getRangeMonthMap(startDate, endDate, dcb);
 
         return new MapResult<>(true, rangMonthDtoMap);
+    }
+
+    @GetMapping("/2")
+    public List<RangeMonth> getRangeMonthList(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) {
+        return rangeMonthService.getRangeMonthList(month, dcb);
     }
 
     @GetMapping("/excel")
