@@ -12,8 +12,8 @@ public class PayDetailDto {
     private String purchaseDate;
     private String cancelDate;
     private Double price;
-    private String paymentType; // Enum OR Properties
+    private String paymentName; // Enum OR Properties
     private String productName;
-    private String company;
-    private String merchantName;
+    private String sellerCompany;
+    private String sellerName;
 }
