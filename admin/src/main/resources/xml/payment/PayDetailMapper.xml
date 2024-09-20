@@ -5,7 +5,7 @@
 
 <mapper namespace="com.example.admin.repository.mapper.payment.PayDetailMapper">
     <select id="getPayDetailsByProductName" parameterType="map" resultType="com.example.admin.domain.dto.payment.PayDetailDto">
-        SELECT CTN, PURCHASE_DATE, CANCEL_DATE, PRICE, PAYMENT_TYPE, PRODUCT_NAME, COMPANY, MERCHANT_NAME
+        SELECT CTN, PURCHASE_DT, CANCEL_DATE, PRICE, PAYMENT_TYPE, PRODUCT_NAME, COMPANY, MERCHANT_NAME
         FROM TB_SDCB_PURCHASE_INFO
         WHERE PAYMENT_TYPE = #{paymentType}
             <if test="productName != null and productName != ''">
@@ -44,5 +44,12 @@
         AND STR_TO_DATE(PURCHASE_DATE, '%Y-%m-%d')
         BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d')
         AND STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+    </select>
+    
+    <select id="selectPaymentDetail" parameterType="map" resultType="com.example.admin.domain.dto.payment.PayDetailDto">
+        SELECT C.CTN, C.PURCHASE_DT AS purchaseDate, C.CANCEL_DT AS cancelDate, A.PAYMENT_AMT AS price, C.PAYMENT_NAME, B.PRODUCT_NAME, B.SELLER_COMPANY, B.SELLER_NAME
+        FROM TB_NOTI_PURCHASE_TYPE A
+        LEFT OUTER JOIN TB_NOTI_PURCHASE_PRODUCT B ON (A.PARTITION_ID = B.PARTITION_ID AND A.REQUEST_ID = B.REQUEST_ID)
+        LEFT OUTER JOIN TB_NOTI_PURCHASE C ON (A.PARTITION_ID = C.PARTITION_ID AND A.REQUEST_ID = C.REQUEST_ID)
     </select>
 </mapper>
