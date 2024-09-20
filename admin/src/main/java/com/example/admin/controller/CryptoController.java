@@ -1,5 +1,6 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.DataResult;
 import com.example.admin.common.response.StatusResult;
 import com.example.admin.service.crypto.AES256CryptoService;
 import lombok.RequiredArgsConstructor;
@@ -14,16 +15,16 @@ public class CryptoController {
     private static final String CRYPTO_KEY = "DCB";
 
     @GetMapping("/encrypt")
-    public StatusResult encrypt(@RequestParam("text") String text) {
-        aes256CryptoService.encryptSingleData(text, CRYPTO_KEY);
+    public DataResult encrypt(@RequestParam("text") String text) {
+        String encrypt = aes256CryptoService.encryptSingleData(text, CRYPTO_KEY);
 
-        return new StatusResult(true);
+        return new DataResult<>(true, encrypt);
     }
 
     @GetMapping("/decrypt")
-    public StatusResult decrypt(@RequestParam("text") String text) {
-        aes256CryptoService.decryptSingleData(text, CRYPTO_KEY);
+    public DataResult decrypt(@RequestParam("text") String text) {
+        String decrypt = aes256CryptoService.decryptSingleData(text, CRYPTO_KEY);
 
-        return new StatusResult(true);
+        return new DataResult<>(true, decrypt);
     }
 }
