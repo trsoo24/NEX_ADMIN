@@ -52,7 +52,7 @@ public class MerchantController {
         return new StatusResult(true);
     }
 
-    @PutMapping("/block")
+    @PutMapping
     public StatusResult blockMerchant(@RequestBody @Valid BlockMerchantDto dto) {
         admMerchantService.blockMerchant(dto);
 
