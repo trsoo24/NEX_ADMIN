@@ -35,10 +35,8 @@ public class BillingGradeController {
 
 
     @GetMapping("/excel")
-    public StatusResult exportExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("year") @Valid String year, HttpServletResponse response) throws IOException {
+    public void exportExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("year") @Valid String year, HttpServletResponse response) throws IOException {
         billingGradeService.exportBillingGradeExcel(dcb, year, response);
-
-        return new StatusResult(true);
     }
 
     @PostMapping

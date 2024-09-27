@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/payment")
@@ -27,24 +26,22 @@ public class PayDetailController {
                                                      @RequestParam("startDate") @Valid String startDate,
                                                      @RequestParam("endDate") @Valid String endDate,
                                                      @RequestParam("searchType") @Valid String searchType,
-                                                     @RequestParam("keywords") @Valid List<String> keywords,
+                                                     @RequestParam("keyword") @Valid String keyword,
                                                      @RequestParam("page") @Valid int page,
                                                      @RequestParam("pageSize") @Valid int pageSize) {
-        Page<PayDetailDto> payDetailDtoPage = payDetailService.getPayDetailPage(dcb, selectedPaymentTypes, startDate, endDate, searchType, keywords, page, pageSize);
+        Page<PayDetailDto> payDetailDtoPage = payDetailService.getPayDetailPage(dcb, selectedPaymentTypes, startDate, endDate, searchType, keyword, page, pageSize);
 
         return new PageResult<>(true, payDetailDtoPage);
     }
 
     @GetMapping("/excel/sdcb")
-    public StatusResult exportSdcbPayDetailExcel(@RequestParam("dcb") @Valid String dcb,
+    public void exportSdcbPayDetailExcel(@RequestParam("dcb") @Valid String dcb,
                                                  @RequestParam("selectedPaymentTypes") @Valid List<String> selectedPaymentTypes,
                                                  @RequestParam("startDate") @Valid String startDate,
                                                  @RequestParam("endDate") @Valid String endDate,
                                                  @RequestParam("searchType") @Valid String searchType,
-                                                 @RequestParam("keywords") @Valid List<String> keywords,
+                                                 @RequestParam("keyword") @Valid String keyword,
                                                  HttpServletResponse response) throws IOException, IllegalAccessException {
-        payDetailService.exportExcel(dcb, selectedPaymentTypes, startDate, endDate, searchType, keywords, response);
-
-        return new StatusResult(true);
+        payDetailService.exportExcel(dcb, selectedPaymentTypes, startDate, endDate, searchType, keyword, response);
     }
 }

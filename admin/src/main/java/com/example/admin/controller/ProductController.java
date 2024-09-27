@@ -40,11 +40,9 @@ public class ProductController {
     }
 
     @GetMapping("/excel")
-    public StatusResult getProductExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("productName") @Valid String productName,
+    public void getProductExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("productName") @Valid String productName,
                                         @RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate,
                                         HttpServletRequest request, HttpServletResponse response) throws IOException, IllegalAccessException {
         productInfoService.exportExcel(dcb, productName, startDate, endDate, response);
-
-        return new StatusResult(true);
     }
 }

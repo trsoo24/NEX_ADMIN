@@ -43,16 +43,12 @@ public class DayPaymentController {
     }
 
     @GetMapping("/excel")
-    public StatusResult exportExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException {
+    public void exportExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException {
         dayPaymentService.exportDayPaymentExcel(month, dcb, response);
-
-        return new StatusResult(true);
     }
 
     @GetMapping("/excel/2")
-    public StatusResult exportExcel2(HttpServletRequest request, @RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException, IllegalAccessException {
+    public void exportExcel2(HttpServletRequest request, @RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException, IllegalAccessException {
         dayPaymentService.exportDayPaymentExcel2(request, month, dcb, response);
-
-        return new StatusResult(true);
     }
 }

@@ -43,9 +43,7 @@ public class MonthPaymentController {
     }
 
     @GetMapping("/excel")
-    public StatusResult exportExcel(@RequestParam("dcb") String dcb, @RequestParam("year") String year, HttpServletResponse response) throws IOException,IllegalAccessException {
+    public void exportExcel(@RequestParam("dcb") String dcb, @RequestParam("year") String year, HttpServletResponse response) throws IOException,IllegalAccessException {
         monthPaymentService.exportMonthPaymentExcel(year, dcb, response);
-
-        return new StatusResult(true);
     }
 }

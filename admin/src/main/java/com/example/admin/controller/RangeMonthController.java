@@ -40,9 +40,7 @@ public class RangeMonthController {
     }
 
     @GetMapping("/excel")
-    public StatusResult exportRangeMonthExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
+    public void exportRangeMonthExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
         rangeMonthService.exportExcel(startDate, endDate, dcb, response);
-
-        return new StatusResult(true);
     }
 }

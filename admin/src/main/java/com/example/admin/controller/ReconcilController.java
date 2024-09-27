@@ -38,13 +38,11 @@ public class ReconcilController {
     }
 
     @GetMapping("/excel")
-    public StatusResult getReconcilExcel(@RequestParam @Valid String dcb,
+    public void getReconcilExcel(@RequestParam @Valid String dcb,
                                           @RequestParam @Valid String startDate,
                                           @RequestParam @Valid String endDate,
                                           @RequestParam @Valid String fileType,
                                           HttpServletResponse response) {
         reconcilService.exportExcel(dcb, startDate, endDate, fileType, response);
-
-        return new StatusResult(true);
     }
 }

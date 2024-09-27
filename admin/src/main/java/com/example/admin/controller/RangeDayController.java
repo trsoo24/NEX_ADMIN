@@ -42,9 +42,7 @@ public class RangeDayController {
     }
 
     @GetMapping("/excel")
-    public StatusResult exportRangeDayExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
+    public void exportRangeDayExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
         rangeDayService.exportExcel(startDate, endDate, dcb, response);
-
-        return new StatusResult(true);
     }
 }

@@ -32,8 +32,8 @@ public class TestPhoneController {
     }
 
     @GetMapping()
-    public PageResult<TestPhone> getAllTestPhones(@RequestParam("dcb") @Valid String dcb, @RequestParam("page") @Valid Integer page, @RequestParam("pageSize") @Valid Integer pageSize) {
-        Page<TestPhone> testPhonePage = testPhoneService.getAllTestPhones(page, pageSize, dcb);
+    public PageResult<TestPhone> getAllTestPhones(@RequestParam("dcb") @Valid String dcb, @RequestParam("ctn") @Valid String ctn, @RequestParam("page") @Valid Integer page, @RequestParam("pageSize") @Valid Integer pageSize) {
+        Page<TestPhone> testPhonePage = testPhoneService.getAllTestPhones(page, pageSize, ctn, dcb);
 
         return new PageResult<>(true, testPhonePage);
     }
