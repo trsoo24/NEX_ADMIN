@@ -1,0 +1,23 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.admin.repository.mapper.item.MerchantStatsDailyMapper">
+    <insert id="insertItemDayStat" parameterType="com.example.admin.domain.entity.item.MerchantDayStat">
+        INSERT INTO TB_MERCHANT_STATS_DAILY(YEAR, MONTH, DAY, MERCHANT_NAME, SUM_PRICE, SUM_TAX, SUM_TOTAL)
+        VALUES (#{year}, #{month}, #{day}, #{merchantName}, #{sumPrice}, #{sumTax}, #{sumTotal})
+    </insert>
+
+    <select id="getItemDayStats" parameterType="map" resultType="com.example.admin.domain.entity.item.MerchantDayStat">
+        SELECT * FROM TB_MERCHANT_STATS_DAILY
+        WHERE 1 = 1
+        <if test="merchantName != null and merchantName != ''">
+            AND MERCHANT_NAME LIKE CONCAT('%', #{merchantName}, '%')
+        </if>
+        <if test="year != null">
+            AND YEAR = #{year}
+        </if>
+        <if test="month != null">
+            AND MONTH = #{month}
+        </if>
+    </select>
+</mapper>
