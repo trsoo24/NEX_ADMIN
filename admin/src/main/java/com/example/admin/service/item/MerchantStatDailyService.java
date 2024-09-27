@@ -1,0 +1,128 @@
+package com.example.admin.service.item;
+
+import com.example.admin.common.service.FunctionUtil;
+import com.example.admin.domain.dto.item.InsertMerchantDayStat;
+import com.example.admin.domain.dto.item.MerchantDayStatDto;
+import com.example.admin.domain.entity.item.MerchantDayStat;
+import com.example.admin.repository.mapper.item.MerchantStatsDailyMapper;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.*;
+
+@Service
+@RequiredArgsConstructor
+public class MerchantStatDailyService {
+    private final MerchantStatsDailyMapper merchantStatsDailyMapper;
+    private final FunctionUtil functionUtil;
+
+    public Page<MerchantDayStatDto> getMerchantStatDailyPage(String dcb, String month, String merchantName, int page, int pageSize) {
+        return functionUtil.toPage(getMerchantStatDaily(dcb, month, merchantName), page, pageSize);
+    }
+
+    public List<MerchantDayStatDto> getMerchantStatDaily(String dcb, String month, String merchantName) {
+        Map<String, Object> requestMap = new HashMap<>();
+        String[] yearAndMonth = month.split("-");
+        requestMap.put("year", yearAndMonth[0]);
+        requestMap.put("month", yearAndMonth[1]);
+        requestMap.put("merchantName", merchantName == null ? "" : merchantName);
+
+        List<MerchantDayStat> merchantDayStatList = merchantStatsDailyMapper.getItemDayStats(requestMap);
+
+        return toMerchantDayStatDtoList(merchantDayStatList);
+    }
+
+    private List<MerchantDayStatDto> toMerchantDayStatDtoList(List<MerchantDayStat> merchantDayStatList) {
+        Map<String, MerchantDayStatDto> itemDayStatDtoMap = new HashMap<>();
+        MerchantDayStatDto merchantDayStatTotal = MerchantDayStatDto.generateTotal();
+
+        for (MerchantDayStat merchantDayStat : merchantDayStatList) {
+            if (itemDayStatDtoMap.get(merchantDayStat.getMerchantName()) != null) {
+                MerchantDayStatDto merchantDayStatDto = itemDayStatDtoMap.get(merchantDayStat.getMerchantName());
+                merchantDayStatDto.addDailySales(merchantDayStat);
+                merchantDayStatTotal.addTotalDailySales(merchantDayStat);
+            } else {
+                MerchantDayStatDto merchantDayStatDto = MerchantDayStatDto.toItemDayStatDto(merchantDayStat);
+                merchantDayStatDto.addDailySales(merchantDayStat);
+                itemDayStatDtoMap.put(merchantDayStat.getMerchantName(), merchantDayStatDto);
+                merchantDayStatTotal.addTotalDailySales(merchantDayStat);
+            }
+        }
+
+        List<MerchantDayStatDto> merchantDayStatDtoList = new ArrayList<>();
+        merchantDayStatDtoList.add(merchantDayStatTotal);
+
+        for (MerchantDayStatDto merchantDayStatDto : itemDayStatDtoMap.values()) {
+            merchantDayStatDto.setPercent(merchantDayStatTotal.getTotal());
+            merchantDayStatDtoList.add(merchantDayStatDto);
+        }
+
+        return merchantDayStatDtoList;
+    }
+
+    public void exportMerchantStatDailyExcel(String dcb, String month, String merchantName, HttpServletResponse response) throws IOException {
+        List<MerchantDayStatDto> merchantDayStatDtoList = getMerchantStatDaily(dcb, month, merchantName);
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("판매자 일별 판매 현황");
+
+        int rowNum = 0;
+        Row headerRow = sheet.createRow(rowNum++);
+        headerRow.createCell(0).setCellValue("판매자 이름");
+        headerRow.createCell(1).setCellValue("Total");
+        headerRow.createCell(2).setCellValue("비율");
+
+        MerchantDayStatDto merchantDayStatDto = merchantDayStatDtoList.get(0);
+        Map<Integer, Double> map = merchantDayStatDto.getDailySales();
+
+        for (int i = 1; i <= 31; i++) {
+            if (map.containsKey(i)) {
+                headerRow.createCell(i + 2).setCellValue(i + " 일");
+            }
+        }
+
+        for (MerchantDayStatDto itemDayStat : merchantDayStatDtoList) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(itemDayStat.getMerchantName());
+            row.createCell(1).setCellValue(itemDayStat.getTotal());
+            row.createCell(2).setCellValue(itemDayStat.getPercent());
+            Map<Integer, Double> dtoMap = itemDayStat.getDailySales();
+            for (int i = 1; i <= 31; i++) {
+                if (map.containsKey(i)) {
+                    row.createCell(i + 2).setCellValue(dtoMap.get(i));
+                }
+            }
+        }
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=ItemStatDaily.xlsx");
+        response.setStatus(200);
+        workbook.write(response.getOutputStream());
+        response.getOutputStream().flush();
+        response.getOutputStream().close();
+        workbook.close();
+    }
+
+
+
+    public void insertTestValue(InsertMerchantDayStat dayStat) {
+        Random random = new Random();
+
+        for (int i = 1; i <= 31; i++) {
+            double randomPrice = Math.floor(100000 + random.nextDouble() * 900000);
+            double randomTax = Math.floor(1000 + random.nextDouble() * 9000);
+            String day = String.valueOf(i);
+            if (i < 10) {
+                day = "0" + day;
+            }
+            MerchantDayStat merchantDayStat = MerchantDayStat.to(dayStat.getYear(), dayStat.getMonth(), day, dayStat.getMerchantName(), randomPrice, randomTax, randomPrice - randomTax);
+            merchantStatsDailyMapper.insertItemDayStat(merchantDayStat);
+        }
+    }
+}
