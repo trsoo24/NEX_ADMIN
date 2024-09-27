@@ -24,14 +24,14 @@ public class PayDetailService {
 
     public Page<PayDetailDto> getPayDetailPage(String dcb, List<String> selectedPaymentTypes,
                                                String startDate, String endDate,
-                                               String searchType, List<String> keywords,
+                                               String searchType, String keyword,
                                                int page, int pageSize) {
-        return functionUtil.toPage(getPayDetailList(dcb, selectedPaymentTypes, startDate, endDate, searchType, keywords), page, pageSize);
+        return functionUtil.toPage(getPayDetailList(dcb, selectedPaymentTypes, startDate, endDate, searchType, keyword), page, pageSize);
     }
 
     public void exportExcel(String dcb, List<String> selectedPaymentTypes,
                             String startDate, String endDate,
-                            String searchType, List<String> keywords,
+                            String searchType, String keyword,
                             HttpServletResponse response) throws IllegalAccessException, IOException {
 
         XSSFWorkbook workbook = new XSSFWorkbook();
@@ -46,7 +46,7 @@ public class PayDetailService {
         }
 
         int rowIdx = 2;
-        List<PayDetailDto> payDetailDtoList = getPayDetailList(dcb, selectedPaymentTypes, startDate, endDate, searchType, keywords);
+        List<PayDetailDto> payDetailDtoList = getPayDetailList(dcb, selectedPaymentTypes, startDate, endDate, searchType, keyword);
 
         for (int j = 0; j < payDetailDtoList.size(); j++) {
             PayDetailDto dto = payDetailDtoList.get(j);
@@ -73,40 +73,25 @@ public class PayDetailService {
         workbook.close();
     }
 
-    // TODO DCB 값은 SDCB 로 고정인데 파라미터에 있어야되나?
     private List<PayDetailDto> getPayDetailList(String dcb, List<String> selectedPaymentTypes,
                                                String startDate, String endDate,
-                                               String searchType, List<String> keywords) {
+                                               String searchType, String keyword) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("dcb", dcb);
+        requestMap.put("startDate", startDate);
+        requestMap.put("endDate", endDate);
+        requestMap.put("keyword", keyword);
+        requestMap.put("paymentTypes", selectedPaymentTypes != null ? selectedPaymentTypes : new ArrayList<>());
 
-        List<PayDetailDto> resultList = new ArrayList<>();
-
-        for (String paymentType : selectedPaymentTypes) {
-            Map<String, Object> requestMap = new HashMap<>();
-            requestMap.put("startDate", startDate);
-            requestMap.put("endDate", endDate);
-            requestMap.put("paymentType", paymentType);
-            List<PayDetailDto> payDetailDtoList = filterSearchType(requestMap, searchType, keywords);
-
-            resultList.addAll(payDetailDtoList);
-        }
-
-        resultList.sort(Comparator.comparing(PayDetailDto::getPurchaseDate));
-        return resultList;
+        return filterSearchType(requestMap, searchType);
     }
 
-    private List<PayDetailDto> filterSearchType(Map<String, Object> map, String searchType, List<String> keywords) {
-        switch (searchType) {
-            case "productName" :
-                map.put("productName", keywords);
-                return payDetailMapper.getPayDetailsByProductName(map);
-            case "ctn" :
-                map.put("ctn", keywords);
-                return payDetailMapper.getPayDetailsByCtn(map);
-            case "company" :
-                map.put("company", keywords);
-                return payDetailMapper.getPayDetailsByCompany(map);
-
-            default: return null;
-        }
+    private List<PayDetailDto> filterSearchType(Map<String, Object> map, String searchType) {
+        return switch (searchType) {
+            case "상품명" -> payDetailMapper.selectPaymentDetailByProductName(map);
+            case "CTN" -> payDetailMapper.selectPaymentDetailByCtn(map);
+            case "company" -> payDetailMapper.selectPaymentDetailByCompanyName(map);
+            default -> new ArrayList<>();
+        };
     }
 }

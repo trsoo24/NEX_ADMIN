@@ -8,8 +8,7 @@ import java.util.Map;
 
 @Mapper
 public interface PayDetailMapper {
-    List<PayDetailDto> getPayDetailsByProductName(Map<String, Object> map);
-    List<PayDetailDto> getPayDetailsByCtn(Map<String, Object> map);
-    List<PayDetailDto> getPayDetailsByCompany(Map<String, Object> map);
-
+    List<PayDetailDto> selectPaymentDetailByProductName(Map<String, Object> map);
+    List<PayDetailDto> selectPaymentDetailByCtn(Map<String, Object> map);
+    List<PayDetailDto> selectPaymentDetailByCompanyName(Map<String, Object> map);
 }

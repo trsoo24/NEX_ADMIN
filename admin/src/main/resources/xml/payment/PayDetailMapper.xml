@@ -4,52 +4,74 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.repository.mapper.payment.PayDetailMapper">
-    <select id="getPayDetailsByProductName" parameterType="map" resultType="com.example.admin.domain.dto.payment.PayDetailDto">
-        SELECT CTN, PURCHASE_DT, CANCEL_DATE, PRICE, PAYMENT_TYPE, PRODUCT_NAME, COMPANY, MERCHANT_NAME
-        FROM TB_SDCB_PURCHASE_INFO
-        WHERE PAYMENT_TYPE = #{paymentType}
-            <if test="productName != null and productName != ''">
-                <foreach collection="list" item="productName" open="(" separator="OR" close=")">
-                    AND PRODUCT_NAME LIKE CONCAT('%', #{productName}, '%')
-                </foreach>
-            </if>
-            AND STR_TO_DATE(PURCHASE_DATE, '%Y-%m-%d')
-                  BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d')
-                  AND STR_TO_DATE(#{endDate}, '%Y-%m-%d')
-    </select>
-
-    <select id="getPayDetailsByCtn" parameterType="map" resultType="com.example.admin.domain.dto.payment.PayDetailDto">
-        SELECT CTN, PURCHASE_DATE, CANCEL_DATE, PRICE, PAYMENT_TYPE, PRODUCT_NAME, COMPANY, MERCHANT_NAME
-        FROM TB_SDCB_PURCHASE_INFO
-        WHERE PAYMENT_TYPE = #{paymentType}
-        <if test="ctn != null and ctn != ''">
-          <foreach collection="list" item="ctn" open="(" separator="OR" close=")">
-              AND CTN LIKE CONCAT('%', #{ctn}, '%')
-          </foreach>
-        </if>
-        AND STR_TO_DATE(PURCHASE_DATE, '%Y-%m-%d')
-        BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d')
-        AND STR_TO_DATE(#{endDate}, '%Y-%m-%d')
-    </select>
-
-    <select id="getPayDetailsByCompany" parameterType="map" resultType="com.example.admin.domain.dto.payment.PayDetailDto">
-        SELECT CTN, PURCHASE_DATE, CANCEL_DATE, PRICE, PAYMENT_TYPE, PRODUCT_NAME, COMPANY, MERCHANT_NAME
-        FROM TB_SDCB_PURCHASE_INFO
-        WHERE PAYMENT_TYPE = #{paymentType}
-        <if test="company != null and company != ''">
-            <foreach collection="list" item="company" open="(" separator="OR" close=")">
-                AND COMPANY LIKE CONCAT('%', #{company}, '%')
-            </foreach>
-        </if>
-        AND STR_TO_DATE(PURCHASE_DATE, '%Y-%m-%d')
-        BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d')
-        AND STR_TO_DATE(#{endDate}, '%Y-%m-%d')
-    </select>
-    
-    <select id="selectPaymentDetail" parameterType="map" resultType="com.example.admin.domain.dto.payment.PayDetailDto">
-        SELECT C.CTN, C.PURCHASE_DT AS purchaseDate, C.CANCEL_DT AS cancelDate, A.PAYMENT_AMT AS price, C.PAYMENT_NAME, B.PRODUCT_NAME, B.SELLER_COMPANY, B.SELLER_NAME
+    <select id="selectPaymentDetailByProductName" parameterType="map" resultType="com.example.admin.domain.dto.payment.PayDetailDto">
+        SELECT C.CTN, C.PURCHASE_DT AS purchaseDate, C.CANCEL_DT AS cancelDate, A.PAYMENT_AMT AS price, A.PAYMENT_NAME, B.PRODUCT_NAME, B.SELLER_COMPANY, B.SELLER_NAME
         FROM TB_NOTI_PURCHASE_TYPE A
         LEFT OUTER JOIN TB_NOTI_PURCHASE_PRODUCT B ON (A.PARTITION_ID = B.PARTITION_ID AND A.REQUEST_ID = B.REQUEST_ID)
         LEFT OUTER JOIN TB_NOTI_PURCHASE C ON (A.PARTITION_ID = C.PARTITION_ID AND A.REQUEST_ID = C.REQUEST_ID)
+        WHERE 1 = 1
+        <if test="keyword != null and keyword != 0">
+            B.PRODUCT_NAME LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="paymentTypes != null and paymentTypes.size() > 0">
+        <foreach collection="paymentTypes" item="paymentType" open="AND (" separator=" OR " close=")">
+        <if test="paymentType == '기타'">
+            A.PAYMENT_NAME NOT IN ('휴대폰결제', '신용카드', 'U+스토어 캐쉬', '문화상품권(컬처캐쉬)', '쿠폰 결제')
+        </if>
+        <if test="paymentType != '기타'">
+            A.PAYMENT_NAME = #{paymentType}
+        </if>
+        </foreach>
+        </if>
+        AND C.PURCHASE_DT BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m') AND LAST_DAY(STR_TO_DATE(CONCAT(#{endDate}, '-01'), '%Y-%m-%d'))
+        ORDER BY purchaseDate
+    </select>
+
+    <select id="selectPaymentDetailByCtn" parameterType="map" resultType="com.example.admin.domain.dto.payment.PayDetailDto">
+        SELECT C.CTN, C.PURCHASE_DT AS purchaseDate, C.CANCEL_DT AS cancelDate, A.PAYMENT_AMT AS price, A.PAYMENT_NAME, B.PRODUCT_NAME, B.SELLER_COMPANY, B.SELLER_NAME
+        FROM TB_NOTI_PURCHASE_TYPE A
+        LEFT OUTER JOIN TB_NOTI_PURCHASE_PRODUCT B ON (A.PARTITION_ID = B.PARTITION_ID AND A.REQUEST_ID = B.REQUEST_ID)
+        LEFT OUTER JOIN TB_NOTI_PURCHASE C ON (A.PARTITION_ID = C.PARTITION_ID AND A.REQUEST_ID = C.REQUEST_ID)
+        WHERE 1 = 1
+        <if test="keyword != null and keyword != 0">
+                C.CTN LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="paymentTypes != null and paymentTypes.size() > 0">
+            <foreach collection="paymentTypes" item="paymentType" open="AND (" separator=" OR " close=")">
+                <if test="payment == '기타'">
+                    A.PAYMENT_NAME NOT IN ('휴대폰결제', '신용카드', 'U+스토어 캐쉬', '문화상품권(컬처캐쉬)', '쿠폰 결제')
+                </if>
+                <if test="payment != '기타'">
+                    A.PAYMENT_NAME = #{paymentType}
+                </if>
+            </foreach>
+        </if>
+        AND C.PURCHASE_DT BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m') AND LAST_DAY(STR_TO_DATE(CONCAT(#{endDate}, '-01'), '%Y-%m-%d'))
+
+        ORDER BY purchaseDate
+    </select>
+
+    <select id="selectPaymentDetailByCompanyName" parameterType="map" resultType="com.example.admin.domain.dto.payment.PayDetailDto">
+        SELECT C.CTN, C.PURCHASE_DT AS purchaseDate, C.CANCEL_DT AS cancelDate, A.PAYMENT_AMT AS price, A.PAYMENT_NAME, B.PRODUCT_NAME, B.SELLER_COMPANY, B.SELLER_NAME
+        FROM TB_NOTI_PURCHASE_TYPE A
+        LEFT OUTER JOIN TB_NOTI_PURCHASE_PRODUCT B ON (A.PARTITION_ID = B.PARTITION_ID AND A.REQUEST_ID = B.REQUEST_ID)
+        LEFT OUTER JOIN TB_NOTI_PURCHASE C ON (A.PARTITION_ID = C.PARTITION_ID AND A.REQUEST_ID = C.REQUEST_ID)
+        WHERE 1 = 1
+        <if test="keyword != null and keyword != 0">
+                B.SELLER_NAME LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="paymentTypes != null and paymentTypes.size() > 0">
+            <foreach collection="paymentTypes" item="paymentType" open="AND (" separator=" OR " close=")">
+                <if test="payment == '기타'">
+                    A.PAYMENT_NAME NOT IN ('휴대폰결제', '신용카드', 'U+스토어 캐쉬', '문화상품권(컬처캐쉬)', '쿠폰 결제')
+                </if>
+                <if test="payment != '기타'">
+                    A.PAYMENT_NAME = #{paymentType}
+                </if>
+            </foreach>
+        </if>
+        AND C.PURCHASE_DT BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m') AND LAST_DAY(STR_TO_DATE(CONCAT(#{endDate}, '-01'), '%Y-%m-%d'))
+
+        ORDER BY purchaseDate
     </select>
 </mapper>
