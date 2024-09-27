@@ -33,10 +33,11 @@ public class TestPhoneService {
         testPhoneMapper.insertTestPhone(TestPhone.toTestPhone(dto));
     }
 
-    public Page<TestPhone> getAllTestPhones(int page, int pageSize, String dcb) {
-        Map<String, Integer> map = new HashMap<>();
+    public Page<TestPhone> getAllTestPhones(int page, int pageSize, String ctn, String dcb) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("ctn", ctn);
 
-        List<TestPhone> testPhoneList = testPhoneMapper.getAllTestPhone();
+        List<TestPhone> testPhoneList = testPhoneMapper.getAllTestPhone(map);
 
         return functionUtil.toPage(testPhoneList, page, pageSize);
     }

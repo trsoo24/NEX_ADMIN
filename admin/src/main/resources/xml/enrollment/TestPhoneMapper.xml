@@ -15,9 +15,12 @@
         WHERE CTN = #{ctn}
     </select>
 
-    <select id="getAllTestPhone" resultType="com.example.admin.domain.entity.enrollment.TestPhone">
+    <select id="getAllTestPhone" parameterType="map" resultType="com.example.admin.domain.entity.enrollment.TestPhone">
         SELECT *
         FROM TB_ENROLLMENT_PHONE
+        <if test="keyword != null and keyword != ''">
+        WHERE CTN LIKE CONCAT('%', #{ctn}, '%')
+        </if>
         ORDER BY REG_DT
     </select>
 
