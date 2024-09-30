@@ -1,6 +1,6 @@
-package com.example.admin.domain.dto.item;
+package com.example.admin.domain.dto.merchant;
 
-import com.example.admin.domain.entity.item.MerchantMonthStat;
+import com.example.admin.domain.entity.merchant.MerchantMonthStat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class MerchantMonthStatDto {
     private Double percent;
     private Map<Integer, Double> monthlySales;
 
-    public static MerchantMonthStatDto toItemMonthStatDto(MerchantMonthStat merchantMonthStat) {
+    public static MerchantMonthStatDto toMerchantMonthStatDto(MerchantMonthStat merchantMonthStat) {
         return MerchantMonthStatDto.builder()
                 .merchantName(merchantMonthStat.getMerchantName())
                 .total(0.0)

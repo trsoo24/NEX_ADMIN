@@ -1,4 +1,4 @@
-package com.example.admin.domain.entity.item;
+package com.example.admin.domain.entity.merchant;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,6 +1,6 @@
-package com.example.admin.domain.dto.item;
+package com.example.admin.domain.dto.merchant;
 
-import com.example.admin.domain.entity.item.MerchantDayStat;
+import com.example.admin.domain.entity.merchant.MerchantDayStat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class MerchantDayStatDto {
     private Double percent;
     private Map<Integer, Double> dailySales;
 
-    public static MerchantDayStatDto toItemDayStatDto(MerchantDayStat merchantDayStat) {
+    public static MerchantDayStatDto toMerchantDayStatDto(MerchantDayStat merchantDayStat) {
         return MerchantDayStatDto.builder()
                 .merchantName(merchantDayStat.getMerchantName())
                 .total(0.0)
@@ -48,6 +48,6 @@ public class MerchantDayStatDto {
     }
 
     public void setPercent(Double totalValue) {
-        this.percent = this.total / totalValue;
+        this.percent = Math.round(this.total / totalValue * 100.0) / 100.0;
     }
 }

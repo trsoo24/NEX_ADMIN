@@ -1,10 +1,10 @@
-package com.example.admin.service.item;
+package com.example.admin.service.merchant;
 
 import com.example.admin.common.service.FunctionUtil;
-import com.example.admin.domain.dto.item.InsertMerchantDayStat;
-import com.example.admin.domain.dto.item.MerchantDayStatDto;
-import com.example.admin.domain.entity.item.MerchantDayStat;
-import com.example.admin.repository.mapper.item.MerchantStatsDailyMapper;
+import com.example.admin.domain.dto.merchant.InsertMerchantDayStat;
+import com.example.admin.domain.dto.merchant.MerchantDayStatDto;
+import com.example.admin.domain.entity.merchant.MerchantDayStat;
+import com.example.admin.repository.mapper.merchant.MerchantStatsDailyMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
@@ -33,24 +33,24 @@ public class MerchantStatDailyService {
         requestMap.put("month", yearAndMonth[1]);
         requestMap.put("merchantName", merchantName == null ? "" : merchantName);
 
-        List<MerchantDayStat> merchantDayStatList = merchantStatsDailyMapper.getItemDayStats(requestMap);
+        List<MerchantDayStat> merchantDayStatList = merchantStatsDailyMapper.getMerchantDayStats(requestMap);
 
         return toMerchantDayStatDtoList(merchantDayStatList);
     }
 
     private List<MerchantDayStatDto> toMerchantDayStatDtoList(List<MerchantDayStat> merchantDayStatList) {
-        Map<String, MerchantDayStatDto> itemDayStatDtoMap = new HashMap<>();
+        Map<String, MerchantDayStatDto> merchantDayStatDtoMap = new HashMap<>();
         MerchantDayStatDto merchantDayStatTotal = MerchantDayStatDto.generateTotal();
 
         for (MerchantDayStat merchantDayStat : merchantDayStatList) {
-            if (itemDayStatDtoMap.get(merchantDayStat.getMerchantName()) != null) {
-                MerchantDayStatDto merchantDayStatDto = itemDayStatDtoMap.get(merchantDayStat.getMerchantName());
+            if (merchantDayStatDtoMap.get(merchantDayStat.getMerchantName()) != null) {
+                MerchantDayStatDto merchantDayStatDto = merchantDayStatDtoMap.get(merchantDayStat.getMerchantName());
                 merchantDayStatDto.addDailySales(merchantDayStat);
                 merchantDayStatTotal.addTotalDailySales(merchantDayStat);
             } else {
-                MerchantDayStatDto merchantDayStatDto = MerchantDayStatDto.toItemDayStatDto(merchantDayStat);
+                MerchantDayStatDto merchantDayStatDto = MerchantDayStatDto.toMerchantDayStatDto(merchantDayStat);
                 merchantDayStatDto.addDailySales(merchantDayStat);
-                itemDayStatDtoMap.put(merchantDayStat.getMerchantName(), merchantDayStatDto);
+                merchantDayStatDtoMap.put(merchantDayStat.getMerchantName(), merchantDayStatDto);
                 merchantDayStatTotal.addTotalDailySales(merchantDayStat);
             }
         }
@@ -58,7 +58,7 @@ public class MerchantStatDailyService {
         List<MerchantDayStatDto> merchantDayStatDtoList = new ArrayList<>();
         merchantDayStatDtoList.add(merchantDayStatTotal);
 
-        for (MerchantDayStatDto merchantDayStatDto : itemDayStatDtoMap.values()) {
+        for (MerchantDayStatDto merchantDayStatDto : merchantDayStatDtoMap.values()) {
             merchantDayStatDto.setPercent(merchantDayStatTotal.getTotal());
             merchantDayStatDtoList.add(merchantDayStatDto);
         }
@@ -101,7 +101,7 @@ public class MerchantStatDailyService {
         }
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=ItemStatDaily.xlsx");
+        response.setHeader("Content-Disposition", "attachment; filename=MerchantStatDaily.xlsx");
         response.setStatus(200);
         workbook.write(response.getOutputStream());
         response.getOutputStream().flush();
@@ -122,7 +122,7 @@ public class MerchantStatDailyService {
                 day = "0" + day;
             }
             MerchantDayStat merchantDayStat = MerchantDayStat.to(dayStat.getYear(), dayStat.getMonth(), day, dayStat.getMerchantName(), randomPrice, randomTax, randomPrice - randomTax);
-            merchantStatsDailyMapper.insertItemDayStat(merchantDayStat);
+            merchantStatsDailyMapper.insertMerchantDayStat(merchantDayStat);
         }
     }
 }

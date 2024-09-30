@@ -1,12 +1,12 @@
-package com.example.admin.service.item;
+package com.example.admin.service.merchant;
 
 import com.example.admin.common.service.FunctionUtil;
-import com.example.admin.domain.dto.item.InsertMerchantMonthStat;
-import com.example.admin.domain.dto.item.MerchantMonthStatDto;
-import com.example.admin.domain.entity.item.MerchantDayStat;
-import com.example.admin.domain.entity.item.MerchantMonthStat;
-import com.example.admin.repository.mapper.item.MerchantStatsDailyMapper;
-import com.example.admin.repository.mapper.item.MerchantStatsMonthlyMapper;
+import com.example.admin.domain.dto.merchant.InsertMerchantMonthStat;
+import com.example.admin.domain.dto.merchant.MerchantMonthStatDto;
+import com.example.admin.domain.entity.merchant.MerchantDayStat;
+import com.example.admin.domain.entity.merchant.MerchantMonthStat;
+import com.example.admin.repository.mapper.merchant.MerchantStatsDailyMapper;
+import com.example.admin.repository.mapper.merchant.MerchantStatsMonthlyMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
@@ -37,7 +37,7 @@ public class MerchantStatsMonthlyService {
         requestMap.put("year", year);
         requestMap.put("merchantName", merchantName == null ? "" : merchantName);
 
-        List<MerchantMonthStat> merchantMonthStatList = merchantStatsMonthlyMapper.getItemMonthStats(requestMap);
+        List<MerchantMonthStat> merchantMonthStatList = merchantStatsMonthlyMapper.getMerchantMonthStats(requestMap);
 
         return toMerchantMonthStatDtoList(merchantMonthStatList);
     }
@@ -52,7 +52,7 @@ public class MerchantStatsMonthlyService {
                 merchantMonthStatDto.addMonthlySales(merchantMonthStat);
                 merchantMonthStatTotal.addTotalMonthlySales(merchantMonthStat);
             } else {
-                MerchantMonthStatDto merchantMonthStatDto = MerchantMonthStatDto.toItemMonthStatDto(merchantMonthStat);
+                MerchantMonthStatDto merchantMonthStatDto = MerchantMonthStatDto.toMerchantMonthStatDto(merchantMonthStat);
                 merchantMonthStatDto.addMonthlySales(merchantMonthStat);
                 itemMonthStatDtoMap.put(merchantMonthStat.getMerchantName(), merchantMonthStatDto);
                 merchantMonthStatTotal.addTotalMonthlySales(merchantMonthStat);
@@ -104,7 +104,7 @@ public class MerchantStatsMonthlyService {
         }
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=ItemStatDaily.xlsx");
+        response.setHeader("Content-Disposition", "attachment; filename=MerchantStatDaily.xlsx");
         response.setStatus(200);
         workbook.write(response.getOutputStream());
         response.getOutputStream().flush();
@@ -124,7 +124,7 @@ public class MerchantStatsMonthlyService {
                 month = "0" + month;
             }
             map.put("month", month);
-            List<MerchantDayStat> dayStatList = merchantStatsDailyMapper.getItemDayStats(map);
+            List<MerchantDayStat> dayStatList = merchantStatsDailyMapper.getMerchantDayStats(map);
             Map<String, List<MerchantDayStat>> merchantMap = new HashMap<>();
 
             for (MerchantDayStat merchantDayStat : dayStatList) {
@@ -152,7 +152,7 @@ public class MerchantStatsMonthlyService {
 
                 MerchantMonthStat merchantMonthStat = MerchantMonthStat.toMonthStat(monthStat.getYear(), month, monthStat.getMerchantName(), sumPrice, sumTax, sumTotal);
 
-                merchantStatsMonthlyMapper.insertItemMonthStat(merchantMonthStat);
+                merchantStatsMonthlyMapper.insertMerchantMonthStat(merchantMonthStat);
             }
         }
     }
