@@ -1,4 +1,4 @@
-package com.example.admin.domain.dto.reconcil.field;
+package com.example.admin.domain.dto.reconcile.gdcb.field;
 
 import lombok.Getter;
 
