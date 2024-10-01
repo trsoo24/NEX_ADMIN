@@ -5,8 +5,8 @@ import com.example.admin.common.response.PageResult;
 import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.reconcile.gdcb.GDCBMonthlyInvoiceSum;
 import com.example.admin.domain.dto.reconcile.gdcb.InsertReconcileDto;
-import com.example.admin.domain.entity.reconcile.gdcb.MonthlyInvoiceSum;
 import com.example.admin.domain.entity.reconcile.gdcb.Reconcile;
+import com.example.admin.service.reconcile.gdcb.GDCBInvoiceDetailService;
 import com.example.admin.service.reconcile.gdcb.GDCBReconcileService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -23,11 +23,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/reconciliation")
 public class GDCBReconcileController {
-    private final GDCBReconcileService GDCBReconcileService;
+    private final GDCBReconcileService gdcbReconcileService;
+    private final GDCBInvoiceDetailService gdcbInvoiceDetailService;
 
     @PostMapping("/gdcb")
     public StatusResult insertReconcile(@RequestBody @Valid InsertReconcileDto insertReconcileDto) {
-        GDCBReconcileService.insertReconcile(insertReconcileDto);
+        gdcbReconcileService.insertReconcile(insertReconcileDto);
 
         return new StatusResult(true);
     }
@@ -38,7 +39,7 @@ public class GDCBReconcileController {
                                                   @RequestParam("fileType") @Valid String fileType,
                                                   @RequestParam("page") @Valid int page,
                                                   @RequestParam("pageSize") @Valid int pageSize) {
-        Page<Reconcile> reconcilPage = GDCBReconcileService.getGDCBReconcilePage(dcb, month, fileType, page, pageSize);
+        Page<Reconcile> reconcilPage = gdcbReconcileService.getGDCBReconcilePage(dcb, month, fileType, page, pageSize);
 
         return new PageResult<>(true, reconcilPage);
     }
@@ -48,7 +49,7 @@ public class GDCBReconcileController {
                                   @RequestParam("month") @Valid String month,
                                   @RequestParam("fileType") @Valid String fileType,
                                   HttpServletResponse response) throws IOException {
-        GDCBReconcileService.exportGDCBExcel(dcb, month, fileType, response);
+        gdcbReconcileService.exportGDCBExcel(dcb, month, fileType, response);
     }
 
     @GetMapping("/gdcb/download")
@@ -56,11 +57,18 @@ public class GDCBReconcileController {
                                      @RequestParam("month") @Valid String month,
                                      @RequestParam("fileType") @Valid String fileType,
                                      @RequestParam("fileName") @Valid String fileName, HttpServletResponse response) {
-        GDCBReconcileService.getGDCBReconcileFile(dcb, month, fileType, fileName, response);
+        gdcbReconcileService.getGDCBReconcileFile(dcb, month, fileType, fileName, response);
     }
 
     @GetMapping("/gdcb/invoice")
-    public MapResult<String, List<MonthlyInvoiceSum>> getGDCBInvoiceDetailList(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) {
-        return null;
+    public MapResult<String, Map<String, List<GDCBMonthlyInvoiceSum>>> getGDCBInvoiceDetailList(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) {
+        Map<String, Map<String, List<GDCBMonthlyInvoiceSum>>> invoiceDetailMap = gdcbInvoiceDetailService.getGDCBInvoiceDetailMap(dcb, month);
+
+        return new MapResult<>(true, invoiceDetailMap);
+    }
+
+    @GetMapping("/excel/gdcb/invoice")
+    public void getGDCBInvoiceDetailExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException {
+        gdcbInvoiceDetailService.exportInvoiceDetailExcel(dcb, month, response);
     }
 }
