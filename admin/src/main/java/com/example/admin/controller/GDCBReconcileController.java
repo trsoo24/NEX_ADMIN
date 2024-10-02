@@ -1,8 +1,10 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.ListResult;
 import com.example.admin.common.response.MapResult;
 import com.example.admin.common.response.PageResult;
 import com.example.admin.common.response.StatusResult;
+import com.example.admin.domain.dto.reconcile.gdcb.GDCBDetailCompare;
 import com.example.admin.domain.dto.reconcile.gdcb.GDCBMonthlyInvoiceSum;
 import com.example.admin.domain.dto.reconcile.gdcb.InsertReconcileDto;
 import com.example.admin.domain.entity.reconcile.gdcb.Reconcile;
@@ -61,14 +63,19 @@ public class GDCBReconcileController {
     }
 
     @GetMapping("/gdcb/invoice")
-    public MapResult<String, Map<String, List<GDCBMonthlyInvoiceSum>>> getGDCBInvoiceDetailList(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) {
-        Map<String, Map<String, List<GDCBMonthlyInvoiceSum>>> invoiceDetailMap = gdcbInvoiceDetailService.getGDCBInvoiceDetailMap(dcb, month);
+    public ListResult<GDCBDetailCompare> getGDCBInvoiceDetailList(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) {
+        List<GDCBDetailCompare> invoiceDetailList = gdcbInvoiceDetailService.getGDCBInvoiceDetailMap(dcb, month);
 
-        return new MapResult<>(true, invoiceDetailMap);
+        return new ListResult<>(true, invoiceDetailList);
     }
 
     @GetMapping("/excel/gdcb/invoice")
     public void getGDCBInvoiceDetailExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException {
         gdcbInvoiceDetailService.exportInvoiceDetailExcel(dcb, month, response);
+    }
+
+    @PostMapping("/gdcb/add")
+    public void insertGDCBInvoice(@RequestParam("year") String year) {
+        gdcbInvoiceDetailService.insertInvoiceDetailData(year);
     }
 }
