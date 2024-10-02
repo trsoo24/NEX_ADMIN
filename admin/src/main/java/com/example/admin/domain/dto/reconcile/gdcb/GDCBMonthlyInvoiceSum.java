@@ -29,7 +29,7 @@ public class GDCBMonthlyInvoiceSum {
                 .paymentType(buySum.getPaymentType())
                 .transactionCnt(buySum.getTransactionCnt() + refundSum.getTransactionCnt())
                 .totalAmountSum(buySum.getTotalAmountSum() - refundSum.getTotalAmountSum())
-                .revsInInvoicedCurrencySum(builder().revsInInvoicedCurrencySum - refundSum.getRevsInInvoicedCurrencySum())
+                .revsInInvoicedCurrencySum(buySum.revsInInvoicedCurrencySum - refundSum.getRevsInInvoicedCurrencySum())
                 .chargeSum(0.0)
                 .build();
 

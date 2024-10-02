@@ -1,19 +1,21 @@
 package com.example.admin.service.reconcile.gdcb;
 
-import com.example.admin.common.service.FunctionUtil;
+import com.example.admin.domain.dto.reconcile.gdcb.GDCBDetailCompare;
 import com.example.admin.domain.dto.reconcile.gdcb.GDCBMonthlyInvoiceSum;
+import com.example.admin.domain.entity.reconcile.gdcb.GoogleMonthlyInvoiceSum;
+import com.example.admin.domain.entity.reconcile.gdcb.MonthlyInvoiceSum;
 import com.example.admin.repository.mapper.reconcile.gdcb.ReconcileMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
@@ -22,36 +24,40 @@ import java.util.*;
 @RequiredArgsConstructor
 public class GDCBInvoiceDetailService {
     private final ReconcileMapper reconcileMapper;
-    private final FunctionUtil functionUtil;
 
     private final String[] revsCategoryArray = {"APP", "APP_SUBSCRIPTION", "CONTENT", "NA", "SPECIAL_APP"};
+    private final String[] paymentTypeArray = {"Invoice Details(DCB + 소액결제 + 기타)", "Invoice Details(DCB)", "Invoice Details(소액결제)", "Invoice Details(기타)"};
 
-    public Map<String, Map<String, List<GDCBMonthlyInvoiceSum>>> getGDCBInvoiceDetailMap(String dcb, String month) {
+    public List<GDCBDetailCompare> getGDCBInvoiceDetailMap(String dcb, String month) {
         Map<String, Object> requestMap = new HashMap<>();
         String[] monthArray = month.split("-");
         String previousMonth = calculatePreviousDate(month);
         String[] preMonthArray = previousMonth.split("-");
-        Map<String, Map<String, List<GDCBMonthlyInvoiceSum>>> responseMap = new LinkedHashMap<>();
+        List<GDCBDetailCompare> responseList = new ArrayList<>();
         requestMap.put("dcb", dcb);
 
         // 지난 달 값
         requestMap.put("year", preMonthArray[0]);
         requestMap.put("month", preMonthArray[1]);
-        responseMap.put(previousMonth + " Invoice Details(DCB + 소액결제 + 기타)", getDetails("전체", requestMap));
-        responseMap.put(previousMonth + " Invoice Details(DCB)", getDetails("00", requestMap));
-        responseMap.put(previousMonth + " Invoice Details(소액결제)", getDetails("PG", requestMap));
-        responseMap.put(previousMonth + " Invoice Details(기타)", getDetails("99", requestMap));
+        gdcbMonthlyInvoiceSumToGDCBCompareDtoList(previousMonth, paymentTypeArray[0], getDetails("전체", requestMap), responseList);
+        gdcbMonthlyInvoiceSumToGDCBCompareDtoList(previousMonth, paymentTypeArray[1], getDetails("00", requestMap), responseList);
+        gdcbMonthlyInvoiceSumToGDCBCompareDtoList(previousMonth, paymentTypeArray[2], getDetails("PG", requestMap), responseList);
+        gdcbMonthlyInvoiceSumToGDCBCompareDtoList(previousMonth, paymentTypeArray[3], getDetails("99", requestMap), responseList);
 
-        // 이달 값
+        // 이번 달 값
         requestMap.put("year", monthArray[0]);
         requestMap.put("month", monthArray[1]);
 
-        responseMap.put(month + " Invoice Details(DCB + 소액결제 + 기타)", getDetails("전체", requestMap));
-        responseMap.put(month + " Invoice Details(DCB)", getDetails("00", requestMap));
-        responseMap.put(month + " Invoice Details(소액결제)", getDetails("PG", requestMap));
-        responseMap.put(month + " Invoice Details(기타)", getDetails("99", requestMap));
+        gdcbMonthlyInvoiceSumToGDCBCompareDtoList(month, paymentTypeArray[0], getDetails("전체", requestMap), responseList);
+        gdcbMonthlyInvoiceSumToGDCBCompareDtoList(month, paymentTypeArray[1], getDetails("00", requestMap), responseList);
+        gdcbMonthlyInvoiceSumToGDCBCompareDtoList(month, paymentTypeArray[2], getDetails("PG", requestMap), responseList);
+        gdcbMonthlyInvoiceSumToGDCBCompareDtoList(month, paymentTypeArray[3], getDetails("99", requestMap), responseList);
 
-        return responseMap;
+        // Google Summary File
+        List<GoogleMonthlyInvoiceSum> googleMonthlySumList = getGoogleMonthlySum(requestMap);
+        googleMonthlySumToGDCBCompareDtoList(month, googleMonthlySumList, responseList);
+
+        return responseList;
     }
 
     private Map<String, List<GDCBMonthlyInvoiceSum>> getDetails(String paymentType, Map<String, Object> requestMap) {
@@ -130,6 +136,37 @@ public class GDCBInvoiceDetailService {
         sumList.add(0, revsCategoryTotal);
     }
 
+    private void gdcbMonthlyInvoiceSumToGDCBCompareDtoList(String month, String parameterType, Map<String, List<GDCBMonthlyInvoiceSum>> sumMap, List<GDCBDetailCompare> responseList) { // 객체 하나로 처리
+
+
+        for (List<GDCBMonthlyInvoiceSum> list : sumMap.values()) {
+            for (GDCBMonthlyInvoiceSum sum : list) {
+                responseList.add(GDCBDetailCompare.fromTbMonthlyInvoiceSum(month, parameterType, sum));
+            }
+        }
+    }
+
+    private void googleMonthlySumToGDCBCompareDtoList(String month, List<GoogleMonthlyInvoiceSum> googleList, List<GDCBDetailCompare> responseList) {
+        for (GoogleMonthlyInvoiceSum sum : googleList) {
+            responseList.add(GDCBDetailCompare.fromGMonthlyInvoiceSum(month, sum));
+        }
+    }
+
+    private List<GoogleMonthlyInvoiceSum> getGoogleMonthlySum(Map<String, Object> requestMap) {
+        List<GoogleMonthlyInvoiceSum> sumList = reconcileMapper.selectGoogleSummary(requestMap);
+        GoogleMonthlyInvoiceSum total = GoogleMonthlyInvoiceSum.toRevsCategoryTotal(sumList.get(0).getYear(), sumList.get(0).getMonth());
+
+        for (GoogleMonthlyInvoiceSum sum : sumList) {
+            total.addItemPriceSum(sum.getItemPriceSum());
+            total.addTaxSum(sum.getTaxSum());
+            total.addTotalAmountSum(sum.getTotalAmountSum());
+            total.addRevShareSum(sum.getRevShareSum());
+        }
+        sumList.add(sumList.size() - 1, total);
+
+        return sumList;
+    }
+
     public void exportInvoiceDetailExcel(String dcb, String month, HttpServletResponse response) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("일별 통계");
@@ -172,20 +209,43 @@ public class GDCBInvoiceDetailService {
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 1, 4));
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 5, 8));
 
-        Map<String, Map<String, List<GDCBMonthlyInvoiceSum>>> invoiceMap = getGDCBInvoiceDetailMap(dcb, month);
+        List<GDCBDetailCompare> invoiceDetailList = getGDCBInvoiceDetailMap(dcb, month);
 
-        for (Map<String, List<GDCBMonthlyInvoiceSum>> mapIdx : invoiceMap.values()) {
-            for(List<GDCBMonthlyInvoiceSum> list : mapIdx.values()) {
-                XSSFRow idxRow = sheet.createRow(rowNum++);
-                for(GDCBMonthlyInvoiceSum sum : list) {
-                    idxRow.createCell(0).setCellValue(sum.getRevsCategory());
-                    idxRow.createCell(1).setCellValue(sum.getTransactionCnt());
-                    idxRow.createCell(2).setCellValue(sum.getTotalAmountSum());
-                    idxRow.createCell(3).setCellValue(sum.getRevsInInvoicedCurrencySum());
-                    idxRow.createCell(4).setCellValue(sum.getChargeSum());
-                }
+        for (GDCBDetailCompare compare : invoiceDetailList) {
+            XSSFRow idxRow = sheet.createRow(rowNum++);
+            if (compare.getTYear() != null && compare.getGYear() == null) { // Monthly Invoice
+                idxRow.createCell(0).setCellValue(compare.getRevsCategory());
+                idxRow.createCell(1).setCellValue(compare.getTransactionCnt());
+                idxRow.createCell(2).setCellValue(compare.getTotalAmountSum());
+                idxRow.createCell(3).setCellValue(compare.getRevsInInvoicedCurrencySum());
+                idxRow.createCell(4).setCellValue(compare.getChargeSum());
             }
         }
+
+        // Google Summary File
+        XSSFRow googleSummaryRow = sheet.createRow(rowNum);
+        googleSummaryRow.createCell(0).setCellValue("Google Summary File");
+        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum++,0,4));
+
+        XSSFRow googleSummaryCol = sheet.createRow(rowNum++);
+        googleSummaryCol.createCell(0).setCellValue("아이템 구분");
+        googleSummaryCol.createCell(1).setCellValue("ItemPriceSum");
+        googleSummaryCol.createCell(2).setCellValue("TaxSum");
+        googleSummaryCol.createCell(3).setCellValue("TotalAmountSum");
+        googleSummaryCol.createCell(4).setCellValue("RevShareSum");
+
+
+        for (GDCBDetailCompare compare : invoiceDetailList) {
+            XSSFRow idxRow = sheet.createRow(rowNum++);
+            if (compare.getGYear() != null && compare.getTYear() == null) { // Google Invoice
+                idxRow.createCell(0).setCellValue(compare.getRevsCategory());
+                idxRow.createCell(1).setCellValue(compare.getItemPriceSum());
+                idxRow.createCell(2).setCellValue(compare.getTaxSum());
+                idxRow.createCell(3).setCellValue(compare.getTotalAmountSum());
+                idxRow.createCell(4).setCellValue(compare.getRevShareSum());
+            }
+        }
+
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=GDCBInvoiceDetail.xlsx");
@@ -197,7 +257,7 @@ public class GDCBInvoiceDetailService {
     }
 
     private String calculatePreviousDate(String month) {
-        int monthInt = Integer.parseInt(month);
+        int monthInt = Integer.parseInt(month.substring(month.indexOf("-") + 1));
         String year = month.substring(0, month.indexOf("-"));
 
         if (monthInt == 1) { // 1월이면 전년 12월
@@ -206,6 +266,51 @@ public class GDCBInvoiceDetailService {
         } else {
             monthInt -= 1;
             return year + "-" + String.format("%02d", monthInt);
+        }
+    }
+
+    @Transactional
+    public void insertInvoiceDetailData(String year) {
+        String month;
+        Random random = new Random();
+        String[] transactionTypes = {"B", "R"};
+        String[] paymentTypes = {"00", "99", "PG"};
+
+
+        for (int i = 1; i <= 12; i++) {
+            month = String.valueOf(i);
+            if (i < 10) {
+                month = "0" + i;
+            }
+
+            for (int j = 0; j < transactionTypes.length; j++) {
+                String transactionType = transactionTypes[j];
+                for (int k = 0; k < paymentTypes.length; k++) {
+                    String paymentType = paymentTypes[k];
+                    for (int l = 0; l < revsCategoryArray.length; l++) {
+                        String revsCategory = revsCategoryArray[l];
+                        double cnt = Math.floor(random.nextDouble(1000));
+                        double itemPriceSum = Math.floor(random.nextDouble(100000));
+                        double taxSum = Math.floor(random.nextDouble(10000));
+                        double totalAmountSum = Math.floor(random.nextDouble(1000000));
+                        double revsInInvoicedSum = Math.floor(random.nextDouble(1000000));
+                        MonthlyInvoiceSum monthlyInvoiceSum = MonthlyInvoiceSum.toEntity(year, month, transactionType, paymentType, revsCategory,
+                                cnt, itemPriceSum, taxSum, totalAmountSum, revsInInvoicedSum);
+                        reconcileMapper.insertGDCBMonthlyInvoice(monthlyInvoiceSum);
+                    }
+                }
+            }
+
+            for (int l = 0; l < revsCategoryArray.length; l++) {
+                String revsCategory = revsCategoryArray[l];
+                double itemPriceSum = Math.floor(random.nextDouble(100000));
+                double taxSum = Math.floor(random.nextDouble(10000));
+                double totalAmountSum = Math.floor(random.nextDouble(1000000));
+                double revShareSum = Math.floor(random.nextDouble(10000));
+
+                GoogleMonthlyInvoiceSum googleInvoiceSum = GoogleMonthlyInvoiceSum.toEntity(year, month, revsCategory, itemPriceSum, taxSum, totalAmountSum, revShareSum);
+                reconcileMapper.insertGoogleMonthlyInvoice(googleInvoiceSum);
+            }
         }
     }
 }
