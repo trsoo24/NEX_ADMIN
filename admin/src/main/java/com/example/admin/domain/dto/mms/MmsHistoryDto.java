@@ -27,11 +27,11 @@ public class MmsHistoryDto {
         }
     }
 
-    private String replaceToStar(int startIdx, int endIdx, String ctn) {
+    private void replaceToStar(int startIdx, int endIdx, String ctn) {
         String head = ctn.substring(0, startIdx);
         String star = "*".repeat(endIdx - startIdx + 1);
         String tail = ctn.substring(endIdx + 1);
 
-        return head + star + tail;
+        this.ctn = head + star + tail;
     }
 }
