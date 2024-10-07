@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.admin.repository.mapper.mms.MmsSendMapper">
+    <insert id="insertMmsHistory" parameterType="com.example.admin.domain.entity.mms.MmsSendHistory">
+        INSERT INTO TB_MMS_SEND_HIS(CREATE_DT, SEQ, PARTITION_ID, TRY_CNT, SEND_DT, SEND_RESULT, TO_CTN, REQUEST_ID, CONTENT, MMS_CATEGORY)
+        VALUES (#{createDt}, #{seq}, #{partitionId}, #{tryCnt}, #{sendDt}, #{sendResult}, #{toCtn},#{reqeustId}, #{content}, #{mmsCategory})
+    </insert>
+
+    <select id="selectMmsHistoryList" parameterType="map" resultType="com.example.admin.domain.dto.mms.MmsHistoryDto">
+        SELECT
+            CREATE_DT createDt,
+            TO_CTN ctn,
+            MMS_CATEGORY mmsCategory,
+            CONTENT content,
+            SEND_RESULT sendResult
+        FROM TB_MMS_SEND_HIS
+        WHERE 1 = 1
+        <if test="ctn != null and ctn != ''">
+            AND TO_CTN LIKE CONCAT('%', #{ctn}, '%')
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            AND CREATE_DT BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d') AND STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+        </if>
+    </select>
+</mapper>
