@@ -1,5 +1,6 @@
 package com.example.admin.domain.dto.reconcile.sdcb;
 
+import com.example.admin.domain.entity.reconcile.sdcb.BillingHistory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,4 +17,36 @@ public class ErrorBillingHistory {
     private String statusCode;
     private String totAmt;
     private String eventTime;
+
+    public static ErrorBillingHistory of(BillingHistory billingHistory) {
+        return ErrorBillingHistory.builder()
+                .caseCode("CASE" + billingHistory.getCaseCode())
+                .requestId(billingHistory.getRequestId())
+                .transactionId(billingHistory.getTransactionId())
+                .statusCode(transStatusCode(billingHistory.getStatusCode()))
+                .totAmt(transTotAmt(billingHistory.getTotAmt()))
+                .eventTime(billingHistory.getEventTime())
+                .build();
+    }
+
+    private static String transStatusCode(String statusCode) {
+        return switch (statusCode) {
+            case "REFUND" -> "환불";
+            case "CHARGE/REFUND" -> "결제/취소";
+            default -> "결제";
+        };
+    }
+
+    private static String transTotAmt(String totAmt) {
+        String[] totAmtArray = totAmt.split("/");
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < totAmtArray.length; i++) {
+            sb.append(Math.floor(Math.round(Double.parseDouble(totAmtArray[i]))));
+            if (i != totAmtArray.length - 1) {
+                sb.append("/");
+            }
+        }
+        return sb.toString();
+    }
 }

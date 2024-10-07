@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BillingHistory {
+public class BillingHistory { // SK Planet 과 과금 대사 작업 결과
     private String requestId; // 요청 ID
     private String compareMonth; // 비교 대상 월
     private String eventTime; // SKP Event 발생 시간
@@ -18,4 +18,9 @@ public class BillingHistory {
     private String ctn; // ctn
     private Integer subNo; // sub no
     private String actType; // 처리 방법 -> 상용에 전부 NULL
+
+    //  dcb, month, case, ctn, page, pageSize
+    // month -> startDate , endDate ( yyyy-MM 형식으로 )
+
+    // CASE , 요청 ID , TRANSACTION ID , 결제유형 , 결제금액 , 처리시간 , 사유 , 처리방법 ( 수정 )
 }

@@ -7,10 +7,20 @@
 <mapper namespace="com.example.admin.repository.mapper.reconcile.sdcb.BillingHistoryMapper">
     <insert id="insertBillingHistory" parameterType="com.example.admin.domain.entity.reconcile.sdcb.BillingHistory">
         INSERT INTO TB_SDCB_COMPARE_RESULT(REQUEST_ID, COMPARE_MONTH, EVENT_TIME, CASE_CODE, TRANSACTION_ID, STATUS_CODE, TOT_AMT, CTN, SUB_NO, ACT_TYPE)
-        VALUES (#{requestId}, #{compareMonth}, #{eventTime}, #{caseCode}, #{transactionId}, #{statusCode}, #{totAmt}, #{cnt}, #{subNo}, #{actType})
+        VALUES (#{requestId}, #{compareMonth}, #{eventTime}, #{caseCode}, #{transactionId}, #{statusCode}, #{totAmt}, #{ctn}, #{subNo}, #{actType})
     </insert>
 
-    <select id="selectBillingHistoryError" parameterType="map" resultType="">
-
+    <select id="selectBillingHistoryList" parameterType="map" resultType="com.example.admin.domain.entity.reconcile.sdcb.BillingHistory">
+        SELECT * FROM TB_SDCB_COMPARE_RESULT
+        WHERE 1 = 1
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            AND STR_TO_DATE(COMPARE_MONTH, '%Y%m') BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m') AND STR_TO_DATE(#{endDate}, '%Y-%m')
+        </if>
+        <if test="caseCode != null and caseCode != ''">
+            AND CASE_CODE = #{caseCode}
+        </if>
+        <if test="ctn != null and ctn != ''">
+            AND CTN LIKE CONCAT('%', #{ctn}, '%')
+        </if>
     </select>
 </mapper>
