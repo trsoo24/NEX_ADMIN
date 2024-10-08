@@ -26,11 +26,15 @@ public class FunctionUtil {
         return new PageImpl<>(ts, pageable, list.size());
     }
 
-    public <T> void exportExcel(List<T> list, HttpServletResponse response) {
+    public String transCtn(String ctn) {
+        if (ctn.contains("-")) {
+            ctn = ctn.replace("-", "");
+        }
 
-    }
-
-    public <T> void exportExcelForDate(List<T> list, HttpServletResponse response) {
-
+        if (ctn.length() == 12) {
+            return ctn.replace(ctn.charAt(3) + "", "");
+        } else {
+            return ctn;
+        }
     }
 }
