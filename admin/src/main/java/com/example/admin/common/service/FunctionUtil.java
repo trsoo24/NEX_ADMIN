@@ -37,4 +37,23 @@ public class FunctionUtil {
             return ctn;
         }
     }
+
+    public static String maskingCtn(String ctn) {
+        // 숫자만 추출
+        String cleanCtn = ctn.replaceAll("[^0-9]", "");
+
+        if (cleanCtn.length() == 10) { // 010-123-4567 형식
+            // 원래 하이픈이 있었는지 확인하고, 하이픈을 추가한 마스킹 처리
+            return ctn.contains("-") ? cleanCtn.replaceAll("(\\d{3})(\\d{3})(\\d{4})", "$1-***-$3")
+                    : cleanCtn.replaceAll("(\\d{3})(\\d{3})(\\d{4})", "$1***$3");
+        } else if (cleanCtn.length() == 11) { // 010-1234-5678 형식
+            return ctn.contains("-") ? cleanCtn.replaceAll("(\\d{3})(\\d{4})(\\d{4})", "$1-****-$3")
+                    : cleanCtn.replaceAll("(\\d{3})(\\d{4})(\\d{4})", "$1****$3");
+        } else if (cleanCtn.length() == 12) { // 0100-1234-5678 형식
+            return ctn.contains("-")
+                    ? cleanCtn.replaceAll("(\\d{4})(\\d{4})(\\d{4})", "$1-****-$3")
+                    : cleanCtn.replaceAll("(\\d{4})(\\d{4})(\\d{4})", "$1****$3");
+        }
+        return ctn;
+    }
 }

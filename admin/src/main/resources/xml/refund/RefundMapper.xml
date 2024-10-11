@@ -4,4 +4,71 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.repository.mapper.refund.RefundMapper">
+    <insert id="insertGdcbAuthInfo" parameterType="com.example.admin.domain.entity.gdcb.AuthInfo">
+        INSERT INTO TB_AUTH_INFO (AUTH_TRANSACTION_ID, PARTITION_ID, CTN, VERSION, CORRELATION_ID, PURCHASE_TIME,
+                                  BILLING_AGREEMENT, OPERATOR_USER_TOKEN, PAYMENT_DESCRIPTION, MERCHANT_NAME, ITEM_NAME, MERCHANT_CONTACT,
+                                  ITEM_PRICE, TAX, TOTAL, USER_LOCALE, DCB_TOS_VERSION, RESULT, CANCEL_NOTIFICATION, CANCEL_NOTIFICATION_DT,
+                                  SUB_NO, ACE_NO, BAN, UNIT_MDL, TRANSACTION_TYPE, TRANSACTION_DT, TRANSACTION_RESULT, PAYMENT_TYPE, REFUND_DT,
+                                  CREATE_DT, FEE_TYPE, CURRENCY, UPDATE_DT, CUST_GRD_CD, ADJ_INFO, BAN_UNPAID_YN_CODE, MP_TRANSACTION_ID,
+                                  MP_TRANSACTION_TYPE)
+        VALUES (#{authTransactionId}, #{partitionId}, #{ctn}, #{version}, #{correlationId}, #{purchaseTime},
+                #{billingAgreement}, #{operatorUserToken}, #{paymentDescription}, #{merchantName}, #{itemName}, #{merchantContact},
+                #{itemPrice}, #{tax}, #{total}, #{userLocale}, #{dcbTosVersion}, #{result}, #{cancelNotification}, #{cancelNotificationDt},
+                #{subNo}, #{aceNo}, #{ban}, #{unitMdl}, #{transactionType}, #{transactionDt}, #{transactionResult}, #{paymentType}, #{refundDt},
+                DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{feeType}, #{currency}, #{updateDt}, #{custGrdCd}, #{adjInfo}, #{banUnpaidYnCode}, #{mpTransactionId},
+                #{mpTransactionType})
+    </insert>
+
+    <insert id="insertManualRefund" parameterType="com.example.admin.domain.entity.refund.ManualRefund">
+        INSERT INTO TB_MANUAL_REFUND (AUTH_TRANSACTION_ID, CORRELATION_ID, CTN, ITEM_NAME, MERCHANT_NAME, PAYMENT_DESCRIPTION,
+                                      MERCHANT_CONTACT, TOTAL, ITEM_PRICE, TAX, SUB_NO, ACE_NO, BAN, UNIT_MDL, FEE_TYPE, TRANSACTION_TYPE,
+                                      TRANSACTION_DT, REFUND_DT, CREATE_DT)
+        VALUES (#{authTransactionId}, #{correlationId}, #{ctn}, #{itemName}, #{merchantName}, #{paymentDescription},
+                #{merchantContact}, #{total}, #{itemPrice}, #{tax}, #{subNo}, #{aceNo}, #{ban}, #{unitMdl}, #{feeType},
+                #{transactionType}, #{transactionDt}, #{refundDt}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'))
+    </insert>
+
+    <insert id="insertManualRefundFileInfo" parameterType="com.example.admin.domain.entity.refund.ManualRefundFileInfo">
+        INSERT INTO TB_MANUAL_REFUND_FILE_INFO (REQUEST_NAME, RESPONSE_NAME, RETRY, UPDATE_DT, CREATE_DT)
+        VALUES (#{requestName}, #{responseName}, #{retry}, #{updateDt}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'))
+    </insert>
+
+    <insert id="insertEai" parameterType="com.example.admin.domain.entity.refund.vo.LgudcbEaiSdw">
+        INSERT INTO TB_LGUDCB_EAI_SDW(CMD,NEW_CORRELATIONID,NEW_ACCOUNT_TYPE,NEW_SMLS_STLM_DV_CD,NEW_SMLS_STLM_CMPNY_CD,NEW_BAN,NEW_ACE_NO
+                                     ,NEW_PRSS_YYMM,NEW_REQUEST_TYPE,NEW_ITEMPRICE,NEW_TAX,NEW_TOTAL,NEW_AUTH_DATE,NEW_TRANSACTION_DATE,NEW_MERCHANTNAME
+                                     ,NEW_ITEMNAME,NEW_MERCHANTCONTACT,NEW_PROD_NO)
+        VALUES ('insert', #{newCorrelationId}, #{newAccountType}, #{newSmlsStlmDvCd}, #{newSmlsStlmCmpnyCd}, IFNULL(#{newBan}, 0), IFNULL(#{newAceNo}, 0), #{newPrssYymm}, #{newRequestType}, IFNULL(#{newItemPrice}, 0), IFNULL(#{newTax}, 0),
+                IFNULL(#{newTotal}, 0), IFNULL(STR_TO_DATE(#{newAuthDate}, '%Y%m%d%H%i%s'), NOW()), IFNULL(STR_TO_DATE(#{newTransactionDate}, '%Y%m%d%H%i%s'), NOW(), IFNULL(#{newMerchantName}, 'NULL'), IFNULL(#{newItemName}, 'NULL'), IFNULL(#{newMerchantContact}, 'NULL'), #{newProdNo})
+    </insert>
+
+    <select id="getAuthInfo" parameterType="map" resultType="com.example.admin.domain.entity.gdcb.AuthInfo">
+        SELECT * FROM TB_AUTH_INFO
+        WHERE CORRELATION_ID = #{correlationId}
+        AND BILLING_AGREEMENT = #{billingAgreement}
+        ORDER BY AUTH_TRANSACTION_ID;
+    </select>
+
+    <select id="selectManualRefundByCorrelationId" parameterType="String" resultType="com.example.admin.domain.entity.refund.ManualRefund">
+        SELECT * FROM TB_MANUAL_REFUND
+        WHERE CORRELATION_ID = #{correlationId}
+    </select>
+
+    <update id="updateRefundAuth" parameterType="map">
+        UPDATE TB_MANUAL_REFUND
+        SET TRANSACTION_TYPE = #{transactionType}
+          , REFUND_DT = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+        WHERE CORRELATION_ID = #{correlationId}
+    </update>
+
+    <select id="selectBillingFileInfo" parameterType="String" resultType="com.example.admin.domain.entity.refund.ManualRefundFileInfo">
+        SELECT * FROM TB_MANUAL_REFUND_FILE_INFO
+        WHERE REQUEST_NAME = #{requestName}
+    </select>
+
+    <update id="updateRefundFileInfo" parameterType="map">
+        UPDATE TB_MANUAL_REFUND_FILE_INFO
+        SET RETRY = #{retry}
+          , UPDATE_DT = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+        WHERE REQUEST_NAME = #{requestName}
+    </update>
 </mapper>
