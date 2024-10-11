@@ -51,7 +51,7 @@ public class GdcbRefundService {
         return responseList;
     }
 
-    public void refundProcess(HttpServletRequest request, RefundDto refundDto) {
+    public boolean refundProcess(HttpServletRequest request, RefundDto refundDto) {
         logUtil.umkInfoLogging(request,"processRefund start~!", "");
 
         try {
@@ -88,22 +88,17 @@ public class GdcbRefundService {
                     // 처리 결과 view 업데이트
                     updateRefundAuth("GDCB", correlationId);
 
-//                    mav.addObject("refundJob", auth);
-//                    mav.addObject("refundResult", this.makeProcessResult(findCsvFile.getResponseFile(), "success"));
-                } else {
-//                    mav.addObject("refundJob", findCorrellationID.get(0).getAuth());
-//                    mav.addObject("refundResult", this.makeProcessResult("환불요청 파일이 없음!", "FAIL"));
+                    return true;
                 }
             }
-//            mav.addObject("correlationId", correlationId);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
 
-//            mav.addObject("refundJob", auth);
-//            mav.addObject("refundResult", this.makeProcessResult(ex.getMessage(), "FAIL"));
+            return false;
         }
-
         logUtil.umkInfoLogging(request, "processRefund end~!", "");
+
+        return true;
     }
 
 

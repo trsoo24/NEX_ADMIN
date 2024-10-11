@@ -47,9 +47,9 @@ public class GdcbRefundController {
 
     @PostMapping("/process/gdcb") // GDCB 환불 프로세스 실행
     public StatusResult refundProcess(HttpServletRequest request, @RequestBody RefundDto refundDto) {
-        gdcbRefundService.refundProcess(request, refundDto);
+        boolean done = gdcbRefundService.refundProcess(request, refundDto);
 
-        return new StatusResult(true);
+        return new StatusResult(done);
     }
 
 
