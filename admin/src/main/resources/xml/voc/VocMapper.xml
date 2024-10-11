@@ -6,23 +6,30 @@
 <mapper namespace="com.example.admin.repository.mapper.voc.VocMapper">
     <!-- provisioning info -->
     <insert id="insertProvisioningInfo" parameterType="com.example.admin.domain.entity.gdcb.ProvisioningInfo">
-        INSERT INTO TB_PROVISIONING_INFO(SUB_NO, CTN, VERSION, CORRELATION_ID, OPERATOR_USER_TOKEN, USER_LOCALE, BILLING_AGREEMENT, RESULT, IS_PROVISIONED, TOS_URL, TOS_VERSION, ACCOUNT_TYPE, GET_PROVISIONING_TRANSACTION_ID, TRANSACTION_LIMIT, PAYMENT_TYPE, UPDATE_DT, CREATE_DT)
-        VALUES (#{subNo}, #{ctn}, #{version}, #{correlationId}, #{operatorUserToken}, #{userLocale}, #{billingAgreement}, #{result}, #{isProvisioned}, #{tosUrl}, #{tosVersion}, #{accountType}, #{getProvisioningTransactionId}, #{transactionLimit}, #{paymentType}, #{updateDt}, #{createDt})
+        INSERT INTO TB_PROVISIONING_INFO(SUB_NO, CTN, VERSION, CORRELATION_ID, OPERATOR_USER_TOKEN, USER_LOCALE,
+                                         BILLING_AGREEMENT, RESULT, IS_PROVISIONED, TOS_URL, TOS_VERSION, ACCOUNT_TYPE,
+                                         GET_PROVISIONING_TRANSACTION_ID, TRANSACTION_LIMIT, PAYMENT_TYPE, UPDATE_DT,
+                                         CREATE_DT)
+        VALUES (#{subNo}, #{ctn}, #{version}, #{correlationId}, #{operatorUserToken}, #{userLocale},
+                #{billingAgreement}, #{result}, #{isProvisioned}, #{tosUrl}, #{tosVersion}, #{accountType},
+                #{getProvisioningTransactionId}, #{transactionLimit}, #{paymentType}, #{updateDt}, #{createDt})
     </insert>
 
     <!-- sms info -->
     <insert id="insertSmsInfo" parameterType="com.example.admin.domain.entity.gdcb.SmsInfo">
-        INSERT INTO TB_SMSMO_INFO(CTN, GOOGLE_USER_TOKEN, RESULT, PAYMENT_TYPE, OPERATOR_USER_TOKEN, UPDATE_DT, CREATE_DT, TOS_VERSION, TOS_DATE)
-        VALUES (#{ctn}, #{googleUserToken}, #{result}, #{paymentType}, #{operatorUserToken}, #{updateDt}, #{createDt}, #{tosVersion}, #{tosDate})
+        INSERT INTO TB_SMSMO_INFO(CTN, GOOGLE_USER_TOKEN, RESULT, PAYMENT_TYPE, OPERATOR_USER_TOKEN, UPDATE_DT,
+                                  CREATE_DT, TOS_VERSION, TOS_DATE)
+        VALUES (#{ctn}, #{googleUserToken}, #{result}, #{paymentType}, #{operatorUserToken}, #{updateDt}, #{createDt},
+                #{tosVersion}, #{tosDate})
     </insert>
 
     <select id="selectSmsmoListByCtn" parameterType="map" resultType="com.example.admin.domain.dto.voc.SmsInfoDto">
         SELECT
-               GOOGLE_USER_TOKEN googleUserToken,
-               OPERATOR_USER_TOKENLGUT operatorUserToken,
-               OUT_EXPIRE_TIME expireTime,
-               TO_CHAR(UPDATE_DT, 'YYYY-MM-DD') updateDT,
-               TO_CHAR(CREATE_DT, 'YYYY-MM-DD') createDT
+        GOOGLE_USER_TOKEN googleUserToken,
+        OPERATOR_USER_TOKENLGUT operatorUserToken,
+        OUT_EXPIRE_TIME expireTime,
+        TO_CHAR(UPDATE_DT, 'YYYY-MM-DD') updateDT,
+        TO_CHAR(CREATE_DT, 'YYYY-MM-DD') createDT
         FROM TB_SMSMO_INFO
         WHERE 1 = 1
         <if test="ctn != null and ctn != ''">
@@ -30,17 +37,56 @@
         </if>
     </select>
 
-    <select id="selectProvisioningListByCtn" parameterType="map" resultType="com.example.admin.domain.dto.voc.ProvisionInfoDto">
+    <select id="selectProvisioningListByCtn" parameterType="map"
+            resultType="com.example.admin.domain.dto.voc.ProvisionInfoDto">
         SELECT
-            SUB_NO subNo,
-            IS_PROVISIONED isProvisioned,
-            OPERATOR_USER_TOKEN operatorUserToken,
-            TO_CHAR(UPDATE_DT, 'YYYY-MM-DD') updateDT,
-            TO_CHAR(CREATE_DT, 'YYYY-MM-DD') createDT
+        SUB_NO subNo,
+        IS_PROVISIONED isProvisioned,
+        OPERATOR_USER_TOKEN operatorUserToken,
+        TO_CHAR(UPDATE_DT, 'YYYY-MM-DD') updateDT,
+        TO_CHAR(CREATE_DT, 'YYYY-MM-DD') createDT
         FROM TB_PROVISIONING_INFO
         WHERE 1 = 1
         <if test="ctn != null and ctn != ''">
             AND REPLACE(CTN, '-', '') LIKE CONCAT('%', #{ctn}, '%')
+        </if>
+    </select>
+
+    <insert id="insertVocHistory" parameterType="com.example.admin.domain.dto.voc.InsertVocClassification">
+        INSERT INTO TB_VOC_HISTORY(REG_DATE, CTN, DCB, CONTENT
+        <if test="classification1 != null">, CLASSIFICATION_1</if>
+        <if test="classification2 != null">, CLASSIFICATION_2</if>
+        <if test="classification3 != null">, CLASSIFICATION_3</if>
+        <if test="answer1 != null">, ANSWER_1</if>
+        <if test="answer2 != null">, ANSWER_2</if>
+        <if test="answer3 != null">, ANSWER_3</if>)
+        VALUES (DATE_FORMAT(NOW(), '%Y-%m-%d'), #{ctn}, #{dcb}, #{content}
+        <if test="classification1 != null">, #{classification1}</if>
+        <if test="classification2 != null">, #{classification2}</if>
+        <if test="classification3 != null">, #{classification3}</if>
+        <if test="answer1 != null">, #{answer1}</if>
+        <if test="answer2 != null">, #{answer2}</if>
+        <if test="answer3 != null">, #{answer3}</if>)
+    </insert>
+
+    <update id="updateVocHistory" parameterType="com.example.admin.domain.dto.voc.UpdateVocHistoryDto">
+        UPDATE TB_VOC_HISTORY
+        <set>
+            <if test="classification1 != null">CLASSIFICATION_1 = #{classification1},</if>
+            <if test="classification2 != null">CLASSIFICATION_2 = #{classification2},</if>
+            <if test="classification3 != null">CLASSIFICATION_3 = #{classification3},</if>
+            <if test="answer1 != null">ANSWER_1 = #{answer1},</if>
+            <if test="answer2 != null">ANSWER_2 = #{answer2},</if>
+            <if test="answer3 != null">ANSWER_3 = #{answer3}</if>
+        </set>
+        WHERE VOC_ID = #{vocId}
+    </update>
+
+    <select id="selectVocHistory" parameterType="map" resultType="com.example.admin.domain.entity.voc.VocClassification">
+        SELECT * FROM TB_VOC_HISTORY
+        WHERE 1 = 1
+        <if test="ctn != null and ctn != ''">
+            AND CTN = #{ctn}
         </if>
     </select>
 </mapper>

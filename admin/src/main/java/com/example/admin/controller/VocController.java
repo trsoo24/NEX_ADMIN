@@ -1,11 +1,17 @@
 package com.example.admin.controller;
 
 import com.example.admin.common.response.MapResult;
+import com.example.admin.common.response.PageResult;
+import com.example.admin.common.response.StatusResult;
+import com.example.admin.domain.dto.voc.InsertVocClassification;
+import com.example.admin.domain.dto.voc.UpdateVocHistoryDto;
 import com.example.admin.domain.entity.gdcb.ProvisioningInfo;
 import com.example.admin.domain.entity.gdcb.SmsInfo;
+import com.example.admin.domain.entity.voc.VocClassification;
 import com.example.admin.service.voc.VocService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -32,7 +38,33 @@ public class VocController {
     }
 
     @PostMapping("/provisioning")
-    public void insertProvisioningInfo(@RequestBody @Valid ProvisioningInfo provisioningInfo) {
+    public StatusResult insertProvisioningInfo(@RequestBody @Valid ProvisioningInfo provisioningInfo) {
         vocService.insertProvisioningInfo(provisioningInfo);
+
+        return new StatusResult(true);
+    }
+
+    @PostMapping("/classification")
+    public StatusResult insertVocClassification(@RequestBody @Valid InsertVocClassification insertVocClassification) {
+        vocService.insertVocClassification(insertVocClassification);
+
+        return new StatusResult(true);
+    }
+
+    @PutMapping("/classification")
+    public StatusResult updateVocClassification(@RequestBody @Valid UpdateVocHistoryDto updateVocHistoryDto) {
+        vocService.updateVocClassification(updateVocHistoryDto);
+
+        return new StatusResult(true);
+    }
+
+    @GetMapping("/classification")
+    public PageResult<VocClassification> getVocClassificationPage(@RequestParam("dcb") @Valid String dcb,
+                                                                  @RequestParam("ctn") @Valid String ctn,
+                                                                  @RequestParam("page") @Valid int page,
+                                                                  @RequestParam("pageSize") @Valid int pageSize) {
+        Page<VocClassification> vocClassificationPage = vocService.getVocClassificationList(dcb, ctn, page, pageSize);
+
+        return new PageResult<>(true, vocClassificationPage);
     }
 }
