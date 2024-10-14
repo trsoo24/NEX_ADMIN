@@ -28,12 +28,14 @@ public class GDCBInvoiceDetailService {
     private final String[] revsCategoryArray = {"APP", "APP_SUBSCRIPTION", "CONTENT", "NA", "SPECIAL_APP"};
     private final String[] paymentTypeArray = {"Invoice Details(DCB + 소액결제 + 기타)", "Invoice Details(DCB)", "Invoice Details(소액결제)", "Invoice Details(기타)"};
 
-    public List<GDCBDetailCompare> getGDCBInvoiceDetailMap(String dcb, String month) {
+    public Map<String, List<GDCBDetailCompare>> getGDCBInvoiceDetailMap(String dcb, String month) {
         Map<String, Object> requestMap = new HashMap<>();
         String[] monthArray = month.split("-");
         String previousMonth = calculatePreviousDate(month);
         String[] preMonthArray = previousMonth.split("-");
         List<GDCBDetailCompare> responseList = new ArrayList<>();
+        Map<String, List<GDCBDetailCompare>> responseMap = new LinkedHashMap<>();
+
         requestMap.put("dcb", dcb);
 
         // 지난 달 값
@@ -53,11 +55,12 @@ public class GDCBInvoiceDetailService {
         gdcbMonthlyInvoiceSumToGDCBCompareDtoList(month, paymentTypeArray[2], getDetails("PG", requestMap), responseList);
         gdcbMonthlyInvoiceSumToGDCBCompareDtoList(month, paymentTypeArray[3], getDetails("99", requestMap), responseList);
 
+        responseMap.put("invoiceDetailsFileContents", responseList);
         // Google Summary File
         List<GoogleMonthlyInvoiceSum> googleMonthlySumList = getGoogleMonthlySum(requestMap);
-        googleMonthlySumToGDCBCompareDtoList(month, googleMonthlySumList, responseList);
+        googleMonthlySumToGDCBCompareDtoList(month, googleMonthlySumList, responseMap);
 
-        return responseList;
+        return responseMap;
     }
 
     private Map<String, List<GDCBMonthlyInvoiceSum>> getDetails(String paymentType, Map<String, Object> requestMap) {
@@ -103,7 +106,7 @@ public class GDCBInvoiceDetailService {
 
     private void setListSize(List<GDCBMonthlyInvoiceSum> sumList) {
         // 비어있는 revsCategory 값 채워서 buy, refund list 길이 통일
-        Boolean[] revsCategoryCheck = new Boolean[revsCategoryArray.length];
+        boolean[] revsCategoryCheck = new boolean[revsCategoryArray.length];
 
         for (GDCBMonthlyInvoiceSum sum : sumList) {
             for (int i = 0; i < revsCategoryArray.length; i++) {
@@ -137,8 +140,6 @@ public class GDCBInvoiceDetailService {
     }
 
     private void gdcbMonthlyInvoiceSumToGDCBCompareDtoList(String month, String parameterType, Map<String, List<GDCBMonthlyInvoiceSum>> sumMap, List<GDCBDetailCompare> responseList) { // 객체 하나로 처리
-
-
         for (List<GDCBMonthlyInvoiceSum> list : sumMap.values()) {
             for (GDCBMonthlyInvoiceSum sum : list) {
                 responseList.add(GDCBDetailCompare.fromTbMonthlyInvoiceSum(month, parameterType, sum));
@@ -146,10 +147,13 @@ public class GDCBInvoiceDetailService {
         }
     }
 
-    private void googleMonthlySumToGDCBCompareDtoList(String month, List<GoogleMonthlyInvoiceSum> googleList, List<GDCBDetailCompare> responseList) {
+    private void googleMonthlySumToGDCBCompareDtoList(String month, List<GoogleMonthlyInvoiceSum> googleList, Map<String, List<GDCBDetailCompare>> responseMap) {
+        List<GDCBDetailCompare> responseList = new ArrayList<>();
         for (GoogleMonthlyInvoiceSum sum : googleList) {
             responseList.add(GDCBDetailCompare.fromGMonthlyInvoiceSum(month, sum));
         }
+
+        responseMap.put("summaryFileContents", responseList);
     }
 
     private List<GoogleMonthlyInvoiceSum> getGoogleMonthlySum(Map<String, Object> requestMap) {
@@ -209,9 +213,10 @@ public class GDCBInvoiceDetailService {
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 1, 4));
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 5, 8));
 
-        List<GDCBDetailCompare> invoiceDetailList = getGDCBInvoiceDetailMap(dcb, month);
+        Map<String, List<GDCBDetailCompare>> detailMap = getGDCBInvoiceDetailMap(dcb, month);
+        List<GDCBDetailCompare> gdcbDetailCompareList = detailMap.get("invoiceDetailsFileContents");
 
-        for (GDCBDetailCompare compare : invoiceDetailList) {
+        for (GDCBDetailCompare compare : gdcbDetailCompareList) {
             XSSFRow idxRow = sheet.createRow(rowNum++);
             if (compare.getTYear() != null && compare.getGYear() == null) { // Monthly Invoice
                 idxRow.createCell(0).setCellValue(compare.getRevsCategory());
@@ -234,8 +239,9 @@ public class GDCBInvoiceDetailService {
         googleSummaryCol.createCell(3).setCellValue("TotalAmountSum");
         googleSummaryCol.createCell(4).setCellValue("RevShareSum");
 
+        List<GDCBDetailCompare> googleDetailList = detailMap.get("summaryFileContents");
 
-        for (GDCBDetailCompare compare : invoiceDetailList) {
+        for (GDCBDetailCompare compare : googleDetailList) {
             XSSFRow idxRow = sheet.createRow(rowNum++);
             if (compare.getGYear() != null && compare.getTYear() == null) { // Google Invoice
                 idxRow.createCell(0).setCellValue(compare.getRevsCategory());

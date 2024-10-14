@@ -63,10 +63,10 @@ public class GDCBReconcileController {
     }
 
     @GetMapping("/gdcb/invoice")
-    public ListResult<GDCBDetailCompare> getGDCBInvoiceDetailList(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) {
-        List<GDCBDetailCompare> invoiceDetailList = gdcbInvoiceDetailService.getGDCBInvoiceDetailMap(dcb, month);
+    public MapResult<String, List<GDCBDetailCompare>> getGDCBInvoiceDetailList(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) {
+        Map<String, List<GDCBDetailCompare>> invoiceDetailMap = gdcbInvoiceDetailService.getGDCBInvoiceDetailMap(dcb, month);
 
-        return new ListResult<>(true, invoiceDetailList);
+        return new MapResult<>(true, invoiceDetailMap);
     }
 
     @GetMapping("/excel/gdcb/invoice")
