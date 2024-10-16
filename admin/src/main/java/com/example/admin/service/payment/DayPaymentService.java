@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,8 +59,7 @@ public class DayPaymentService {
 
                 if(dayPaymentMap.containsKey(date)) {
                     DayPayment containsDayPayment = dayPaymentMap.get(date);
-                    containsDayPayment.addTotalAmount(dayPayment);
-                    dayPayment.calculateStat();
+                    dayPayment.addTotalAmount(containsDayPayment);
                 }
 
                 if (dayPaymentMap.size() >= totalDayPaymentList.size() - i) { // 마지막 list 도는 순서일 때 평균값 계산
@@ -69,7 +69,11 @@ public class DayPaymentService {
                 dayPaymentMap.put(date, dayPayment);
             }
 
-            return new ArrayList<>(dayPaymentMap.values());
+            List<DayPayment> responseList = new ArrayList<>(dayPaymentMap.values());
+            responseList.sort(Comparator.comparing(dayPayment -> LocalDate.parse(dayPayment.getStat_day())));
+
+            return responseList;
+
         }
     }
 
