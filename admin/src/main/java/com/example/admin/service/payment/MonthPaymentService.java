@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 
 @Service
@@ -30,28 +32,46 @@ public class MonthPaymentService {
     private final PdcbMonthPaymentMapper pdcbMonthPaymentMapper;
     private final SdcbMonthPaymentMapper sdcbMonthPaymentMapper;
 
-    public MonthPayment getMonthPayment(String dcb, String year) {
-        MonthPayment monthPayment = new MonthPayment();
-        switch (dcb.toLowerCase()) {
-            case "adcb" -> monthPayment = adcbMonthPaymentMapper.getMonthPayment(year);
-            case "gdcb" -> monthPayment = gdcbMonthPaymentMapper.getMonthPayment(year);
-            case "mdcb" -> monthPayment = mdcbMonthPaymentMapper.getMonthPayment(year);
-            case "msdcb" -> monthPayment = msdcbMonthPaymentMapper.getMonthPayment(year);
-            case "ndcb" -> monthPayment = ndcbMonthPaymentMapper.getMonthPayment(year);
-            case "pdcb" -> monthPayment = pdcbMonthPaymentMapper.getMonthPayment(year);
-            case "sdcb" -> monthPayment = sdcbMonthPaymentMapper.getMonthPayment(year);
-        }
+    public List<MonthPayment> getMonthPayment(List<String> dcbs, String year) {
+        if (dcbs.size() == 1) {
+            return getMonthPaymentList(dcbs.get(0), year);
+        } else {
+            List<MonthPayment> totalMonthPaymentList = new ArrayList<>();
+            Map<String, MonthPayment> monthPaymentMap = new HashMap<>();
 
-        return monthPayment;
+            for (String dcb : dcbs) {
+                List<MonthPayment> monthPaymentList = getMonthPaymentList(dcb, year);
+                totalMonthPaymentList.addAll(monthPaymentList);
+            }
+
+            for (int i = 0; i < totalMonthPaymentList.size(); i++) {
+                MonthPayment monthPayment = totalMonthPaymentList.get(i);
+                String date = monthPayment.getStat_month();
+
+                if (monthPaymentMap.containsKey(date)) {
+                    MonthPayment containsMonthPayment = monthPaymentMap.get(date);
+                    monthPayment.addTotalAmount(containsMonthPayment);
+                }
+
+                if (monthPaymentMap.size() >= totalMonthPaymentList.size() - i) {
+                    monthPayment.calculateStat();
+                }
+                monthPaymentMap.put(date, monthPayment);
+            }
+            List<MonthPayment> responseList = new ArrayList<>(monthPaymentMap.values());
+            responseList.sort(Comparator.comparing(monthPayment -> YearMonth.parse(monthPayment.getStat_month())));
+
+            return responseList;
+        }
     }
 
-    public Map<String, List<Object>> getMonthPaymentDtoForm(String date, String dcb) {
+    public Map<String, List<Object>> getMonthPaymentDtoForm(String date, List<String> dcbs) {
         log.info("MonthPayment 조회 API");
         Map<String, MonthPayment> valueMap = new LinkedHashMap<>();
         Map<String, List<Object>> dtoMap = new LinkedHashMap<>();
 
-        MonthPayment total = MonthPayment.toTotal();
-        List<MonthPayment> monthPaymentList = getMonthPaymentList(date, dcb);
+        MonthPayment total = MonthPayment.toTotal("TOTAL");
+        List<MonthPayment> monthPaymentList = getMonthPayment(dcbs, date);
         calculateMap(valueMap, monthPaymentList, total);
 
         List<MonthPaymentDto> monthPaymentDtoList = generateDtoList(valueMap, total);
@@ -61,7 +81,7 @@ public class MonthPaymentService {
         return dtoMap;
     }
 
-    private List<MonthPayment> getMonthPaymentList(String year, String dcb) {
+    private List<MonthPayment> getMonthPaymentList(String dcb, String year) {
         // TODO DCB 조건값 추가
         String[] dcbArr = dcb.split(",");
         List<MonthPayment> monthPaymentList = new ArrayList<>();
@@ -134,8 +154,8 @@ public class MonthPaymentService {
         }
     }
 
-    public void exportMonthPaymentExcel(String year, String dcb, HttpServletResponse response) throws IOException, IllegalAccessException {
-        Map<String, List<Object>> monthPaymentMap = getMonthPaymentDtoForm(year, dcb);
+    public void exportMonthPaymentExcel(String year, List<String> dcbs, HttpServletResponse response) throws IOException, IllegalAccessException {
+        Map<String, List<Object>> monthPaymentMap = getMonthPaymentDtoForm(year, dcbs);
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("월별 통계");

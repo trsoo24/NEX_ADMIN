@@ -1,10 +1,8 @@
 package com.example.admin.controller;
 
-import com.example.admin.common.response.DataResult;
 import com.example.admin.common.response.ListResult;
 import com.example.admin.common.response.MapResult;
 import com.example.admin.common.response.StatusResult;
-import com.example.admin.domain.entity.payment.DayPayment;
 import com.example.admin.domain.entity.payment.MonthPayment;
 import com.example.admin.service.payment.MonthPaymentService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,19 +29,21 @@ public class MonthPaymentController {
     }
 
     @GetMapping()
-    public MapResult<String, List<Object>> getMonthPayment(@RequestParam("dcb") @Valid String dcb, @RequestParam("year") @Valid String year) {
-        Map<String, List<Object>> monthPaymentMap = monthPaymentService.getMonthPaymentDtoForm(year, dcb);
+    public MapResult<String, List<Object>> getMonthPayment(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("year") @Valid String year) {
+        Map<String, List<Object>> monthPaymentMap = monthPaymentService.getMonthPaymentDtoForm(year, dcbs);
 
         return new MapResult<>(true, monthPaymentMap);
     }
 
     @GetMapping("/2")
-    public MonthPayment getDayPayments2(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) {
-        return monthPaymentService.getMonthPayment(dcb, month);
+    public ListResult<MonthPayment> getDayPayments2(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month) {
+        List<MonthPayment> monthPaymentList = monthPaymentService.getMonthPayment(dcbs, month);
+
+        return new ListResult<>(true, monthPaymentList);
     }
 
     @GetMapping("/excel")
-    public void exportExcel(@RequestParam("dcb") String dcb, @RequestParam("year") String year, HttpServletResponse response) throws IOException,IllegalAccessException {
-        monthPaymentService.exportMonthPaymentExcel(year, dcb, response);
+    public void exportExcel(@RequestParam("dcbs") List<String> dcbs, @RequestParam("year") String year, HttpServletResponse response) throws IOException,IllegalAccessException {
+        monthPaymentService.exportMonthPaymentExcel(year, dcbs, response);
     }
 }
