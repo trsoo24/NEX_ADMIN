@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Mapper
 public interface BillingGradeMapper {
-    List<BillingGradeDto> getBillingGradeDto(Map<String, String> map);
+    List<BillingGradeDto> getBillingGradeDto(Map<String, Object> map);
     void insertBillingGrade(BillingGrade billingGrade);
-    List<BillingGrade> getBillingGrade(Map<String, String> map);
+    List<BillingGrade> getBillingGrade(Map<String, Object> map);
 }

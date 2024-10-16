@@ -5,6 +5,7 @@ import com.example.admin.domain.entity.billing.BillingGrade;
 import com.example.admin.repository.mapper.billinggrade.BillingGradeMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -25,40 +26,66 @@ public class BillingGradeService {
     private final String[] categories = {"전체", "정상", "연체"};
     private final String[] descriptions = {"청구 대상(명)", "청구 건수(건)", "청구액(원)"};
 
-    public List<BillingGrade> getBillingGrade(String dcb, String yyMm) {
-        Map<String, String> requestMap = new HashMap<String, String>();
-        requestMap.put("dcb", dcb.toUpperCase());
-        requestMap.put("yyMm", yyMm);
+    public Map<String, List<BillingGradeDto>> getBillingGradeList(List<String> dcbs, String yyMm) {
+        Map<String, Object> requestMap = new HashMap<>();
+        List<BillingGradeDto> totalBillingGradeList = new ArrayList<>();
+        Map<String, List<BillingGradeDto>> dcbBillingGradeMap = new LinkedHashMap<>();
+        Map<String, List<BillingGradeDto>> responseMap = new LinkedHashMap<>();
 
-        return billingGradeMapper.getBillingGrade(requestMap);
-    }
+        for (String dcb : dcbs) {
+            requestMap.put("dcb", dcb.toUpperCase());
+            requestMap.put("yyMm", yyMm);
 
-    // 등급별 월별 청구 현황 조회
-    public List<BillingGradeDto> searchBillingGrade(String dcb, String yyMm) {
-        List<BillingGradeDto> billingGradeDtoList = sortList(getBillingGradeList(dcb, yyMm));
+            List<BillingGradeDto> billingGradeList = billingGradeMapper.getBillingGradeDto(requestMap);
+            dcbBillingGradeMap.put(dcb, billingGradeList);
+            totalBillingGradeList.addAll(billingGradeList);
+        }
 
-        for (BillingGradeDto billingGradeDto : billingGradeDtoList) {
-            if (billingGradeDto.getCustGrdCd().equals("A")) {
-                billingGradeDto.dtoSetCustGrdCd("전체");
-            } else if (billingGradeDto.getCustGrdCd().equals("E")) {
-                billingGradeDto.dtoSetCustGrdCd("그 외");
+        Map<String, BillingGradeDto> billingGradeMap = new HashMap<>();
+        for (BillingGradeDto billingGrade : totalBillingGradeList) {
+            String key = billingGrade.getCustGrdCd();
+
+            if (billingGradeMap.containsKey(key)) {
+                BillingGradeDto totalBillingGrade = billingGradeMap.get(key);
+                totalBillingGrade.addTotalValue(billingGrade);
+                billingGradeMap.put(key, totalBillingGrade);
             } else {
-                billingGradeDto.dtoSetCustGrdCd(billingGradeDto.getCustGrdCd() + "등급");
+                BillingGradeDto totalBillingGrade = BillingGradeDto.toTotalBillingGrade(billingGrade, "total");
+                billingGradeMap.put(key, totalBillingGrade);
             }
         }
 
-        return billingGradeDtoList;
+        responseMap.put("total", new ArrayList<>(billingGradeMap.values()));
+        responseMap.putAll(dcbBillingGradeMap);
+
+        return responseMap;
     }
 
-    private List<BillingGradeDto> getBillingGradeList(String dcb, String yyMm) {
-        Map<String, String> requestMap = new HashMap<String, String>();
-        requestMap.put("dcb", dcb.toUpperCase());
-        requestMap.put("yyMm", yyMm);
-        return billingGradeMapper.getBillingGradeDto(requestMap);
+
+    // 등급별 월별 청구 현황 조회
+    public Map<String, List<BillingGradeDto>> searchBillingGrade(List<String> dcbs, String yyMm) {
+        Map<String, List<BillingGradeDto>> billingGradeDtoMap = getBillingGradeList(dcbs, yyMm);
+
+        for (List<BillingGradeDto> billingGradeDtoList : billingGradeDtoMap.values()) {
+            sortList(billingGradeDtoList);
+
+            for (BillingGradeDto billingGradeDto : billingGradeDtoList) {
+                if (billingGradeDto.getCustGrdCd().equals("A")) {
+                    billingGradeDto.dtoSetCustGrdCd("전체");
+                } else if (billingGradeDto.getCustGrdCd().equals("E")) {
+                    billingGradeDto.dtoSetCustGrdCd("그 외");
+                } else {
+                    billingGradeDto.dtoSetCustGrdCd(billingGradeDto.getCustGrdCd() + "등급");
+                }
+            }
+        }
+
+        return billingGradeDtoMap;
     }
+
 
     // 등급별 월 청구 현황 엑셀 생성
-    public void exportBillingGradeExcel(String dcb, String yyMm, HttpServletResponse response) throws IOException {
+    public void exportBillingGradeExcel(List<String> dcbs, String yyMm, HttpServletResponse response) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("등급별 청구 현황");
         XSSFRow header = sheet.createRow(0);
@@ -79,27 +106,29 @@ public class BillingGradeService {
         }
 
         int rowIdx = 2;
-        List<BillingGradeDto> billingGradeDtoList = searchBillingGrade(dcb, yyMm);
-        Map<String, BillingGradeDto> billingGradeDtoMap = getBillingGradeMap(billingGradeDtoList);
+        Map<String, List<BillingGradeDto>> billingGradeDtoMap = searchBillingGrade(dcbs, yyMm);
 
-        for (BillingGradeDto billingGrade : billingGradeDtoMap.values()) {
-            XSSFRow row = sheet.createRow(rowIdx++);
+        for (List<BillingGradeDto> billingGradeDtoList : billingGradeDtoMap.values()) {
 
-            Field[] fields = BillingGradeDto.class.getDeclaredFields();
+            for (BillingGradeDto billingGradeDto : billingGradeDtoList) {
+                XSSFRow row = sheet.createRow(rowIdx++);
 
-            for (int i = 0; i < fields.length; i++) {
-                fields[i].setAccessible(true); // private 필드에 접근 가능하게 설정
+                Field[] fields = BillingGradeDto.class.getDeclaredFields();
 
-                try {
-                    Object value = fields[i].get(billingGrade);
+                for (int i = 0; i < fields.length; i++) {
+                    fields[i].setAccessible(true); // private 필드에 접근 가능하게 설정
 
-                    if (value instanceof Integer) {
-                        row.createCell(i).setCellValue((Integer) value);
-                    } else {
-                        row.createCell(i).setCellValue(String.valueOf(value));
+                    try {
+                        Object value = fields[i].get(billingGradeDto);
+
+                        if (value instanceof Integer) {
+                            row.createCell(i).setCellValue((Integer) value);
+                        } else {
+                            row.createCell(i).setCellValue(String.valueOf(value));
+                        }
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
                     }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
                 }
             }
         }
@@ -119,25 +148,6 @@ public class BillingGradeService {
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
     }
 
-    private Map<String, BillingGradeDto> getBillingGradeMap(List<BillingGradeDto> billingGradeList) {
-        Map<String, BillingGradeDto> billingGradeMap = new LinkedHashMap<>();
-        List<BillingGradeDto> sortedBillingGradeList = sortList(billingGradeList);
-
-        for (int i = 0; i < sortedBillingGradeList.size(); i++) {
-            BillingGradeDto billingGradeDto = sortedBillingGradeList.get(i);
-
-            if (billingGradeDto.getCustGrdCd().equals("A")) {
-                billingGradeMap.put("전체", billingGradeDto);
-            } else if (billingGradeDto.getCustGrdCd().equals("E")) {
-                billingGradeMap.put("그 외", billingGradeDto);
-            } else {
-                billingGradeMap.put(billingGradeDto.getCustGrdCd() + "등급", billingGradeDto);
-            }
-        }
-
-        return billingGradeMap;
-    }
-
     private List<BillingGradeDto> sortList(List<BillingGradeDto> billingGradeList) { // 순서대로 정렬
         List<String> sortList = List.of("A", "1", "2", "3", "4", "5", "6", "7", "E");
 
@@ -149,8 +159,6 @@ public class BillingGradeService {
 
         return billingGradeList;
     }
-
-
 
     @Transactional
     public void insertRandomBillingGradeRecord(String year) {

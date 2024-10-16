@@ -24,7 +24,6 @@ public class BillingGrade { // 월별 청구 현황 ( 등급별 ) 조회
     private Integer unpaidAmount;
     private String dcb;
 
-
     public static BillingGrade toBillingGrade(String custGrdCd, String statYyMm, String regDt, int allAceCnt, int allCnt, int allAmount,
                                               int paidAceCnt, int paidCnt, int paidAmount, int unpaidAceCnt, int unpaidCnt, int unpaidAmount, String dcb) {
         return BillingGrade.builder()
