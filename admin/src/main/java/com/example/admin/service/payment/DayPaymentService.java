@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,29 +38,49 @@ public class DayPaymentService {
     private final CookieUtil cookieUtil;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public DayPayment getDayPayment(String dcb, String month) {
-        DayPayment dayPayment = new DayPayment();
+    public List<DayPayment> getDayPayment(List<String> dcbs, String month) {
+        if (dcbs.size() == 1) {
+            String dcb = dcbs.get(0);
+            return getDayPaymentList(dcb, month);
+        } else {
+            List<DayPayment> totalDayPaymentList = new ArrayList<>();
+            Map<String, DayPayment> dayPaymentMap = new HashMap<>();
 
-        switch (dcb.toLowerCase()) {
-            case "adcb" -> dayPayment = adcbDayPaymentMapper.getDayPayment(month);
-            case "gdcb" -> dayPayment = gdcbDayPaymentMapper.getDayPayment(month);
-            case "mdcb" -> dayPayment = mdcbDayPaymentMapper.getDayPayment(month);
-            case "msdcb" -> dayPayment = msdcbDayPaymentMapper.getDayPayment(month);
-            case "ndcb" -> dayPayment = ndcbDayPaymentMapper.getDayPayment(month);
-            case "pdcb" -> dayPayment = pdcbDayPaymentMapper.getDayPayment(month);
-            case "sdcb" -> dayPayment = sdcbDayPaymentMapper.getDayPayment(month);
+            for (String dcb : dcbs) {
+                List<DayPayment> dayPaymentList = getDayPaymentList(dcb, month);
+
+                totalDayPaymentList.addAll(dayPaymentList);
+            }
+
+            for (int i = 0; i < totalDayPaymentList.size(); i++) {
+                DayPayment dayPayment = totalDayPaymentList.get(i);
+                String date = dayPayment.getStat_day();
+
+                if(dayPaymentMap.containsKey(date)) {
+                    DayPayment containsDayPayment = dayPaymentMap.get(date);
+                    containsDayPayment.addTotalAmount(dayPayment);
+                    dayPayment.calculateStat();
+                }
+
+                if (dayPaymentMap.size() >= totalDayPaymentList.size() - i) { // 마지막 list 도는 순서일 때 평균값 계산
+                    dayPayment.calculateStat();
+                }
+
+                dayPaymentMap.put(date, dayPayment);
+            }
+
+            return new ArrayList<>(dayPaymentMap.values());
         }
-
-        return dayPayment;
     }
 
-    public Map<String, List<Object>> getDayPaymentDtoForm(String dcb, String month) {
+    public Map<String, List<Object>> getDayPaymentDtoForm(List<String> dcbs, String month) {
        log.info("getDayPaymentDtoForm");
        Map<String, DayPayment> valueMap = new LinkedHashMap<>();
        Map<String, List<Object>> dtoMap = new LinkedHashMap<>();
 
-       DayPayment total = DayPayment.toTotal();
-       List<DayPayment> dayPaymentList = getDayPaymentList(month, dcb);
+
+       DayPayment total = DayPayment.toTotal("TOTAL");
+       List<DayPayment> dayPaymentList = getDayPayment(dcbs, month);
 
        calculateMap(valueMap, dayPaymentList, total);
 
@@ -71,7 +92,7 @@ public class DayPaymentService {
        return dtoMap;
     }
 
-    private List<DayPayment> getDayPaymentList(String month, String dcb) {
+    private List<DayPayment> getDayPaymentList(String dcb, String month) {
         log.info("getDayPaymentList");
 
         List<DayPayment> dayPaymentList = new ArrayList<>();
@@ -221,9 +242,9 @@ public class DayPaymentService {
     }
 
 
-    public void exportDayPaymentExcel(String month, String dcb, HttpServletResponse response) throws IOException {
+    public void exportDayPaymentExcel(String month, List<String> dcbs, HttpServletResponse response) throws IOException {
         // column : {value1, value2, ... } 정렬 방식 엑셀
-        Map<String, List<Object>> dayPaymentMap = getDayPaymentDtoForm(month, dcb);
+        Map<String, List<Object>> dayPaymentMap = getDayPaymentDtoForm(dcbs, month);
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("일별 통계");
@@ -254,13 +275,13 @@ public class DayPaymentService {
         workbook.close();
     }
 
-    public void exportDayPaymentExcel2(HttpServletRequest request, String month, String dcb, HttpServletResponse response) throws IOException, IllegalAccessException {
+    public void exportDayPaymentExcel2(HttpServletRequest request, String month, List<String> dcbs, HttpServletResponse response) throws IOException, IllegalAccessException {
         // 날짜 : { value1, value2, ... } 정렬 방식 엑셀
 
 
         Map<String, DayPayment> valueMap = new LinkedHashMap<>();
-        DayPayment total = DayPayment.toTotal();
-        List<DayPayment> dayPaymentList = getDayPaymentList(month, dcb);
+        DayPayment total = DayPayment.toTotal("TOTAL");
+        List<DayPayment> dayPaymentList = getDayPayment(dcbs, month);
         calculateMap(valueMap, dayPaymentList, total);
 
         List<DayPaymentDto> dayPaymentDtoList = generateDtoList(valueMap, total);

@@ -31,24 +31,26 @@ public class DayPaymentController {
     }
 
     @GetMapping
-    public MapResult<String, List<Object>> getDayPayments(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) {
-        Map<String, List<Object>> dayPaymentMap = dayPaymentService.getDayPaymentDtoForm(dcb, month);
+    public MapResult<String, List<Object>> getDayPayments(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month) {
+        Map<String, List<Object>> dayPaymentMap = dayPaymentService.getDayPaymentDtoForm(dcbs, month);
 
         return new MapResult<>(true, dayPaymentMap);
     }
 
     @GetMapping("/2")
-    public DayPayment getDayPayments2(@RequestParam("dcb") @Valid String dcb, @RequestParam("day") @Valid String day) {
-        return dayPaymentService.getDayPayment(dcb, day);
+    public ListResult<DayPayment> getDayPayments2(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month) {
+        List<DayPayment> dayPaymentList = dayPaymentService.getDayPayment(dcbs, month);
+
+        return new ListResult<>(true, dayPaymentList);
     }
 
     @GetMapping("/excel")
-    public void exportExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException {
-        dayPaymentService.exportDayPaymentExcel(month, dcb, response);
+    public void exportExcel(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException {
+        dayPaymentService.exportDayPaymentExcel(month, dcbs, response);
     }
 
     @GetMapping("/excel/2")
-    public void exportExcel2(HttpServletRequest request, @RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException, IllegalAccessException {
-        dayPaymentService.exportDayPaymentExcel2(request, month, dcb, response);
+    public void exportExcel2(HttpServletRequest request, @RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException, IllegalAccessException {
+        dayPaymentService.exportDayPaymentExcel2(request, month, dcbs, response);
     }
 }
