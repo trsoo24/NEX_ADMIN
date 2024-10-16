@@ -45,7 +45,7 @@ public class DayPaymentService {
 
         if (dcbs.size() == 1) {
             String dcb = dcbs.get(0);
-            responseMap.put(dcb, getDayPaymentList(dcb, month));
+            responseMap.put("total", getDayPaymentList(dcb, month));
 
             return responseMap;
         } else {
@@ -104,6 +104,10 @@ public class DayPaymentService {
            addDtoMap(dtoMap, dayPaymentDtoList);
 
            responseMap.put(dcb, dtoMap);
+
+           if (dcbs.size() == 2) {
+               return responseMap;
+           }
        }
 
        return responseMap;

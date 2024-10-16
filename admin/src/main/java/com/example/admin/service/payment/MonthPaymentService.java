@@ -92,6 +92,10 @@ public class MonthPaymentService {
 
             addDtoMap(dtoMap, monthPaymentDtoList);
             responseMap.put(dcb, dtoMap);
+
+            if (dcbs.size() == 2) {
+                return responseMap;
+            }
         }
 
         return responseMap;
