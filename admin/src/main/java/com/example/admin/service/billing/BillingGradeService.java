@@ -37,12 +37,13 @@ public class BillingGradeService {
             requestMap.put("yyMm", yyMm);
 
             List<BillingGradeDto> billingGradeList = billingGradeMapper.getBillingGradeDto(requestMap);
-            dcbBillingGradeMap.put(dcb, billingGradeList);
 
             if (dcbs.size() == 1) { // dcb 단일 선택 시
+                dcbBillingGradeMap.put("total", billingGradeList);
                 return dcbBillingGradeMap;
             }
 
+            dcbBillingGradeMap.put(dcb, billingGradeList);
             totalBillingGradeList.addAll(billingGradeList);
         }
 
