@@ -38,6 +38,11 @@ public class BillingGradeService {
 
             List<BillingGradeDto> billingGradeList = billingGradeMapper.getBillingGradeDto(requestMap);
             dcbBillingGradeMap.put(dcb, billingGradeList);
+
+            if (dcbs.size() == 1) { // dcb 단일 선택 시
+                return dcbBillingGradeMap;
+            }
+
             totalBillingGradeList.addAll(billingGradeList);
         }
 
