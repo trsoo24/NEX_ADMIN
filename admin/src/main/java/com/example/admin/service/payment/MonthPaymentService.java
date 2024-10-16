@@ -32,15 +32,21 @@ public class MonthPaymentService {
     private final PdcbMonthPaymentMapper pdcbMonthPaymentMapper;
     private final SdcbMonthPaymentMapper sdcbMonthPaymentMapper;
 
-    public List<MonthPayment> getMonthPayment(List<String> dcbs, String year) {
+    public Map<String, List<MonthPayment>> getMonthPayment(List<String> dcbs, String year) {
+        Map<String, List<MonthPayment>> responseMap = new LinkedHashMap<>();
         if (dcbs.size() == 1) {
-            return getMonthPaymentList(dcbs.get(0), year);
+            List<MonthPayment> monthPaymentList = getMonthPaymentList(dcbs.get(0), year);
+            responseMap.put("total", monthPaymentList);
+
+            return responseMap;
         } else {
+            Map<String, List<MonthPayment>> dcbMonthPaymentMap = new HashMap<>();
             List<MonthPayment> totalMonthPaymentList = new ArrayList<>();
             Map<String, MonthPayment> monthPaymentMap = new HashMap<>();
 
             for (String dcb : dcbs) {
                 List<MonthPayment> monthPaymentList = getMonthPaymentList(dcb, year);
+                dcbMonthPaymentMap.put(dcb, monthPaymentList);
                 totalMonthPaymentList.addAll(monthPaymentList);
             }
 
@@ -61,24 +67,34 @@ public class MonthPaymentService {
             List<MonthPayment> responseList = new ArrayList<>(monthPaymentMap.values());
             responseList.sort(Comparator.comparing(monthPayment -> YearMonth.parse(monthPayment.getStat_month())));
 
-            return responseList;
+            responseMap.put("total", responseList);
+            responseMap.putAll(dcbMonthPaymentMap);
+
+            return responseMap;
         }
     }
 
-    public Map<String, List<Object>> getMonthPaymentDtoForm(String date, List<String> dcbs) {
+    public Map<String, Map<String, List<Object>>> getMonthPaymentDtoForm(String date, List<String> dcbs) {
         log.info("MonthPayment 조회 API");
         Map<String, MonthPayment> valueMap = new LinkedHashMap<>();
-        Map<String, List<Object>> dtoMap = new LinkedHashMap<>();
+        Map<String, Map<String, List<Object>>> responseMap = new LinkedHashMap<>();
 
-        MonthPayment total = MonthPayment.toTotal("TOTAL");
-        List<MonthPayment> monthPaymentList = getMonthPayment(dcbs, date);
-        calculateMap(valueMap, monthPaymentList, total);
+        Map<String, List<MonthPayment>> monthPaymentMap = getMonthPayment(dcbs, date);
+        dcbs.add(0, "total");
 
-        List<MonthPaymentDto> monthPaymentDtoList = generateDtoList(valueMap, total);
+        for (String dcb : dcbs) {
+            List<MonthPayment> monthPaymentList = monthPaymentMap.get(dcb);
+            Map<String, List<Object>> dtoMap = new LinkedHashMap<>();
+            MonthPayment total = MonthPayment.toTotal("TOTAL");
 
-        addDtoMap(dtoMap, monthPaymentDtoList);
+            calculateMap(valueMap, monthPaymentList, total);
+            List<MonthPaymentDto> monthPaymentDtoList = generateDtoList(valueMap, total);
 
-        return dtoMap;
+            addDtoMap(dtoMap, monthPaymentDtoList);
+            responseMap.put(dcb, dtoMap);
+        }
+
+        return responseMap;
     }
 
     private List<MonthPayment> getMonthPaymentList(String dcb, String year) {
@@ -155,7 +171,7 @@ public class MonthPaymentService {
     }
 
     public void exportMonthPaymentExcel(String year, List<String> dcbs, HttpServletResponse response) throws IOException, IllegalAccessException {
-        Map<String, List<Object>> monthPaymentMap = getMonthPaymentDtoForm(year, dcbs);
+        Map<String, Map<String, List<Object>>> monthPaymentMap = getMonthPaymentDtoForm(year, dcbs);
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("월별 통계");
@@ -173,9 +189,12 @@ public class MonthPaymentService {
                 row.createCell(0).setCellValue(((MonthPaymentField) field.get(null)).getDescription());
             }
 
-            List<Object> objects = monthPaymentMap.get(fields[j].getName());
-            for (int k = 0; k < objects.size(); k++) {
-                row.createCell(k + 1).setCellValue(objects.get(k).toString());
+            for (Map<String, List<Object>> paymentMap : monthPaymentMap.values()) {
+                List<Object> objects = paymentMap.get(fields[j].getName());
+
+                for (int k = 0; k < objects.size(); k++) {
+                    row.createCell(k + 1).setCellValue(objects.get(k).toString());
+                }
             }
         }
 

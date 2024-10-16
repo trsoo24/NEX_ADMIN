@@ -39,17 +39,22 @@ public class DayPaymentService {
     private final CookieUtil cookieUtil;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public List<DayPayment> getDayPayment(List<String> dcbs, String month) {
+    public Map<String, List<DayPayment>> getDayPayment(List<String> dcbs, String month) {
+        Map<String, List<DayPayment>> dcbDayPaymentMap = new LinkedHashMap<>();
+        Map<String, List<DayPayment>> responseMap = new LinkedHashMap<>();
+
         if (dcbs.size() == 1) {
             String dcb = dcbs.get(0);
-            return getDayPaymentList(dcb, month);
+            responseMap.put(dcb, getDayPaymentList(dcb, month));
+
+            return responseMap;
         } else {
             List<DayPayment> totalDayPaymentList = new ArrayList<>();
             Map<String, DayPayment> dayPaymentMap = new HashMap<>();
 
             for (String dcb : dcbs) {
                 List<DayPayment> dayPaymentList = getDayPaymentList(dcb, month);
-
+                dcbDayPaymentMap.put(dcb, dayPaymentList);
                 totalDayPaymentList.addAll(dayPaymentList);
             }
 
@@ -72,28 +77,36 @@ public class DayPaymentService {
             List<DayPayment> responseList = new ArrayList<>(dayPaymentMap.values());
             responseList.sort(Comparator.comparing(dayPayment -> LocalDate.parse(dayPayment.getStat_day())));
 
-            return responseList;
+            responseMap.put("total", responseList);
+            responseMap.putAll(dcbDayPaymentMap);
 
+            return responseMap;
         }
     }
 
-    public Map<String, List<Object>> getDayPaymentDtoForm(List<String> dcbs, String month) {
-       log.info("getDayPaymentDtoForm");
+    public Map<String, Map<String, List<Object>>> getDayPaymentDtoForm(List<String> dcbs, String month) {
        Map<String, DayPayment> valueMap = new LinkedHashMap<>();
-       Map<String, List<Object>> dtoMap = new LinkedHashMap<>();
+       Map<String, Map<String, List<Object>>> responseMap = new LinkedHashMap<>();
 
 
-       DayPayment total = DayPayment.toTotal("TOTAL");
-       List<DayPayment> dayPaymentList = getDayPayment(dcbs, month);
+       Map<String, List<DayPayment>> dayPaymentMap = getDayPayment(dcbs, month);
+        dcbs.add(0, "total");
 
-       calculateMap(valueMap, dayPaymentList, total);
+       for (String dcb : dcbs) {
+           Map<String, List<Object>> dtoMap = new LinkedHashMap<>();
+           DayPayment total = DayPayment.toTotal("TOTAL");
 
+           List<DayPayment> dayPaymentList = dayPaymentMap.get(dcb);
+           calculateMap(valueMap, dayPaymentList, total);
 
-       List<DayPaymentDto> dayPaymentDtoList = generateDtoList(valueMap, total);
+           List<DayPaymentDto> dayPaymentDtoList = generateDtoList(valueMap, total);
 
-       addDtoMap(dtoMap, dayPaymentDtoList);
+           addDtoMap(dtoMap, dayPaymentDtoList);
 
-       return dtoMap;
+           responseMap.put(dcb, dtoMap);
+       }
+
+       return responseMap;
     }
 
     private List<DayPayment> getDayPaymentList(String dcb, String month) {
@@ -248,7 +261,7 @@ public class DayPaymentService {
 
     public void exportDayPaymentExcel(String month, List<String> dcbs, HttpServletResponse response) throws IOException {
         // column : {value1, value2, ... } 정렬 방식 엑셀
-        Map<String, List<Object>> dayPaymentMap = getDayPaymentDtoForm(dcbs, month);
+        Map<String, Map<String, List<Object>>> dayPaymentMap = getDayPaymentDtoForm(dcbs, month);
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("일별 통계");
@@ -264,9 +277,12 @@ public class DayPaymentService {
                 row.createCell(0).setCellValue(fields[j].getName());
             }
 
-            List<Object> objects = dayPaymentMap.get(fields[j].getName());
-            for (int k = 0; k < objects.size(); k++) {
-                row.createCell(k + 1).setCellValue(objects.get(k).toString());
+            for (Map<String, List<Object>> map : dayPaymentMap.values()) {
+                List<Object> objects = map.get(fields[j].getName());
+
+                for (int k = 0; k < objects.size(); k++) {
+                    row.createCell(k + 1).setCellValue(objects.get(k).toString());
+                }
             }
         }
 
@@ -281,35 +297,36 @@ public class DayPaymentService {
 
     public void exportDayPaymentExcel2(HttpServletRequest request, String month, List<String> dcbs, HttpServletResponse response) throws IOException, IllegalAccessException {
         // 날짜 : { value1, value2, ... } 정렬 방식 엑셀
-
-
         Map<String, DayPayment> valueMap = new LinkedHashMap<>();
-        DayPayment total = DayPayment.toTotal("TOTAL");
-        List<DayPayment> dayPaymentList = getDayPayment(dcbs, month);
-        calculateMap(valueMap, dayPaymentList, total);
-
-        List<DayPaymentDto> dayPaymentDtoList = generateDtoList(valueMap, total);
+        Map<String, List<DayPayment>> dayPaymentMap = getDayPayment(dcbs, month);
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("일별 통계 ver.2");
         sheet.createRow(0);
         XSSFRow headerRow = sheet.createRow(1);
 
-        DayPaymentField[] dayPaymentFields = DayPaymentField.values();
-        Field[] fields = DayPaymentDto.class.getDeclaredFields();
+        for (List<DayPayment> dayPaymentList : dayPaymentMap.values()) {
+            DayPayment total = DayPayment.toTotal("TOTAL");
+            calculateMap(valueMap, dayPaymentList, total);
 
-        for (int i = 0; i < fields.length; i++) {
-            headerRow.createCell(i).setCellValue(dayPaymentFields[i].getDescription());
-        }
+            List<DayPaymentDto> dayPaymentDtoList = generateDtoList(valueMap, total);
 
-        int rowIdx = 2;
-        for (int j = 0; j < dayPaymentDtoList.size(); j++) {
-            DayPaymentDto dayPaymentDto = dayPaymentDtoList.get(j);
-            XSSFRow row = sheet.createRow(rowIdx++);
-            for (int k = 0; k < fields.length; k++) {
-                Field field = fields[k];
-                field.setAccessible(true);
-                row.createCell(k).setCellValue(String.valueOf(field.get(dayPaymentDto)));
+            DayPaymentField[] dayPaymentFields = DayPaymentField.values();
+            Field[] fields = DayPaymentDto.class.getDeclaredFields();
+
+            for (int i = 0; i < fields.length; i++) {
+                headerRow.createCell(i).setCellValue(dayPaymentFields[i].getDescription());
+            }
+
+            int rowIdx = 2;
+            for (int j = 0; j < dayPaymentDtoList.size(); j++) {
+                DayPaymentDto dayPaymentDto = dayPaymentDtoList.get(j);
+                XSSFRow row = sheet.createRow(rowIdx++);
+                for (int k = 0; k < fields.length; k++) {
+                    Field field = fields[k];
+                    field.setAccessible(true);
+                    row.createCell(k).setCellValue(String.valueOf(field.get(dayPaymentDto)));
+                }
             }
         }
 

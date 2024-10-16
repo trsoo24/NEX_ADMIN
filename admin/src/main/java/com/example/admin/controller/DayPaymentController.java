@@ -4,6 +4,7 @@ import com.example.admin.common.response.DataResult;
 import com.example.admin.common.response.ListResult;
 import com.example.admin.common.response.MapResult;
 import com.example.admin.common.response.StatusResult;
+import com.example.admin.domain.dto.payment.DayPaymentDto;
 import com.example.admin.domain.entity.payment.DayPayment;
 import com.example.admin.service.payment.DayPaymentService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,17 +32,21 @@ public class DayPaymentController {
     }
 
     @GetMapping
-    public MapResult<String, List<Object>> getDayPayments(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month) {
-        Map<String, List<Object>> dayPaymentMap = dayPaymentService.getDayPaymentDtoForm(dcbs, month);
+    public MapResult<String, Map<String, List<Object>>> getDayPayments(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month) {
+        // DayPaymentDto List 컬럼이름1 : ~~~, 컬럼이름2 : ~~~ , ...
+
+        Map<String, Map<String, List<Object>>> dayPaymentMap = dayPaymentService.getDayPaymentDtoForm(dcbs, month);
 
         return new MapResult<>(true, dayPaymentMap);
     }
 
     @GetMapping("/2")
-    public ListResult<DayPayment> getDayPayments2(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month) {
-        List<DayPayment> dayPaymentList = dayPaymentService.getDayPayment(dcbs, month);
+    public MapResult<String, List<DayPayment>> getDayPayments2(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month) {
+        // DayPayment List 날짜별 값 ~
 
-        return new ListResult<>(true, dayPaymentList);
+        Map<String, List<DayPayment>> dayPaymentMap = dayPaymentService.getDayPayment(dcbs, month);
+
+        return new MapResult<>(true, dayPaymentMap);
     }
 
     @GetMapping("/excel")

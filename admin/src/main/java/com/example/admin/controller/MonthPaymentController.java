@@ -29,17 +29,17 @@ public class MonthPaymentController {
     }
 
     @GetMapping()
-    public MapResult<String, List<Object>> getMonthPayment(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("year") @Valid String year) {
-        Map<String, List<Object>> monthPaymentMap = monthPaymentService.getMonthPaymentDtoForm(year, dcbs);
+    public MapResult<String, Map<String, List<Object>>> getMonthPayment(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("year") @Valid String year) {
+        Map<String, Map<String, List<Object>>> monthPaymentMap = monthPaymentService.getMonthPaymentDtoForm(year, dcbs);
 
         return new MapResult<>(true, monthPaymentMap);
     }
 
     @GetMapping("/2")
-    public ListResult<MonthPayment> getDayPayments2(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month) {
-        List<MonthPayment> monthPaymentList = monthPaymentService.getMonthPayment(dcbs, month);
+    public MapResult<String, List<MonthPayment>> getDayPayments2(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month) {
+        Map<String, List<MonthPayment>> monthPaymentMap = monthPaymentService.getMonthPayment(dcbs, month);
 
-        return new ListResult<>(true, monthPaymentList);
+        return new MapResult<>(true, monthPaymentMap);
     }
 
     @GetMapping("/excel")
