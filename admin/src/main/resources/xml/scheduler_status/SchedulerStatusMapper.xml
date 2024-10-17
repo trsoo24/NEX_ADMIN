@@ -14,4 +14,16 @@
         FROM
             TB_SCHEDULER_STATUS
     </select>
+
+    <update id="updateSchedulerStatus" parameterType="com.example.admin.domain.dto.scheduler_status.ModifySchedulerStatusRequest">
+        UPDATE
+            TB_SCHEDULER_STATUS
+        SET
+            server1 = #{server1},
+            server2 = #{server2},
+            last_modifier = #{modifier},
+            last_modified_date = now()
+        WHERE
+            scheduler = #{scheduler}
+    </update>
 </mapper>
