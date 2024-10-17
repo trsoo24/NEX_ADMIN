@@ -2,6 +2,7 @@ package com.example.admin.service.range;
 
 import com.example.admin.domain.dto.range.RangeMonthDto;
 import com.example.admin.domain.dto.range.field.RangeMonthField;
+import com.example.admin.domain.entity.range.RangeDay;
 import com.example.admin.domain.entity.range.RangeMonth;
 import com.example.admin.repository.mapper.range.RangeMonthMapper;
 import jakarta.servlet.http.HttpServletResponse;
@@ -60,7 +61,7 @@ public class RangeMonthService {
     }
 
     @Transactional
-    public void insertRangeMonth(String year) { // DB 에 값 채우기
+    public void insertRangeMonth(String year, String dcb) { // DB 에 값 채우기
         List<RangeMonth> rangeMonthList = new ArrayList<>();
 
         for (int i = 1; i <= 12; i++) {
@@ -75,11 +76,11 @@ public class RangeMonthService {
             sb.append("-");
             sb.append(month);
 
-            RangeMonth totalRangeMonth = RangeMonth.setDefault(sb.toString(), "A");
+            RangeMonth totalRangeMonth = RangeMonth.setDefault(sb.toString(), "A", dcb);
             rangeMonthList.add(totalRangeMonth);
 
             for (String aStat : A_STAT_ARRAY) {
-                rangeMonthList.add(RangeMonth.setDefault(sb.toString(), aStat));
+                rangeMonthList.add(RangeMonth.setDefault(sb.toString(), aStat, dcb));
             }
 
             createRangeMonth(sb.toString(), rangeMonthList, totalRangeMonth);
@@ -129,7 +130,23 @@ public class RangeMonthService {
         return null;
     }
 
-
+    private void sortRangeMonthList(List<RangeMonth> rangeMonthList) {
+        rangeMonthList.sort(Comparator
+                .comparing(RangeMonth::getStat_month) // stat_month 로 정렬
+                .thenComparingInt(rangeMonth -> {
+                    switch (rangeMonth.getA_stat()) {
+                        case "A": return 0;
+                        case "1": return 1;
+                        case "2": return 2;
+                        case "3": return 3;
+                        case "4": return 4;
+                        case "5": return 5;
+                        case "O": return 6;
+                        default: return Integer.MAX_VALUE; // 예상치 못한 값에 대한 처리
+                    }
+                })
+        );
+    }
 
 
     public void exportExcel(String startDate, String endDate, String dcb, HttpServletResponse response) throws IllegalAccessException, IOException {

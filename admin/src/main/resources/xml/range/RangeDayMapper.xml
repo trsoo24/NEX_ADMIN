@@ -4,18 +4,31 @@
 
 <mapper namespace="com.example.admin.repository.mapper.range.RangeDayMapper">
     <insert id="insertRangeDay">
-        INSERT INTO ADCB_STATS_RANGE_DAY(STAT_DAY, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT)
-        VALUES (#{stat_day}, #{a_stat}, #{b_stat}, #{c_stat}, #{d_stat}, #{e_stat}, #{f_stat}, #{g_stat})
+        INSERT INTO TB_STATS_RANGE_DAY(STAT_DAY, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT, DCB)
+
+        VALUES (#{stat_day}, #{a_stat}, #{b_stat}, #{c_stat}, #{d_stat}, #{e_stat}, #{f_stat}, #{g_stat}, #{dcb})
     </insert>
 
     <select id="getRangeDayList" parameterType="map" resultMap="rangeDayMap">
-        SELECT * FROM ADCB_STATS_RANGE_DAY
-        WHERE STAT_DAY BETWEEN #{startDate} AND #{endDate};
+        SELECT * FROM TB_STATS_RANGE_DAY
+        WHERE 1 = 1
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            AND STAT_DAY BETWEEN #{startDate} AND #{endDate}
+        </if>
+        <if test="dcb != null and dcb != ''">
+            AND DCB = #{dcb}
+        </if>
     </select>
 
     <select id="getRangeDayScheduleList" parameterType="map" resultMap="rangeDayMap">
-        SELECT * FROM ADCB_STATS_RANGE_DAY
-        WHERE STAT_DAY = #{day};
+        SELECT * FROM TB_STATS_RANGE_DAY
+        WHERE 1 = 1
+        <if test="day != null and day != ''">
+            AND STAT_DAY = #{day}
+        </if>
+        <if test="dcb != null and dcb != ''">
+            AND DCB = #{dcb}
+        </if>
     </select>
 
     <resultMap id="rangeDayMap" type="com.example.admin.domain.entity.range.RangeDay">

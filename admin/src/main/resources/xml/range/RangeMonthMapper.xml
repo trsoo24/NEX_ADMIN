@@ -4,18 +4,30 @@
 
 <mapper namespace="com.example.admin.repository.mapper.range.RangeMonthMapper">
     <insert id="insertRangeMonth">
-        INSERT INTO ADCB_STATS_RANGE_MONTH(STAT_MONTH, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT)
-        VALUES (#{stat_month}, #{a_stat}, #{b_stat}, #{c_stat}, #{d_stat}, #{e_stat}, #{f_stat}, #{g_stat})
+        INSERT INTO TB_STATS_RANGE_MONTH(STAT_MONTH, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT, DCB)
+        VALUES (#{stat_month}, #{a_stat}, #{b_stat}, #{c_stat}, #{d_stat}, #{e_stat}, #{f_stat}, #{g_stat}, #{dcb})
     </insert>
 
     <select id="getRangeMonthList" parameterType="map" resultMap="rangeMonthMap">
-        SELECT * FROM ADCB_STATS_RANGE_MONTH
-        WHERE STAT_MONTH BETWEEN #{startDate} AND #{endDate};
+        SELECT * FROM TB_STATS_RANGE_MONTH
+        WHERE 1 = 1
+            <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+                AND STAT_MONTH BETWEEN #{startDate} AND #{endDate}
+            </if>
+            <if test="dcb != null and dcb != ''">
+                AND DCB = #{dcb}
+            </if>
     </select>
 
     <select id="getRangeMonthScheduleList" parameterType="map" resultMap="rangeMonthMap">
-        SELECT * FROM ADCB_STATS_RANGE_MONTH
-        WHERE STAT_MONTH = #{month};
+        SELECT * FROM TB_STATS_RANGE_MONTH
+        WHERE 1 = 1
+        <if test="month != null and month != ''">
+            AND STAT_MONTH = #{month}
+        </if>
+        <if test="dcb != null and dcb != ''">
+            AND DCB = #{dcb}
+        </if>
     </select>
 
     <resultMap id="rangeMonthMap" type="com.example.admin.domain.entity.range.RangeMonth">

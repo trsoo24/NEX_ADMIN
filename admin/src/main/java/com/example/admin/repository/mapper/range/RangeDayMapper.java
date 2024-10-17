@@ -10,7 +10,7 @@ import java.util.Map;
 public interface RangeDayMapper {
     void insertRangeDay(RangeDay rangeDay);
 
-    List<RangeDay> getRangeDayList(Map<String, String> paramMap);
+    List<RangeDay> getRangeDayList(Map<String, Object> paramMap);
 
-    List<RangeDay> getRangeDayScheduleList(Map<String, String> map);
+    List<RangeDay> getRangeDayScheduleList(Map<String, Object> map);
 }

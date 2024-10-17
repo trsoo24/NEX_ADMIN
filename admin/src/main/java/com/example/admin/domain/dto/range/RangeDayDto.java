@@ -20,6 +20,7 @@ public class RangeDayDto {
     private Double e_stat;
     private Double f_stat;
     private Double g_stat;
+    private String dcb;
 
     public static RangeDayDto toDto (RangeDay rangeDay) throws IllegalAccessException {
         return RangeDayDto.builder()
@@ -31,6 +32,7 @@ public class RangeDayDto {
                 .e_stat(rangeDay.getE_stat())
                 .f_stat(rangeDay.getF_stat())
                 .g_stat(rangeDay.getG_stat())
+                .dcb(rangeDay.getDcb())
                 .build();
     }
 

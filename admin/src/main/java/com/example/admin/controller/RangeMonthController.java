@@ -23,8 +23,8 @@ public class RangeMonthController {
     private final RangeMonthService rangeMonthService;
 
     @PostMapping()
-    public void insertRangeMonth(@RequestParam("year") String year) {
-        rangeMonthService.insertRangeMonth(year);
+    public void insertRangeMonth(@RequestParam("year") String year, @RequestParam("dcb") @Valid String dcb) {
+        rangeMonthService.insertRangeMonth(year, dcb);
     }
 
     @GetMapping()

@@ -18,6 +18,7 @@ public class RangeMonth {
     private Double e_stat; // 취소 금액 ( 원 )
     private Double f_stat; // 실 결제 금액 ( 원 )
     private Double g_stat; // 인당 결제 금액 ( 원 )
+    private String dcb;
 
     public void calculateFStat() {
         this.f_stat = this.d_stat - this.e_stat;
@@ -44,7 +45,7 @@ public class RangeMonth {
         this.g_stat = (double) Math.round(this.g_stat);
     }
 
-    public static RangeMonth setDefault(String statMonth, String aStat) {
+    public static RangeMonth setDefault(String statMonth, String aStat, String dcb) {
         double def = 0;
         return RangeMonth.builder()
                 .stat_month(statMonth)
@@ -55,6 +56,7 @@ public class RangeMonth {
                 .e_stat(def)
                 .f_stat(def)
                 .g_stat(def)
+                .dcb(dcb)
                 .build();
     }
 }

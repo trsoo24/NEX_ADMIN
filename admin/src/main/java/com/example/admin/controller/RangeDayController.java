@@ -23,26 +23,26 @@ public class RangeDayController {
     private final RangeDayService rangeDayService;
 
     @PostMapping()
-    public StatusResult insertRangeDay(@RequestParam("month") @Valid String month) {
-        rangeDayService.insertRangeDay(month);
+    public StatusResult insertRangeDay(@RequestParam("month") @Valid String month, @RequestParam("dcb") @Valid String dcb) {
+        rangeDayService.insertRangeDay(month, dcb);
 
         return new StatusResult(true);
     }
 
     @GetMapping()
-    public MapResult<String, List<RangeDayDto>> getRangeDayMap(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate) throws IllegalAccessException {
-        Map<String, List<RangeDayDto>> rangeDayDtoMap = rangeDayService.getRangeDayMap(startDate, endDate, dcb);
+    public MapResult<String, List<RangeDayDto>> getRangeDayMap(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate) throws IllegalAccessException {
+        Map<String, List<RangeDayDto>> rangeDayDtoMap = rangeDayService.getRangeDayMap(startDate, endDate, dcbs);
 
         return new MapResult<>(true, rangeDayDtoMap);
     }
 
     @GetMapping("/2")
-    public List<RangeDay> getRangeDayList(@RequestParam("dcb") @Valid String dcb, @RequestParam("day") @Valid String day) {
-        return rangeDayService.getRangeDayList(day, dcb);
+    public List<RangeDay> getRangeDayList(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("day") @Valid String day) {
+        return rangeDayService.getRangeDay(day, dcbs);
     }
 
     @GetMapping("/excel")
-    public void exportRangeDayExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
-        rangeDayService.exportExcel(startDate, endDate, dcb, response);
+    public void exportRangeDayExcel(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
+        rangeDayService.exportExcel(startDate, endDate, dcbs, response);
     }
 }

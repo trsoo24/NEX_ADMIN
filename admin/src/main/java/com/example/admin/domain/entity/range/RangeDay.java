@@ -18,6 +18,7 @@ public class RangeDay {
     private Double e_stat;
     private Double f_stat;
     private Double g_stat;
+    private String dcb;
 
     public void calculateFStat() {
         this.f_stat = this.d_stat - this.e_stat;
@@ -44,7 +45,7 @@ public class RangeDay {
         this.g_stat = (double) Math.round(this.g_stat);
     }
 
-    public static RangeDay setDefault(String date, String aStat) {
+    public static RangeDay setDefault(String date, String aStat, String dcb) {
         double def = 0;
         return RangeDay.builder()
                 .stat_day(date)
@@ -55,6 +56,16 @@ public class RangeDay {
                 .e_stat(def)
                 .f_stat(def)
                 .g_stat(def)
+                .dcb(dcb)
                 .build();
+    }
+
+    public void addTotalValue(RangeDay rangeDay) {
+        this.b_stat += rangeDay.getB_stat();
+        this.c_stat += rangeDay.getC_stat();
+        this.d_stat += rangeDay.getD_stat();
+        this.e_stat += rangeDay.getE_stat();
+        this.f_stat += rangeDay.getF_stat();
+        this.g_stat += rangeDay.getG_stat();
     }
 }
