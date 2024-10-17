@@ -51,7 +51,7 @@ public class MonthPaymentService {
             }
 
             for (int i = 0; i < totalMonthPaymentList.size(); i++) {
-                MonthPayment monthPayment = totalMonthPaymentList.get(i);
+                MonthPayment monthPayment = MonthPayment.copy(totalMonthPaymentList.get(i));
                 String date = monthPayment.getStat_month();
 
                 if (monthPaymentMap.containsKey(date)) {
@@ -64,6 +64,7 @@ public class MonthPaymentService {
                 }
                 monthPaymentMap.put(date, monthPayment);
             }
+
             List<MonthPayment> responseList = new ArrayList<>(monthPaymentMap.values());
             responseList.sort(Comparator.comparing(monthPayment -> YearMonth.parse(monthPayment.getStat_month())));
 

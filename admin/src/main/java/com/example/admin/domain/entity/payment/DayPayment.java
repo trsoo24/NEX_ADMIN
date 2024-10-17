@@ -81,4 +81,27 @@ public class DayPayment {
     private double mathCeil(double value) {
         return Math.ceil(value);
     }
+
+    public static DayPayment copy(DayPayment dayPayment) {
+        return DayPayment.builder()
+                .stat_day(dayPayment.getStat_day())
+                .a_stat(dayPayment.getA_stat())
+                .b_stat(dayPayment.getB_stat())
+                .c_stat(dayPayment.getC_stat())
+                .d_stat(dayPayment.getD_stat())
+                .e_stat(dayPayment.getE_stat())
+                .f_stat(dayPayment.getF_stat())
+                .g_stat(dayPayment.getG_stat())
+                .h_stat(dayPayment.getH_stat())
+                .i_stat(dayPayment.getI_stat())
+                .j_stat(dayPayment.getJ_stat())
+                .k_stat(dayPayment.getK_stat())
+                .l_stat(dayPayment.getL_stat())
+                .m_stat(dayPayment.getM_stat())
+                .n_stat(dayPayment.getN_stat())
+                .p_stat(dayPayment.getP_stat())
+                .r_stat(dayPayment.getR_stat())
+                .t_stat(dayPayment.getT_stat())
+                .build();
+    }
 }

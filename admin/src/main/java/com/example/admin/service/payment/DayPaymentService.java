@@ -59,7 +59,7 @@ public class DayPaymentService {
             }
 
             for (int i = 0; i < totalDayPaymentList.size(); i++) {
-                DayPayment dayPayment = totalDayPaymentList.get(i);
+                DayPayment dayPayment = DayPayment.copy(totalDayPaymentList.get(i));
                 String date = dayPayment.getStat_day();
 
                 if(dayPaymentMap.containsKey(date)) {
@@ -74,10 +74,10 @@ public class DayPaymentService {
                 dayPaymentMap.put(date, dayPayment);
             }
 
-            List<DayPayment> responseList = new ArrayList<>(dayPaymentMap.values());
-            responseList.sort(Comparator.comparing(dayPayment -> LocalDate.parse(dayPayment.getStat_day())));
+            List<DayPayment> totalValueList = new ArrayList<>(dayPaymentMap.values());
+            totalValueList.sort(Comparator.comparing(dayPayment -> LocalDate.parse(dayPayment.getStat_day())));
 
-            responseMap.put("total", responseList);
+            responseMap.put("total", totalValueList);
             responseMap.putAll(dcbDayPaymentMap);
 
             return responseMap;

@@ -77,4 +77,27 @@ public class MonthPayment {
     private double calculateAverage(double numerator, double denominator) {
         return Math.round(numerator / denominator * 100 * 10) / 10.0;
     }
+
+    public static MonthPayment copy(MonthPayment monthPayment) {
+        return MonthPayment.builder()
+                .stat_month(monthPayment.getStat_month())
+                .a_stat(monthPayment.getA_stat())
+                .b_stat(monthPayment.getB_stat())
+                .c_stat(monthPayment.getC_stat())
+                .d_stat(monthPayment.getD_stat())
+                .e_stat(monthPayment.getE_stat())
+                .f_stat(monthPayment.getF_stat())
+                .g_stat(monthPayment.getG_stat())
+                .h_stat(monthPayment.getH_stat())
+                .i_stat(monthPayment.getI_stat())
+                .j_stat(monthPayment.getJ_stat())
+                .k_stat(monthPayment.getK_stat())
+                .l_stat(monthPayment.getL_stat())
+                .m_stat(monthPayment.getM_stat())
+                .n_stat(monthPayment.getN_stat())
+                .p_stat(monthPayment.getP_stat())
+                .r_stat(monthPayment.getR_stat())
+                .t_stat(monthPayment.getT_stat())
+                .build();
+    }
 }
