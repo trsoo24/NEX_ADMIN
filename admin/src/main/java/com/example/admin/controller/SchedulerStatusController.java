@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +29,7 @@ public class SchedulerStatusController {
 
     // 스케줄러의 기동 서버를 변경한다.
     @PutMapping()
-    public void updateSchedulerStatus(ModifySchedulerStatusRequest request) {
+    public void updateSchedulerStatus(@RequestBody ModifySchedulerStatusRequest request) {
         schedulerStatusService.updateSchedulerStatus(request);
     }
 
