@@ -71,8 +71,9 @@ public class RangeDayService {
         return responseList;
     }
 
-    public List<RangeDay> getRangeDayList(String startDate, String endDate, List<String> dcbs) {
+    public Map<String, List<RangeDay>> getRangeDayList(String startDate, String endDate, List<String> dcbs) {
         Map<String, Object> paramMap = new HashMap<>(); // 요청 쿼리
+        Map<String, List<RangeDay>> rangeDayMap = new LinkedHashMap<>(); // DCB 별 RangeDay 저장
         List<RangeDay> rangeDayList = new ArrayList<>();
         paramMap.put("startDate", startDate);
         paramMap.put("endDate", endDate);
@@ -82,41 +83,39 @@ public class RangeDayService {
             List<RangeDay> DCBRangeDayList = rangeDayMapper.getRangeDayList(paramMap);
             // list 정렬
             sortRangeDayList(DCBRangeDayList);
+            rangeDayMap.put(dcb, DCBRangeDayList);
 
             rangeDayList.addAll(DCBRangeDayList);
         }
 
-        List<RangeDay> responseList = new ArrayList<>(generateDCBTotalList(rangeDayList));
+        Map<String, List<RangeDay>> responseMap = new LinkedHashMap<>();
 
-        if(dcbs.size() == 1) return responseList;
+        List<RangeDay> totalList = new ArrayList<>(generateDCBTotalList(rangeDayList));
+        responseMap.put("total", totalList);
 
-        responseList.addAll(rangeDayList);
+        if(dcbs.size() == 1) return responseMap;
 
-        return responseList;
+        responseMap.putAll(rangeDayMap); // 전체 DCB 추가 저장
+
+        return responseMap;
     }
 
     public Map<String, List<RangeDayDto>> getRangeDayMap(String startDate, String endDate, List<String> dcbs) throws IllegalAccessException {
         Map<String ,List<RangeDayDto>> responseMap = new LinkedHashMap<>();
 
-        List<RangeDay> rangeDayList = getRangeDayList(startDate, endDate, dcbs);
+        Map<String, List<RangeDay>> rangeDayMap = getRangeDayList(startDate, endDate, dcbs);
 
-        for (RangeDay rangeDay : rangeDayList) {
-            List<RangeDayDto> dtoList = new ArrayList<>();
-            if (responseMap.containsKey(rangeDay.getStat_day())) {
-                dtoList = responseMap.get(rangeDay.getStat_day());
+        for (List<RangeDay> rangeDayList : rangeDayMap.values()) {
+            for (RangeDay rangeDay : rangeDayList) {
+                List<RangeDayDto> dtoList = new ArrayList<>();
+                if (responseMap.containsKey(rangeDay.getDcb())) {
+                    dtoList = responseMap.get(rangeDay.getDcb());
+                }
+
+                dtoList.add(RangeDayDto.toDto(rangeDay));
+
+                responseMap.put(rangeDay.getDcb(), dtoList);
             }
-
-//            RangeDayDto dto = RangeDayDto.toDto(rangeDay);
-//
-//            if (dto.getA_stat().equals("전체")) {
-//                dtoList.add(0, dto);
-//            } else {
-//                dtoList.add(dto);
-//            }
-
-            dtoList.add(RangeDayDto.toDto(rangeDay));
-
-            responseMap.put(rangeDay.getStat_day(), dtoList);
         }
         return responseMap;
     }
