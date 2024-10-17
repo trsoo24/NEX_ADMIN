@@ -59,4 +59,13 @@ public class RangeMonth {
                 .dcb(dcb)
                 .build();
     }
+
+    public void addTotalValue(RangeMonth rangeMonth) {
+        this.b_stat += rangeMonth.getB_stat();
+        this.c_stat += rangeMonth.getC_stat();
+        this.d_stat += rangeMonth.getD_stat();
+        this.e_stat += rangeMonth.getE_stat();
+        this.f_stat += rangeMonth.getF_stat();
+        this.g_stat += rangeMonth.getG_stat();
+    }
 }

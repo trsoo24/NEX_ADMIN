@@ -2,7 +2,6 @@ package com.example.admin.service.range;
 
 import com.example.admin.domain.dto.range.RangeMonthDto;
 import com.example.admin.domain.dto.range.field.RangeMonthField;
-import com.example.admin.domain.entity.range.RangeDay;
 import com.example.admin.domain.entity.range.RangeMonth;
 import com.example.admin.repository.mapper.range.RangeMonthMapper;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,35 +26,94 @@ public class RangeMonthService {
     private final String[] A_STAT_ARRAY = {"1", "2", "3", "4", "5", "O"};
     private final Double[] AVERAGE_VALUE_ARRAY = {100000.0, 200000.0, 300000.0, 400000.0, 500000.0, 810000.0};
 
-    public List<RangeMonth> getRangeMonthList(String month, String dcb) {
+    public List<RangeMonth> getRangeMonth(String month, List<String> dcbs) {
         Map<String, String> paramMap = new HashMap<>(); // 요청 쿼리
+        List<RangeMonth> rangeMonthList = new ArrayList<>();
         paramMap.put("month", month);
-        paramMap.put("dcb", dcb);
 
-        return rangeMonthMapper.getRangeMonthScheduleList(paramMap);
+        for(String dcb : dcbs) {
+            paramMap.put("dcb", dcb);
+
+            List<RangeMonth> DCBRangeMonthList = rangeMonthMapper.getRangeMonthScheduleList(paramMap);
+            // list 정렬
+            sortRangeMonthList(DCBRangeMonthList);
+
+            rangeMonthList.addAll(DCBRangeMonthList);
+        }
+
+        List<RangeMonth> responseList = new ArrayList<>(generateDCBTotalList(rangeMonthList));
+
+        if(dcbs.size() == 1) return responseList;
+
+        responseList.addAll(rangeMonthList);
+
+        return responseList;
     }
-    public Map<String, List<RangeMonthDto>> getRangeMonthMap(String startDate, String endDate, String dcb) throws IllegalAccessException {
+
+    private List<RangeMonth> generateDCBTotalList(List<RangeMonth> rangeMonthList) {
+        Map<String, RangeMonth> totalMap = new HashMap<>();
+
+        for (RangeMonth rangeMonth : rangeMonthList) {
+            String key = rangeMonth.getStat_month() + rangeMonth.getA_stat();
+
+            if (totalMap.containsKey(key)) {
+                totalMap.get(key).addTotalValue(rangeMonth);
+            } else {
+                // 초기 Total 값 생성
+                RangeMonth totalRangeMonth = RangeMonth.setDefault(rangeMonth.getStat_month(), rangeMonth.getA_stat(), "total");
+                totalRangeMonth.addTotalValue(rangeMonth);
+
+                totalMap.put(key, totalRangeMonth);
+            }
+        }
+
+        List<RangeMonth> responseList = new ArrayList<>(totalMap.values());
+
+        // Map 에서 나와서 정렬
+        sortRangeMonthList(responseList);
+
+        return responseList;
+    }
+
+    private List<RangeMonth> getRangeMonthList(String startDate, String endDate, List<String> dcbs) {
         Map<String, String> paramMap = new HashMap<>(); // 요청 쿼리
+        List<RangeMonth> rangeMonthList = new ArrayList<>();
         paramMap.put("startDate", startDate);
         paramMap.put("endDate", endDate);
 
-        List<RangeMonth> rangeMonthList = rangeMonthMapper.getRangeMonthList(paramMap);
+        for(String dcb : dcbs) {
+            paramMap.put("dcb", dcb);
+
+            List<RangeMonth> DCBRangeMonthList = rangeMonthMapper.getRangeMonthList(paramMap);
+            // list 정렬
+            sortRangeMonthList(DCBRangeMonthList);
+
+            rangeMonthList.addAll(DCBRangeMonthList);
+        }
+
+        List<RangeMonth> responseList = new ArrayList<>(generateDCBTotalList(rangeMonthList));
+
+        if(dcbs.size() == 1) return responseList;
+
+        responseList.addAll(rangeMonthList);
+
+        return responseList;
+    }
+
+    public Map<String, List<RangeMonthDto>> getRangeMonthMap(String startDate, String endDate, List<String> dcbs) throws IllegalAccessException {
         Map<String ,List<RangeMonthDto>> responseMap = new LinkedHashMap<>();
+        List<RangeMonth> rangeMonthList = getRangeMonthList(startDate, endDate, dcbs);
 
         for (RangeMonth rangeMonth : rangeMonthList) {
             List<RangeMonthDto> dtoList = new ArrayList<>();
-            if (responseMap.containsKey(rangeMonth.getStat_month())) {
-                dtoList = responseMap.get(rangeMonth.getStat_month());
+            if (responseMap.containsKey(rangeMonth.getDcb())) {
+                dtoList = responseMap.get(rangeMonth.getDcb());
             }
 
             RangeMonthDto dto = RangeMonthDto.toDto(rangeMonth);
 
-            if (dto.getA_stat().equals("전체")) {
-                dtoList.add(0, dto);
-            } else {
-                dtoList.add(dto);
-            }
-            responseMap.put(rangeMonth.getStat_month(), dtoList);
+            dtoList.add(dto);
+            responseMap.put(rangeMonth.getDcb(), dtoList);
         }
         return responseMap;
     }
@@ -149,7 +207,7 @@ public class RangeMonthService {
     }
 
 
-    public void exportExcel(String startDate, String endDate, String dcb, HttpServletResponse response) throws IllegalAccessException, IOException {
+    public void exportExcel(String startDate, String endDate, List<String> dcbs, HttpServletResponse response) throws IllegalAccessException, IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("월별 통계");
         sheet.createRow(0);
@@ -162,7 +220,7 @@ public class RangeMonthService {
         int rowIndex = 2;
         String lastStatMonth = null;
         int startMergeRowIndex = -1;
-        Map<String, List<RangeMonthDto>> rangeMonthMap = getRangeMonthMap(startDate, endDate, dcb);
+        Map<String, List<RangeMonthDto>> rangeMonthMap = getRangeMonthMap(startDate, endDate, dcbs);
         for (Map.Entry<String, List<RangeMonthDto>> entry : rangeMonthMap.entrySet()) {
             List<RangeMonthDto> rangeMonthDtoList = entry.getValue();
             for (RangeMonthDto dto : rangeMonthDtoList) {

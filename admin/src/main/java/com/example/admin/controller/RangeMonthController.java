@@ -1,8 +1,6 @@
 package com.example.admin.controller;
 
-import com.example.admin.common.response.ListResult;
 import com.example.admin.common.response.MapResult;
-import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.range.RangeMonthDto;
 import com.example.admin.domain.entity.range.RangeMonth;
 import com.example.admin.service.range.RangeMonthService;
@@ -28,19 +26,19 @@ public class RangeMonthController {
     }
 
     @GetMapping()
-    public MapResult<String, List<RangeMonthDto>> getRangeMonthMap(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate) throws IllegalAccessException {
-        Map<String, List<RangeMonthDto>> rangMonthDtoMap = rangeMonthService.getRangeMonthMap(startDate, endDate, dcb);
+    public MapResult<String, List<RangeMonthDto>> getRangeMonthMap(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate) throws IllegalAccessException {
+        Map<String, List<RangeMonthDto>> rangMonthDtoMap = rangeMonthService.getRangeMonthMap(startDate, endDate, dcbs);
 
         return new MapResult<>(true, rangMonthDtoMap);
     }
 
     @GetMapping("/2")
-    public List<RangeMonth> getRangeMonthList(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) {
-        return rangeMonthService.getRangeMonthList(month, dcb);
+    public List<RangeMonth> getRangeMonthList(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month) {
+        return rangeMonthService.getRangeMonth(month, dcbs);
     }
 
     @GetMapping("/excel")
-    public void exportRangeMonthExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
-        rangeMonthService.exportExcel(startDate, endDate, dcb, response);
+    public void exportRangeMonthExcel(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
+        rangeMonthService.exportExcel(startDate, endDate, dcbs, response);
     }
 }
