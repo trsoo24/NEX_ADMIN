@@ -71,7 +71,7 @@ public class RangeDayService {
         return responseList;
     }
 
-    public Map<String, List<RangeDay>> getRangeDayList(String startDate, String endDate, List<String> dcbs) {
+    private Map<String, List<RangeDay>> getRangeDayList(String startDate, String endDate, List<String> dcbs) {
         Map<String, Object> paramMap = new HashMap<>(); // 요청 쿼리
         Map<String, List<RangeDay>> rangeDayMap = new LinkedHashMap<>(); // DCB 별 RangeDay 저장
         List<RangeDay> rangeDayList = new ArrayList<>();
