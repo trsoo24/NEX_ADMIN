@@ -6,6 +6,8 @@ import com.example.admin.repository.mapper.scheduler_status.SchedulerStatusMappe
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class SchedulerStatusService {
@@ -14,7 +16,7 @@ public class SchedulerStatusService {
 
 
     // 스케줄러 기동 현황을 조회한다.
-    public SchedulerStatusResponse getSchedulerStatus() {
+    public List<SchedulerStatusResponse> getSchedulerStatus() {
         return schedulerStatusMapper.getSchedulerStatus();
     }
 
