@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.admin.repository.mapper.scheduler_status.SchedulerStatusMapper">
+    <select id="getSchedulerStatus" resultType="com.example.admin.domain.dto.scheduler_status.SchedulerStatusResponse">
+        SELECT
+            scheduler,
+            server1,
+            server2,
+            last_modifier AS lastModifier,
+            last_modified_date AS lastModifiedDate
+        FROM
+            TB_SCHEDULER_STATUS
+    </select>
+</mapper>
