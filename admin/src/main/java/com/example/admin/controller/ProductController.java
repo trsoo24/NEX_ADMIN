@@ -1,8 +1,11 @@
 package com.example.admin.controller;
 
+import com.example.admin.common.response.ListResult;
 import com.example.admin.common.response.PageResult;
 import com.example.admin.common.response.StatusResult;
 import com.example.admin.domain.dto.item.*;
+import com.example.admin.domain.entity.item.ItemStatsDaily;
+import com.example.admin.domain.entity.item.ItemStatsMonthly;
 import com.example.admin.service.item.ItemStatsDailyService;
 import com.example.admin.service.item.ItemStatsMonthlyService;
 import com.example.admin.service.item.ProductInfoService;
@@ -14,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -48,6 +52,13 @@ public class ProductController {
         productInfoService.exportExcel(dcb, productName, startDate, endDate, response);
     }
 
+    @GetMapping("/day/2")
+    public List<ItemStatsDaily> getItemStatsDailyList(@RequestParam("dcb") @Valid String dcb,
+                                                            @RequestParam("month") @Valid String month,
+                                                            @RequestParam("itemName") @Valid String itemName) {
+        return itemStatsDailyService.getItemStatsDailyList(dcb, month, itemName);
+    }
+
     @GetMapping("/day")
     public PageResult<ItemStatsDailyDto> getItemStatsDailyPage(@RequestParam("dcb") @Valid String dcb,
                                                                @RequestParam("month") @Valid String month,
@@ -79,6 +90,14 @@ public class ProductController {
         Page<ItemStatsMonthlyDto> itemStatsMonthlyDtoPage = itemStatsMonthlyService.getItemStatsMonthlyPage(dcb, year, itemName, page, pageSize);
 
         return new PageResult<>(true, itemStatsMonthlyDtoPage);
+    }
+
+    @GetMapping("/month/2")
+    public List<ItemStatsMonthly> getItemStatsMonthlyList(@RequestParam("dcb") @Valid String dcb,
+                                                          @RequestParam("year") @Valid String year,
+//                                                                   @RequestParam("merchantName") @Valid String merchantName,
+                                                          @RequestParam("itemName") @Valid String itemName) {
+        return itemStatsMonthlyService.getItemStatsMonthlyList(dcb, year, itemName);
     }
 
     @GetMapping("/month/excel")

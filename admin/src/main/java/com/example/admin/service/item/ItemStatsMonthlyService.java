@@ -28,17 +28,20 @@ public class ItemStatsMonthlyService {
     private final ItemStatsDailyMapper itemStatsDailyMapper;
     private final FunctionUtil functionUtil;
 
-    public Page<ItemStatsMonthlyDto> getItemStatsMonthlyPage(String dcb, String year, String itemName, int page, int pageSize) {
-        return functionUtil.toPage(getItemStatsMonthlyList(dcb, year, itemName), page, pageSize);
-    }
-
-    public List<ItemStatsMonthlyDto> getItemStatsMonthlyList(String dcb, String year, String itemName) {
+    public List<ItemStatsMonthly> getItemStatsMonthlyList(String dcb, String year, String itemName) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("dcb", dcb);
         requestMap.put("year", year);
         requestMap.put("itemName", itemName == null ? "" : itemName);
 
-        List<ItemStatsMonthly> itemStatsMonthlyList = itemStatsMonthlyMapper.getItemMonthStats(requestMap);
+        return itemStatsMonthlyMapper.getItemMonthStats(requestMap);
+    }
+    public Page<ItemStatsMonthlyDto> getItemStatsMonthlyPage(String dcb, String year, String itemName, int page, int pageSize) {
+        return functionUtil.toPage(getItemStatsMonthlyDtoList(dcb, year, itemName), page, pageSize);
+    }
+
+    public List<ItemStatsMonthlyDto> getItemStatsMonthlyDtoList(String dcb, String year, String itemName) {
+        List<ItemStatsMonthly> itemStatsMonthlyList = getItemStatsMonthlyList(dcb, year, itemName);
 
         return toItemStatsMonthlyDtoList(itemStatsMonthlyList);
     }
@@ -73,7 +76,7 @@ public class ItemStatsMonthlyService {
     }
 
     public void exportItemStatsMonthlyExcel(String dcb, String year, String itemName, HttpServletResponse response) throws IOException {
-        List<ItemStatsMonthlyDto> itemStatsMonthlyDtoList = getItemStatsMonthlyList(dcb, year, itemName);
+        List<ItemStatsMonthlyDto> itemStatsMonthlyDtoList = getItemStatsMonthlyDtoList(dcb, year, itemName);
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("상품 일별 판매 현황");

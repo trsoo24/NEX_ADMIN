@@ -22,11 +22,7 @@ public class ItemStatsDailyService {
     private final ItemStatsDailyMapper itemStatsDailyMapper;
     private final FunctionUtil functionUtil;
 
-    public Page<ItemStatsDailyDto> getItemStatsDailyPage(String dcb, String month, String itemName, int page, int pageSize) {
-        return functionUtil.toPage(getItemStatsDailyList(dcb, month, itemName), page, pageSize);
-    }
-
-    public List<ItemStatsDailyDto> getItemStatsDailyList(String dcb, String month, String itemName) {
+    public List<ItemStatsDaily> getItemStatsDailyList(String dcb, String month, String itemName) {
         Map<String, Object> requestMap = new HashMap<>();
         String[] yearAndMonth = month.split("-");
         requestMap.put("dcb", dcb);
@@ -35,8 +31,15 @@ public class ItemStatsDailyService {
 //        requestMap.put("merchantName", merchantName == null ? "" : merchantName);
         requestMap.put("itemName", itemName == null ? "" : itemName);
 
-        List<ItemStatsDaily> itemStatsDailyList = itemStatsDailyMapper.getItemDayStats(requestMap);
+        return itemStatsDailyMapper.getItemDayStats(requestMap);
+    }
+    public Page<ItemStatsDailyDto> getItemStatsDailyPage(String dcb, String month, String itemName, int page, int pageSize) {
+        List<ItemStatsDaily> itemStatsDailyList = getItemStatsDailyList(dcb, month, itemName);
 
+        return functionUtil.toPage(transItemStatsDailyDtoList(itemStatsDailyList), page, pageSize);
+    }
+
+    public List<ItemStatsDailyDto> transItemStatsDailyDtoList(List<ItemStatsDaily> itemStatsDailyList) {
         return toItemStatsDailyDtoList(itemStatsDailyList);
     }
 
@@ -70,7 +73,9 @@ public class ItemStatsDailyService {
     }
 
     public void exportItemStatDailyExcel(String dcb, String month, String itemName, HttpServletResponse response) throws IOException {
-        List<ItemStatsDailyDto> itemStatsDailyDtoList = getItemStatsDailyList(dcb, month, itemName);
+        List<ItemStatsDaily> itemStatsDailyList = getItemStatsDailyList(dcb, month, itemName);
+
+        List<ItemStatsDailyDto> itemStatsDailyDtoList = transItemStatsDailyDtoList(itemStatsDailyList);
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("상품 일별 판매 현황");

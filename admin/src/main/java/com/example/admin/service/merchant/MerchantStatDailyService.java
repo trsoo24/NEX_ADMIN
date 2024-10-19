@@ -22,18 +22,22 @@ public class MerchantStatDailyService {
     private final MerchantStatsDailyMapper merchantStatsDailyMapper;
     private final FunctionUtil functionUtil;
 
-    public Page<MerchantDayStatDto> getMerchantStatDailyPage(String dcb, String month, String merchantName, int page, int pageSize) {
-        return functionUtil.toPage(getMerchantStatDaily(dcb, month, merchantName), page, pageSize);
-    }
-
-    public List<MerchantDayStatDto> getMerchantStatDaily(String dcb, String month, String merchantName) {
+    public List<MerchantDayStat> getMerchantStatsDaily(String dcb, String month, String merchantName) {
         Map<String, Object> requestMap = new HashMap<>();
         String[] yearAndMonth = month.split("-");
+        requestMap.put("dcb", dcb);
         requestMap.put("year", yearAndMonth[0]);
         requestMap.put("month", yearAndMonth[1]);
         requestMap.put("merchantName", merchantName == null ? "" : merchantName);
 
-        List<MerchantDayStat> merchantDayStatList = merchantStatsDailyMapper.getMerchantDayStats(requestMap);
+        return merchantStatsDailyMapper.getMerchantDayStats(requestMap);
+    }
+    public Page<MerchantDayStatDto> getMerchantStatDailyPage(String dcb, String month, String merchantName, int page, int pageSize) {
+        return functionUtil.toPage(getMerchantStatDtoDaily(dcb, month, merchantName), page, pageSize);
+    }
+
+    public List<MerchantDayStatDto> getMerchantStatDtoDaily(String dcb, String month, String merchantName) {
+        List<MerchantDayStat> merchantDayStatList = getMerchantStatsDaily(dcb, month, merchantName);
 
         return toMerchantDayStatDtoList(merchantDayStatList);
     }
@@ -67,7 +71,7 @@ public class MerchantStatDailyService {
     }
 
     public void exportMerchantStatDailyExcel(String dcb, String month, String merchantName, HttpServletResponse response) throws IOException {
-        List<MerchantDayStatDto> merchantDayStatDtoList = getMerchantStatDaily(dcb, month, merchantName);
+        List<MerchantDayStatDto> merchantDayStatDtoList = getMerchantStatDtoDaily(dcb, month, merchantName);
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("판매자 일별 판매 현황");
