@@ -12,12 +12,12 @@
             last_modifier AS lastModifier,
             last_modified_date AS lastModifiedDate
         FROM
-            TB_SCHEDULER_STATUS
+            TB_SCHEDULE_MANAGE
     </select>
 
     <update id="updateSchedulerStatus" parameterType="com.example.admin.domain.dto.schedule_manage.ModifyScheduleManageRequest">
         UPDATE
-            TB_SCHEDULER_STATUS
+            TB_SCHEDULE_MANAGE
         SET
             server1 = #{server1},
             server2 = #{server2},
