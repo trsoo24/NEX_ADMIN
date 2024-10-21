@@ -89,7 +89,7 @@ public class LogUtil{
         String adminId = "";
 
         StringBuffer url = request.getRequestURL();
-        String remoteAddr = request.getRemoteAddr() == null ? "" : request.getRemoteAddr().toString();
+        String remoteAddr = request.getRemoteAddr() == null ? "" : request.getRemoteAddr();
 
         //log_info.info("umk="+umk);
 
@@ -106,16 +106,14 @@ public class LogUtil{
 
         //log_info.info("umk="+umk);
 
-        StringBuffer sb = new StringBuffer();
+        String sb = "[" +
+                "UMK=" + umk +
+                "|" + "URL" + "=" + url +
+                "|" + "REMOTE_ADDR" + "=" + remoteAddr +
+                "|" + "LOGIN_ID" + "=" + adminId +
+                "] ";
 
-        sb.append("[");
-        sb.append("UMK=").append(umk);
-        sb.append("|").append("URL").append("=").append(url);
-        sb.append("|").append("REMOTE_ADDR").append("=").append(remoteAddr);
-        sb.append("|").append("LOGIN_ID").append("=").append(adminId);
-        sb.append("] ");
-
-        logMsg = sb.toString()+logMsg;
+        logMsg = sb +logMsg;
 
         log_info.info(logMsg);
     }

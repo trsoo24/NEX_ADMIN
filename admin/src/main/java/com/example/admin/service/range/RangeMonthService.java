@@ -93,6 +93,7 @@ public class RangeMonthService {
 
         List<RangeMonth> responseList = new ArrayList<>(generateDCBTotalList(rangeMonthList));
 
+        // TODO
         if(dcbs.size() == 1) return responseList;
 
         responseList.addAll(rangeMonthList);

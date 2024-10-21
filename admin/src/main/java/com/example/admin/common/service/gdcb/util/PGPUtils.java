@@ -196,9 +196,8 @@ public class PGPUtils {
     		
     		PGPLiteralData ld = null;
     		
-    		if (message instanceof  PGPCompressedData) {
-    			PGPCompressedData cData = (PGPCompressedData) message;
-    			PGPObjectFactory pgpFact = new PGPObjectFactory(cData.getDataStream());
+    		if (message instanceof PGPCompressedData cData) {
+                PGPObjectFactory pgpFact = new PGPObjectFactory(cData.getDataStream());
     			
     			message = pgpFact.nextObject();
     		}
@@ -506,9 +505,7 @@ public class PGPUtils {
         if (sig.hasSubpackets()) {
             PGPSignatureSubpacketVector sv = sig.getHashedSubPackets();
             if (sv.hasSubpacket(PGPUtils.KEY_FLAGS)) {
-            	if ((sv.getKeyFlags() == 0 && keyUsage == 0)) {
-                    return false;
-                }
+                return sv.getKeyFlags() != 0 || keyUsage != 0;
             }
         }
         

@@ -39,13 +39,10 @@ public class MemberReference {
             return false;
         }
 
+        // 요청 사용자가 MANAGER 이고, Target 이 USER 일 경우
         if (requestMemberRole.equals(Role.ROLE_ADMIN.getRole())) {
             // 요청 사용자가 SUPER_ADMIN 일 경우
             return true;
-        } else if (requestMemberRole.equals(Role.ROLE_MANAGER.getRole()) && target.equals(Role.ROLE_USER.getRole())) {
-            // 요청 사용자가 MANAGER 이고, Target 이 USER 일 경우
-            return true;
-        }
-        return false;
+        } else return requestMemberRole.equals(Role.ROLE_MANAGER.getRole()) && target.equals(Role.ROLE_USER.getRole());
     }
 }
