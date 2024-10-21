@@ -20,13 +20,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class GdcbSshClient {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private SshClient ssh;
     private SessionChannelClient client;
@@ -95,11 +96,7 @@ public class GdcbSshClient {
     }
 
     public boolean isConnected() {
-        if (ssh != null && ssh.isConnected()) {
-            return true;
-        }
-
-        return false;
+        return ssh != null && ssh.isConnected();
     }
 
     public void disConnect() {
@@ -228,12 +225,12 @@ public class GdcbSshClient {
                     log.info("Starting Command : {}", cmd);
 
 
-                    out.write(cmd.getBytes("UTF-8"));
+                    out.write(cmd.getBytes(StandardCharsets.UTF_8));
                     out.flush();
 
                     boolean promptReturned = false;
 
-                    while (promptReturned == false && (read = in.read(buffer)) > 0) {
+                    while (!promptReturned && (read = in.read(buffer)) > 0) {
                         String msg = new String(buffer, 0, read);
                         // 호스명 설정을 상용으로 변경
                         if (msg != null && msg.trim().length() > 1 && msg.indexOf(GDCBConstants.HostPrompt_Real) < 0) {

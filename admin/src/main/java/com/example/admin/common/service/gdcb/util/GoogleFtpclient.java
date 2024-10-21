@@ -26,7 +26,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class GoogleFtpclient {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
     // SSH 클라이언트
     private SshClient sshClient;
     private SftpClient sftpClient;
@@ -179,7 +179,7 @@ public class GoogleFtpclient {
                 result = this.ftpDir(sb.toString(), GDCBConstants.Prefix_OutstandingFile);
             }
 
-            Collections.sort(result);;
+            Collections.sort(result);
 
             return result.get(result.size() - 1);
 
@@ -199,7 +199,7 @@ public class GoogleFtpclient {
 
             if (result != null && !result.isEmpty()) {
 
-                Collections.sort(result);;
+                Collections.sort(result);
 
                 return result.get(result.size() - 1);
             }
@@ -309,11 +309,7 @@ public class GoogleFtpclient {
     }
 
     public boolean isConnected() {
-        if (sshClient != null && scpClient != null && sshClient.isConnected()) {
-            return true;
-        } else {
-            return false;
-        }
+        return sshClient != null && scpClient != null && sshClient.isConnected();
     }
 
     /**
@@ -323,7 +319,7 @@ public class GoogleFtpclient {
      * @return
      * @throws IOException
      */
-    private List<String> ftpDir(String path, String orderPrefix) throws IOException, FileNotFoundException {
+    private List<String> ftpDir(String path, String orderPrefix) throws IOException {
 
         log.info("Google 디렉토리 조회[{}] : {}", orderPrefix, path);
 

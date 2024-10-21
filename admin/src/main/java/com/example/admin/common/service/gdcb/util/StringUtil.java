@@ -19,11 +19,8 @@ public class StringUtil {
 	 * @return : boolean
 	 */
 	public static boolean isEmpty(String str) {
-		if (str == null || str.trim().equals("")) {
-			return true;
-		}
-		return false;
-	}
+        return str == null || str.trim().equals("");
+    }
 
 	/**
 	 * 문자열 str을 문자 x로 구분하여 String[] 을 만들어 돌려준다
@@ -49,7 +46,7 @@ public class StringUtil {
 			}
 		}
 		v.add(str1);
-		String array[];
+		String[] array;
 		array = new String[v.size()];
 		for (int i = 0; i < array.length; i++)
 		{
@@ -80,7 +77,7 @@ public class StringUtil {
 			} else{
 				retVal.add(str.substring(i, end)); 
 				i = end + 1; 
-				retVal.add(str.substring(i, str.length())); 
+				retVal.add(str.substring(i));
 				break;
 			}
 		} 
@@ -97,7 +94,7 @@ public class StringUtil {
 	public static String formatParam(String name, String value)
 	{
 		StringBuffer s = new StringBuffer();
-		s.append(Integer.toString(name.getBytes().length));
+		s.append(name.getBytes().length);
 		s.append(":");
 		s.append(name);
 		if (value == null)
@@ -106,7 +103,7 @@ public class StringUtil {
 		}
 		else
 		{
-			s.append(Integer.toString(value.getBytes().length));
+			s.append(value.getBytes().length);
 			s.append(":");
 			s.append(value);
 		}
@@ -177,7 +174,7 @@ public class StringUtil {
 			sw.close();
 
 		} catch (IOException ioe) {
-			rtn = "getExceptionTrace(Exception ee) : " + ioe.toString();
+			rtn = "getExceptionTrace(Exception ee) : " + ioe;
 		}
 
 		return rtn;
@@ -198,7 +195,7 @@ public class StringUtil {
 			sw.close();
 
 		} catch (IOException ioe) {
-			rtn = "getExceptionTrace(Exception ee) : " + ioe.toString();
+			rtn = "getExceptionTrace(Exception ee) : " + ioe;
 		}
 
 		return rtn;
@@ -693,7 +690,7 @@ public class StringUtil {
 		int iDay = 0;
 		int iLastday = 0;
 
-		int days[]={0,31,28,31,30,31,30,31,31,30,31,30,31};
+		int[] days ={0,31,28,31,30,31,30,31,31,30,31,30,31};
 
 		sDate = checkTrim(sDate);
 
@@ -724,11 +721,8 @@ public class StringUtil {
 			iLastday = days[iMonth];
 		}
 
-		if ( iDay < 1 || iDay > iLastday) {
-			return false;
-		}
-		return true;
-	}
+        return iDay >= 1 && iDay <= iLastday;
+    }
 
 
 
@@ -750,10 +744,9 @@ public class StringUtil {
 
 		String tmp = origin_txt;
 		StringBuffer sb = new StringBuffer();
-		sb.append("");
-		while (tmp.indexOf(find_str)>-1) {
+        while (tmp.indexOf(find_str)>-1) {
 			itmp = tmp.indexOf(find_str);
-			sb.append(tmp.substring(0,itmp));
+			sb.append(tmp, 0, itmp);
 			sb.append(replace_str);
 			tmp = tmp.substring(itmp+find_str.length());
 		}
@@ -881,11 +874,11 @@ public class StringUtil {
 	//몇개월전 MONTH 구하기
 	public static String getMonth(int before){
 		Calendar cal = Calendar.getInstance();
-		cal.add ( cal.MONTH, -before );
-		int mo =  cal.get ( cal.MONTH ) +1;
+		cal.add (Calendar.MONTH, -before );
+		int mo =  cal.get (Calendar.MONTH) +1;
 		String month;
 		if(mo<10){
-			month = "0"+String.valueOf(mo);
+			month = "0"+ mo;
 		}else{
 			month = String.valueOf(mo);
 		}
@@ -895,13 +888,13 @@ public class StringUtil {
 	//year 구하기
 	public static String getYear(int before){
 		Calendar cal = Calendar.getInstance ( );
-		cal.add ( cal.YEAR, -before );
-		int mo =  cal.get(cal.YEAR )%5;
+		cal.add (Calendar.YEAR, -before );
+		int mo =  cal.get(Calendar.YEAR)%5;
 		String year;
 		if(mo==0){
 			year = "05";
 		}else{
-			year = "0"+String.valueOf(mo);
+			year = "0"+ mo;
 		}
 		return year;
 	}

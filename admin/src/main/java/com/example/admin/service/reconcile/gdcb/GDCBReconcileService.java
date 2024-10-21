@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,12 +90,12 @@ public class GDCBReconcileService {
         try {
             InputStream in = new FileInputStream(file);
 
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + java.net.URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "\\ ") + "\"");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + java.net.URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "\\ ") + "\"");
             response.setHeader("Content-Type", "application/octet-stream; charset=utf-8");
             response.setHeader("Content-Length", "" + file.length());
 
             int cnt = 0;
-            byte byteArray[] = new byte[(int) file.length()];
+            byte[] byteArray = new byte[(int) file.length()];
 
             while ((cnt = in.read(byteArray)) > 0) {
                 response.getOutputStream().write(byteArray, 0, cnt);

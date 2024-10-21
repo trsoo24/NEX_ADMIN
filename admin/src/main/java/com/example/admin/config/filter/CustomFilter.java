@@ -51,9 +51,6 @@ public class CustomFilter extends OncePerRequestFilter {
             return true;
         }
 
-        if (request.getRequestURI().equals("/login")) {
-            return true;
-        }
-        return false;
+        return request.getRequestURI().equals("/login");
     }
 }

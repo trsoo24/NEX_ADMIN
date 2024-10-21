@@ -23,7 +23,7 @@ public class PGPFileHandler {
             log.debug("PGP 복호화 : {}", pathPgpFile);
 
             // 복호화 대상 파일명 형식 확인 <- 파일명이 .csv.pgp 로 끝나는 파일만 복호화 대상으로 한다.
-            if (".csv.pgp".equals(pathPgpFile.substring(pathPgpFile.length() - 8, pathPgpFile.length()))) {
+            if (".csv.pgp".equals(pathPgpFile.substring(pathPgpFile.length() - 8))) {
                 String resultFileName = pathPgpFile.replace(".pgp", "");
 
                 PGPFile.decryptAndVerify(pathPgpFile, resultFileName, lgPrivateKey, googlePublicKey, keyPw);
