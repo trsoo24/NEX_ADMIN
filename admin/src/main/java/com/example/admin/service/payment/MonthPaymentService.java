@@ -7,9 +7,11 @@ import com.example.admin.repository.mapper.monthpayment.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -181,26 +183,35 @@ public class MonthPaymentService {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("월별 통계");
 
-        sheet.createRow(0);
+        int rowIdx = 1;
 
-        Field[] fields = MonthPaymentDto.class.getDeclaredFields();
-        Field[] excelFields = MonthPaymentField.class.getDeclaredFields();
+        for (String outerKey : monthPaymentMap.keySet()) {
+            Map<String, List<Object>> innerMap = monthPaymentMap.get(outerKey);
 
-        for (int j = 0; j < monthPaymentMap.size(); j++) {
-            Row row = sheet.createRow(j + 1);
-            Field field = excelFields[j];
+            Row outerRow = sheet.createRow(rowIdx);
+            Cell outerCell = outerRow.createCell(0);
+            outerCell.setCellValue(outerKey);  // total 등 입력
 
-            if (j > 0 && field.isEnumConstant()) { // 통계 column 값
-                row.createCell(0).setCellValue(((MonthPaymentField) field.get(null)).getDescription());
-            }
+            int innerRowCount = 0;
 
-            for (Map<String, List<Object>> paymentMap : monthPaymentMap.values()) {
-                List<Object> objects = paymentMap.get(fields[j].getName());
+            for (String innerKey : innerMap.keySet()) {
+                List<Object> values = innerMap.get(innerKey);
 
-                for (int k = 0; k < objects.size(); k++) {
-                    row.createCell(k + 1).setCellValue(objects.get(k).toString());
+                Row dateRow = sheet.createRow(rowIdx + 1 + innerRowCount);
+                Cell dateCell = dateRow.createCell(1);
+                dateCell.setCellValue(innerKey);  // 날짜 입력
+
+                for (int i = 0; i < values.size(); i++) {
+                    Cell valueCell = dateRow.createCell(i + 2);
+                    valueCell.setCellValue(values.get(i).toString());
                 }
+
+                innerRowCount++;
             }
+            // TOTAL , DCB 별 병합
+            sheet.addMergedRegion(new CellRangeAddress(outerCell.getRowIndex(), outerCell.getRowIndex() + innerRowCount, 0, 0));
+
+            rowIdx += 1 + innerRowCount;
         }
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
