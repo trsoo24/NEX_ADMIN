@@ -1,0 +1,65 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.example.admin.repository.mapper.analysis.AnalysisStatisticsMapper">
+    <insert id="insertApiLogs" parameterType="com.example.admin.domain.entity.analysis.ApiLogs">
+        INSERT INTO TB_API_LOGS (CREATE_DT, SEQ, BAN_UNPAID_YN_CODE, HTTP_STATUS, CUST_GRD_CD, RESULT_CODE, API_RESULT, AMOUNT,REQ_TIME, RSP_TIME, OPERATOR_USER_TOKEN, API_TYPE, SEQ_ID, AUTH_TRANSACTION_ID, MERCHANT_NAME, CORRELATION_ID, ISSUER_ID)
+        VALUES (#{createDt}, #{seq}, #{banUnpaidYnCode}, #{httpStatus}, #{custGrdCd}, #{resultCode}, #{apiResult}, #{amount},#{reqTime}, #{rspTime}, #{operatorUserToken}, #{apiType}, #{seqId}, #{authTransactionId}, #{merchantName}, #{correlationId}, #{issuerId})
+    </insert>
+
+    <insert id="insertLogAnalysis" parameterType="com.example.admin.domain.entity.analysis.AnalysisStatistics">
+        INSERT INTO TB_LOG_ANALYSIS (
+            CREATE_DT, TOTAL_COUNT, SUCCESS_COUNT, FAILURE_COUNT,
+            CODE_51100070, CODE_52000002, CODE_52000003, CODE_52101200,
+            CODE_51000012, CODE_30000009, CODE_30000008, CODE_41000001,
+            CODE_41000002, CODE_52104008, CODE_53104008, CODE_30000002, CODE_OTHER, DCB
+        )
+        VALUES (
+                   #{createDt}, #{totalCount}, #{successCount}, #{failureCount},
+                   #{code51100070}, #{code52000002}, #{code52000003}, #{code52101200},
+                   #{code51000012}, #{code30000009}, #{code30000008}, #{code41000001},
+                   #{code41000002}, #{code52104008}, #{code53104008}, #{code30000002}, #{codeOther}, #{dcb}
+               )
+    </insert>
+    <select id="generateAnalysisStatistics" parameterType="map" resultType="com.example.admin.domain.entity.analysis.AnalysisStatistics">
+    WITH FILTER AS (
+    SELECT *
+        FROM TB_API_LOGS
+        WHERE 1 = 1
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            AND CREATE_DT BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(#{endDate}, '%Y-%m-%d %H:%i:%s')
+        </if>
+    )
+        SELECT
+        CREATE_DT,
+        COUNT(*) AS totalCount,
+        COUNT(CASE WHEN RESULT_CODE = '20000000' OR RESULT_CODE = '20000001' THEN 1 END) AS successCount,
+        COUNT(CASE WHEN RESULT_CODE != '20000000' AND RESULT_CODE != '20000001' THEN 1 END) AS failureCount,
+
+        -- 각 코드 값별 COUNT
+        COUNT(CASE WHEN RESULT_CODE = '51100070' THEN 1 END) AS code51100070,
+        COUNT(CASE WHEN RESULT_CODE = '52000002' THEN 1 END) AS code52000002,
+        COUNT(CASE WHEN RESULT_CODE = '52000003' THEN 1 END) AS code52000003,
+        COUNT(CASE WHEN RESULT_CODE = '52101200' THEN 1 END) AS code52101200,
+        COUNT(CASE WHEN RESULT_CODE = '51000012' THEN 1 END) AS code51000012,
+        COUNT(CASE WHEN RESULT_CODE = '30000009' THEN 1 END) AS code30000009,
+        COUNT(CASE WHEN RESULT_CODE = '30000008' THEN 1 END) AS code30000008,
+        COUNT(CASE WHEN RESULT_CODE = '41000001' THEN 1 END) AS code41000001,
+        COUNT(CASE WHEN RESULT_CODE = '41000002' THEN 1 END) AS code41000002,
+        COUNT(CASE WHEN RESULT_CODE = '52104008' THEN 1 END) AS code52104008,
+        COUNT(CASE WHEN RESULT_CODE = '53104008' THEN 1 END) AS code53104008,
+        COUNT(CASE WHEN RESULT_CODE = '30000002' THEN 1 END) AS code30000002,
+
+        -- 지정된 코드 값을 제외한 나머지는 codeOther로 처리
+        COUNT(CASE WHEN RESULT_CODE NOT IN (
+        '20000000', '20000001', '51100070', '52000002', '52000003',
+        '52101200', '51000012', '30000009', '30000008', '41000001',
+        '41000002', '52104008', '53104008', '30000002') THEN 1
+        END) AS codeOther
+
+        FROM FILTER
+        GROUP BY CREATE_DT
+    </select>
+</mapper>
