@@ -10,15 +10,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
@@ -264,31 +267,42 @@ public class DayPaymentService {
 
 
     public void exportDayPaymentExcel(String month, List<String> dcbs, HttpServletResponse response) throws IOException {
-        // column : {value1, value2, ... } 정렬 방식 엑셀
         Map<String, Map<String, List<Object>>> dayPaymentMap = getDayPaymentDtoForm(dcbs, month);
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("일별 통계");
 
-        sheet.createRow(0);
+        int rowIdx = 1;
 
-        Field[] fields = DayPaymentDto.class.getDeclaredFields();
+        for (String outerKey : dayPaymentMap.keySet()) {
+            Map<String, List<Object>> innerMap = dayPaymentMap.get(outerKey);
 
-        for (int j = 0; j < dayPaymentMap.size(); j++) {
-            Row row = sheet.createRow(j + 1);
+            Row outerRow = sheet.createRow(rowIdx);
+            Cell outerCell = outerRow.createCell(0);
+            outerCell.setCellValue(outerKey);  // total 등 입력
 
-            if (j > 0) { // 통계 column 값
-                row.createCell(0).setCellValue(fields[j].getName());
-            }
+            int innerRowCount = 0;
 
-            for (Map<String, List<Object>> map : dayPaymentMap.values()) {
-                List<Object> objects = map.get(fields[j].getName());
+            for (String innerKey : innerMap.keySet()) {
+                List<Object> values = innerMap.get(innerKey);
 
-                for (int k = 0; k < objects.size(); k++) {
-                    row.createCell(k + 1).setCellValue(objects.get(k).toString());
+                Row dateRow = sheet.createRow(rowIdx + 1 + innerRowCount);
+                Cell dateCell = dateRow.createCell(1);
+                dateCell.setCellValue(innerKey);  // 날짜 입력
+
+                for (int i = 0; i < values.size(); i++) {
+                    Cell valueCell = dateRow.createCell(i + 2);
+                    valueCell.setCellValue(values.get(i).toString());
                 }
+
+                innerRowCount++;
             }
+            // TOTAL , DCB 별 병합
+            sheet.addMergedRegion(new CellRangeAddress(outerCell.getRowIndex(), outerCell.getRowIndex() + innerRowCount, 0, 0));
+
+            rowIdx += 1 + innerRowCount;
         }
+
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=DayPaymentStats.xlsx");
