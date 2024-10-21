@@ -19,17 +19,15 @@ public class MmsSendHistoryService {
     private final MmsSendMapper mmsSendMapper;
     private final FunctionUtil functionUtil;
 
-    public Page<MmsHistoryDto> getMmsSendHistoryPage(String dcb, String startDate, String endDate, String ctn, int page, int pageSize) {
-        List<MmsHistoryDto> mmsHistoryDtoList = getMmsSendHistoryList(dcb, startDate, endDate, ctn);
+    public Page<MmsHistoryDto> getMmsSendHistoryPage(String dcb, String ctn, int page, int pageSize) {
+        List<MmsHistoryDto> mmsHistoryDtoList = getMmsSendHistoryList(dcb, ctn);
 
         return functionUtil.toPage(mmsHistoryDtoList, page, pageSize);
     }
 
-    private List<MmsHistoryDto> getMmsSendHistoryList(String dcb, String startDate, String endDate, String ctn) {
+    private List<MmsHistoryDto> getMmsSendHistoryList(String dcb, String ctn) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("dcb", dcb);
-        requestMap.put("startDate", startDate);
-        requestMap.put("endDate", endDate);
         requestMap.put("ctn", ctn);
 
         List<MmsHistoryDto> mmsHistoryDtoList = mmsSendMapper.selectMmsHistoryList(requestMap);

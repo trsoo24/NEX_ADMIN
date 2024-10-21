@@ -22,12 +22,10 @@ public class MmsSendHistoryController {
 
     @GetMapping("/history/mms")
     public PageResult<MmsHistoryDto> getMmsHistoryPage(@RequestParam("dcb") @Valid String dcb,
-                                                       @RequestParam("startDate") @Valid String startDate,
-                                                       @RequestParam("endDate") @Valid String endDate,
                                                        @RequestParam("ctn") @Valid String ctn,
                                                        @RequestParam("page") @Valid int page,
                                                        @RequestParam("pageSize") @Valid int pageSize) {
-        Page<MmsHistoryDto> mmsHistoryDtoPage = mmsSendHistoryService.getMmsSendHistoryPage(dcb, startDate, endDate, ctn, page, pageSize);
+        Page<MmsHistoryDto> mmsHistoryDtoPage = mmsSendHistoryService.getMmsSendHistoryPage(dcb, ctn, page, pageSize);
 
         return new PageResult<>(true, mmsHistoryDtoPage);
     }

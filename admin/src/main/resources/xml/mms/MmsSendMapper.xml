@@ -21,8 +21,5 @@
         <if test="ctn != null and ctn != ''">
             AND TO_CTN LIKE CONCAT('%', #{ctn}, '%')
         </if>
-        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-            AND CREATE_DT BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d') AND STR_TO_DATE(#{endDate}, '%Y-%m-%d')
-        </if>
     </select>
 </mapper>
