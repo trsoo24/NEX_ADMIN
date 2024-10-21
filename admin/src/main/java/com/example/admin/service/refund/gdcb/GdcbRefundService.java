@@ -241,19 +241,18 @@ public class GdcbRefundService {
         while (startYear <= endYear) {
 
             while (startMonth <= 12) {
-                StringBuilder sb = new StringBuilder();
 
-                sb.append("grep");
-                sb.append(" '");
-                sb.append(correlationID);
-                sb.append("' ");
-                sb.append(billingTlo);
-                sb.append("/");
-                sb.append(startYear * 100 + startMonth);
-                sb.append("*/GDCB*.log");
-                sb.append("\n");
+                String sb = "grep" +
+                        " '" +
+                        correlationID +
+                        "' " +
+                        billingTlo +
+                        "/" +
+                        (startYear * 100 + startMonth) +
+                        "*/GDCB*.log" +
+                        "\n";
 
-                list.add(sb.toString());
+                list.add(sb);
 
                 startMonth++;
 

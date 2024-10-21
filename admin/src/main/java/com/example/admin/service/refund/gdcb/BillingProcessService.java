@@ -34,8 +34,8 @@ public class BillingProcessService {
     private final PGPFileHandler pgpFileHandler;
     private final RefundMapper refundMapper;
 
-    private SimpleDateFormat formatterMM = new SimpleDateFormat("yyyyMM", Locale.KOREA);
-    private SimpleDateFormat formatterDD = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+    private final SimpleDateFormat formatterMM = new SimpleDateFormat("yyyyMM", Locale.KOREA);
+    private final SimpleDateFormat formatterDD = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
 
     @Transactional(rollbackFor = Exception.class)
     public void billingProcess(RefundJob refundJob) throws Exception {
@@ -483,22 +483,19 @@ public class BillingProcessService {
 
     private String getReqCSV(RefundJob refundJob){
 
-        StringBuilder sb = new StringBuilder();
+        String sb = refundJob.getPath() +
+                "/" +
+                refundJob.getRequestFile().replace(".pgp", "");
 
-        sb.append(refundJob.getPath());
-        sb.append("/");
-        sb.append(refundJob.getRequestFile().replace(".pgp", ""));
-
-        return sb.toString();
+        return sb;
     }
 
     private String getRespCSV(RefundJob refundJob) {
-        StringBuilder sb = new StringBuilder();
 
-        sb.append(refundJob.getPath());
-        sb.append("/");
-        sb.append(refundJob.getResponseFile().replace(".pgp", ""));
+        String sb = refundJob.getPath() +
+                "/" +
+                refundJob.getResponseFile().replace(".pgp", "");
 
-        return sb.toString();
+        return sb;
     }
 }

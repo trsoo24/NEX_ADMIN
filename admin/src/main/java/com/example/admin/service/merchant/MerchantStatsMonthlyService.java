@@ -29,15 +29,20 @@ public class MerchantStatsMonthlyService {
     private final FunctionUtil functionUtil;
 
     public Page<MerchantMonthStatDto> getMerchantStatsMonthlyPage(String dcb, String year, String merchantName, int page, int pageSize) {
-        return functionUtil.toPage(getMerchantStatsMonthly(dcb, year, merchantName), page, pageSize);
+        return functionUtil.toPage(getMerchantStatsDtoMonthly(dcb, year, merchantName), page, pageSize);
     }
 
-    public List<MerchantMonthStatDto> getMerchantStatsMonthly(String dcb, String year, String merchantName) {
+    public List<MerchantMonthStat> getMerchantStatsMonthly(String dcb, String year, String merchantName) {
         Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("dcb", dcb);
         requestMap.put("year", year);
         requestMap.put("merchantName", merchantName == null ? "" : merchantName);
 
-        List<MerchantMonthStat> merchantMonthStatList = merchantStatsMonthlyMapper.getMerchantMonthStats(requestMap);
+        return merchantStatsMonthlyMapper.getMerchantMonthStats(requestMap);
+    }
+
+    public List<MerchantMonthStatDto> getMerchantStatsDtoMonthly(String dcb, String year, String merchantName) {
+        List<MerchantMonthStat> merchantMonthStatList = getMerchantStatsMonthly(dcb, year, merchantName);
 
         return toMerchantMonthStatDtoList(merchantMonthStatList);
     }
@@ -70,7 +75,7 @@ public class MerchantStatsMonthlyService {
     }
 
     public void exportMerchantStatMonthlyExcel(String dcb, String year, String merchantName, HttpServletResponse response) throws IOException {
-        List<MerchantMonthStatDto> merchantMonthStatDtoList = getMerchantStatsMonthly(dcb, year, merchantName);
+        List<MerchantMonthStatDto> merchantMonthStatDtoList = getMerchantStatsDtoMonthly(dcb, year, merchantName);
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("판매자 월별 판매 현황");
