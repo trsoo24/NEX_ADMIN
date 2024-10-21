@@ -3,8 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.admin.repository.mapper.scheduler_status.SchedulerStatusMapper">
-    <select id="getSchedulerStatus" resultType="com.example.admin.domain.dto.scheduler_status.SchedulerStatusResponse">
+<mapper namespace="com.example.admin.repository.mapper.schedule_manage.ScheduleManageMapper">
+    <select id="getSchedulerStatus" resultType="com.example.admin.domain.dto.schedule_manage.GetScheduleManageResponse">
         SELECT
             scheduler,
             server1,
@@ -15,7 +15,7 @@
             TB_SCHEDULER_STATUS
     </select>
 
-    <update id="updateSchedulerStatus" parameterType="com.example.admin.domain.dto.scheduler_status.ModifySchedulerStatusRequest">
+    <update id="updateSchedulerStatus" parameterType="com.example.admin.domain.dto.schedule_manage.ModifyScheduleManageRequest">
         UPDATE
             TB_SCHEDULER_STATUS
         SET

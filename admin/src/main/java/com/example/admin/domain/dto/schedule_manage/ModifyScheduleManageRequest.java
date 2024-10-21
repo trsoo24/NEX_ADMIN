@@ -1,4 +1,4 @@
-package com.example.admin.domain.dto.scheduler_status;
+package com.example.admin.domain.dto.schedule_manage;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SchedulerStatusResponse {
-    private final String dcb = "GDCB";
+public class ModifyScheduleManageRequest {
     private String scheduler;
     private String server1;
     private String server2;
-    private String lastModifier;
-    private String lastModifiedDate;
+    private String modifier;
 }
