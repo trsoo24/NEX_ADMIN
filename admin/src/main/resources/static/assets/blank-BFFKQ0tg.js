@@ -1,0 +1,1 @@
+import{_ as o,c as t,d as c,o as n,f as a}from"./index-BNrJ-Dvj.js";const r={},s={class:"layout-wrapper layout-blank"};function _(l,p){const e=a("RouterView");return n(),t("div",s,[c(e)])}const f=o(r,[["render",_]]);export{f as default};
