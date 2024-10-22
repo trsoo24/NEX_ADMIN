@@ -5,13 +5,11 @@ import com.example.admin.domain.entity.billing.BillingGrade;
 import com.example.admin.repository.mapper.billinggrade.BillingGradeMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +17,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BillingGradeService {
@@ -92,37 +91,49 @@ public class BillingGradeService {
 
     // 등급별 월 청구 현황 엑셀 생성
     public void exportBillingGradeExcel(List<String> dcbs, String yyMm, HttpServletResponse response) throws IOException {
+        log.info("등급별 월 청구 현황 엑셀 API 실행");
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("등급별 청구 현황");
-        XSSFRow header = sheet.createRow(0);
-        XSSFRow subHeaderRow = sheet.createRow(1);
+        XSSFCellStyle cellStyle = setCellCenter(workbook);
 
-        header.createCell(0).setCellValue("구분");
-        sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 0));
-
-        int colIdx = 1;
-
-        for (String category : categories) {
-            header.createCell(colIdx).setCellValue(category);
-            sheet.addMergedRegion(new CellRangeAddress(0, 0, colIdx, colIdx + 2));
-            for (String description : descriptions) {
-                subHeaderRow.createCell(colIdx).setCellValue(description);
-                colIdx++;
-            }
-        }
-
-        int rowIdx = 2;
         Map<String, List<BillingGradeDto>> billingGradeDtoMap = searchBillingGrade(dcbs, yyMm);
 
-        for (List<BillingGradeDto> billingGradeDtoList : billingGradeDtoMap.values()) {
+        int rowIdx = 0;
+        int colIdx = 1;
+
+        for (Map.Entry<String, List<BillingGradeDto>> entry : billingGradeDtoMap.entrySet()) {
+            String key = entry.getKey();
+            List<BillingGradeDto> billingGradeDtoList = entry.getValue();
+
+            XSSFRow dcbHeader = sheet.createRow(rowIdx);
+            XSSFCell dcbCell = dcbHeader.createCell(0);
+            dcbCell.setCellValue(key);
+            dcbCell.setCellStyle(cellStyle);
+            sheet.addMergedRegion(new CellRangeAddress(rowIdx, rowIdx++, 0, entry.getValue().size()));
+
+            XSSFRow categoryHeader = sheet.createRow(rowIdx);
+            XSSFRow descriptionHeader = sheet.createRow(rowIdx + 1);
+            categoryHeader.createCell(0).setCellValue("구분");
+            sheet.addMergedRegion(new CellRangeAddress(rowIdx, rowIdx + 1, 0, 0));
+
+            for (String category : categories) {
+                categoryHeader.createCell(colIdx).setCellValue(category);
+                sheet.addMergedRegion(new CellRangeAddress(rowIdx, rowIdx, colIdx, colIdx + 2));
+                for (String description : descriptions) {
+                    descriptionHeader.createCell(colIdx).setCellValue(description);
+                    colIdx++;
+                }
+            }
+            colIdx = 1;
+            rowIdx += 2;
 
             for (BillingGradeDto billingGradeDto : billingGradeDtoList) {
                 XSSFRow row = sheet.createRow(rowIdx++);
 
                 Field[] fields = BillingGradeDto.class.getDeclaredFields();
 
-                for (int i = 0; i < fields.length; i++) {
-                    fields[i].setAccessible(true); // private 필드에 접근 가능하게 설정
+                for (int i = 0; i < fields.length - 1; i++) { // DCB 값 제외
+                    fields[i].setAccessible(true);
 
                     try {
                         Object value = fields[i].get(billingGradeDto);
@@ -133,25 +144,27 @@ public class BillingGradeService {
                             row.createCell(i).setCellValue(String.valueOf(value));
                         }
                     } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                        throw new RuntimeException(e);
                     }
                 }
             }
+            rowIdx++;
         }
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=BillingGrade.xlsx");
         response.setStatus(200);
-        setCellCenter(workbook);
         workbook.write(response.getOutputStream());
         response.getOutputStream().flush();
         response.getOutputStream().close();
         workbook.close();
     }
 
-    private void setCellCenter(XSSFWorkbook workbook) { // 셀 가운데 정렬
+    private XSSFCellStyle setCellCenter(XSSFWorkbook workbook) { // 셀 가운데 정렬
         XSSFCellStyle cellStyle = workbook.createCellStyle();
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
+
+        return cellStyle;
     }
 
     private List<BillingGradeDto> sortList(List<BillingGradeDto> billingGradeList) { // 순서대로 정렬

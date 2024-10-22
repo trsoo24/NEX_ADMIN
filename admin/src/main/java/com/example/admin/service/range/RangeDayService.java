@@ -6,10 +6,9 @@ import com.example.admin.domain.entity.range.RangeDay;
 import com.example.admin.repository.mapper.range.RangeDayMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -212,104 +211,48 @@ public class RangeDayService {
     public void exportExcel(String startDate, String endDate, List<String> dcbs, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("일별 통계");
-        XSSFRow headerRow = sheet.createRow(0);
 
         RangeDayField[] rangeDayFields = RangeDayField.values();
         Field[] rangeDayDtoFields = RangeDayDto.class.getDeclaredFields();
 
-        for (int i = 0; i < rangeDayFields.length; i++) {
-            headerRow.createCell(i + 1).setCellValue(rangeDayFields[i].getDescription());
-        }
-
-        int rowIndex = 1;
+        int rowIndex = 0;
+        int startMergeRowIndex = - 1;
         String lastStatDay = null;
-        int startMergeRowIndex = -1;
         Map<String, List<RangeDayDto>> rangeDayMap = getRangeDayMap(startDate, endDate, dcbs);
+        XSSFCellStyle middle = workbook.createCellStyle();
+        middle.setAlignment(HorizontalAlignment.CENTER);
 
         for (Map.Entry<String, List<RangeDayDto>> entry : rangeDayMap.entrySet()) {
             String key = entry.getKey();
             List<RangeDayDto> rangeDayDtoList = entry.getValue();
 
+            // Map의 key 병합 처리
+            XSSFCell keyCell = sheet.createRow(rowIndex).createCell(0);
+            keyCell.setCellValue(key);
+            keyCell.setCellStyle(middle); // 중앙 정렬
+
+            sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex + 1, 0, rangeDayFields.length - 1));
+
+            rowIndex += 2;
+
+            XSSFRow headerRow = sheet.createRow(rowIndex);
+
+            for (int i = 0; i < rangeDayFields.length; i++) {
+                headerRow.createCell(i).setCellValue(rangeDayFields[i].getDescription());
+            }
+
             for (RangeDayDto dto : rangeDayDtoList) {
-                XSSFRow row = sheet.createRow(rowIndex++);
+                XSSFRow row = sheet.createRow(++rowIndex);
+
+                // 날짜별 병합 처리
                 if (dto.getStat_day().equals(lastStatDay)) {
                     row.createCell(0).setCellValue("");
                 } else {
                     if (startMergeRowIndex != -1) {
-                        sheet.addMergedRegion(new CellRangeAddress(startMergeRowIndex, rowIndex - 2, 0, 0));
+                        sheet.addMergedRegion(new CellRangeAddress(startMergeRowIndex, rowIndex - 1, 0, 0)); // 날짜 병합
                     }
-                    startMergeRowIndex = rowIndex - 1;
+                    startMergeRowIndex = rowIndex;
                     row.createCell(0).setCellValue(dto.getStat_day());
-                    lastStatDay = dto.getStat_day();
-                }
-                for (int i = 1; i < rangeDayFields.length; i++) {
-                    Field field = rangeDayDtoFields[i];
-                    field.setAccessible(true);
-                    Object value = field.get(dto);
-                    if (value != null) {
-                        if (value instanceof Double) {
-                            row.createCell(i).setCellValue((Double) value);
-                        } else if (value instanceof String) {
-                            row.createCell(i).setCellValue((String) value);
-                        } else {
-                            row.createCell(i).setCellValue(value.toString());
-                        }
-                    } else {
-                        row.createCell(i).setCellValue("");
-                    }
-                }
-            }
-        }
-        if (startMergeRowIndex != -1) {
-            sheet.addMergedRegion(new CellRangeAddress(startMergeRowIndex, rowIndex - 1, 0, 0));
-        }
-
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=RangeMonth.xlsx");
-        response.setStatus(200);
-        workbook.write(response.getOutputStream());
-        response.getOutputStream().flush();
-        response.getOutputStream().close();
-        workbook.close();
-    }
-
-    public void exportExcel2(String startDate, String endDate, List<String> dcbs, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("일별 통계");
-        XSSFRow headerRow = sheet.createRow(0);
-
-        RangeDayField[] rangeDayFields = RangeDayField.values();
-        Field[] rangeDayDtoFields = RangeDayDto.class.getDeclaredFields();
-
-        for (int i = 0; i < rangeDayFields.length; i++) {
-            headerRow.createCell(i + 1).setCellValue(rangeDayFields[i].getDescription());
-        }
-
-        int rowIndex = 1;
-        String lastStatDay = null;
-        int startMergeRowIndex = -1;
-        Map<String, List<RangeDayDto>> rangeDayMap = getRangeDayMap(startDate, endDate, dcbs);
-
-        for (Map.Entry<String, List<RangeDayDto>> entry : rangeDayMap.entrySet()) {
-            String key = entry.getKey();
-            List<RangeDayDto> rangeDayDtoList = entry.getValue();
-
-            // Map의 key를 첫 번째 열에 병합 처리
-            int startKeyMergeRowIndex = rowIndex;  // Key 병합 인덱스
-            sheet.createRow(startKeyMergeRowIndex).createCell(0).setCellValue(key);
-
-            for (RangeDayDto dto : rangeDayDtoList) {
-                XSSFRow row = sheet.createRow(rowIndex++);
-
-                // 날짜별 병합 처리
-                if (dto.getStat_day().equals(lastStatDay)) {
-                    row.createCell(1).setCellValue("");
-                } else {
-                    if (startMergeRowIndex != -1) {
-                        sheet.addMergedRegion(new CellRangeAddress(startMergeRowIndex, rowIndex - 2, 1, 1)); // 날짜 병합
-                    }
-                    startMergeRowIndex = rowIndex - 1;
-                    row.createCell(1).setCellValue(dto.getStat_day());
                     lastStatDay = dto.getStat_day();
                 }
 
@@ -320,29 +263,23 @@ public class RangeDayService {
                     Object value = field.get(dto);
                     if (value != null) {
                         if (value instanceof Double) {
-                            row.createCell(i + 1).setCellValue((Double) value); // 셀 입력
+                            row.createCell(i).setCellValue((Double) value); // 셀 입력
                         } else if (value instanceof String) {
-                            row.createCell(i + 1).setCellValue((String) value);
+                            row.createCell(i).setCellValue((String) value);
                         } else {
-                            row.createCell(i + 1).setCellValue(value.toString());
+                            row.createCell(i).setCellValue(value.toString());
                         }
                     } else {
-                        row.createCell(i + 1).setCellValue("");
+                        row.createCell(i).setCellValue("");
                     }
                 }
-
-                // 마지막 행까지 key 병합 처리
-                if (startKeyMergeRowIndex != rowIndex - 1) {
-                    sheet.addMergedRegion(new CellRangeAddress(startKeyMergeRowIndex, rowIndex - 1, 0, 0)); // 첫 번째 열에 Map의 key 병합
-                } else {
-                    sheet.getRow(startKeyMergeRowIndex).createCell(0).setCellValue(key); // 병합이 필요 없는 경우 한 셀에만 입력
-                }
             }
-        }
-
-        // 마지막 날짜 병합
-        if (startMergeRowIndex != -1) {
-            sheet.addMergedRegion(new CellRangeAddress(startMergeRowIndex, rowIndex - 1, 1, 1));
+            // 마지막 날짜 병합
+            if (startMergeRowIndex != -1) {
+                sheet.addMergedRegion(new CellRangeAddress(startMergeRowIndex, rowIndex, 0, 0));
+            }
+            rowIndex++;
+            startMergeRowIndex = -1;
         }
 
 

@@ -1,5 +1,6 @@
 package com.example.admin.service.range;
 
+import com.example.admin.domain.dto.range.RangeDayDto;
 import com.example.admin.domain.dto.range.RangeMonthDto;
 import com.example.admin.domain.dto.range.field.RangeMonthField;
 import com.example.admin.domain.entity.range.RangeMonth;
@@ -7,10 +8,9 @@ import com.example.admin.repository.mapper.range.RangeMonthMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -207,43 +207,63 @@ public class RangeMonthService {
         );
     }
 
-
     public void exportExcel(String startDate, String endDate, List<String> dcbs, HttpServletResponse response) throws IllegalAccessException, IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("월별 통계");
-        sheet.createRow(0);
-        XSSFRow headerRow = sheet.createRow(1);
+
         RangeMonthField[] rangeMonthFields = RangeMonthField.values();
         Field[] rangeMonthDtoFields = RangeMonthDto.class.getDeclaredFields();
-        for (int i = 0; i < rangeMonthFields.length; i++) {
-            headerRow.createCell(i).setCellValue(rangeMonthFields[i].getDescription());
-        }
-        int rowIndex = 2;
+
+
+        int rowIndex = 0;
+        int startMergeRowIndex = - 1;
         String lastStatMonth = null;
-        int startMergeRowIndex = -1;
         Map<String, List<RangeMonthDto>> rangeMonthMap = getRangeMonthMap(startDate, endDate, dcbs);
+        XSSFCellStyle middle = workbook.createCellStyle();
+        middle.setAlignment(HorizontalAlignment.CENTER);
+
         for (Map.Entry<String, List<RangeMonthDto>> entry : rangeMonthMap.entrySet()) {
-            List<RangeMonthDto> rangeMonthDtoList = entry.getValue();
-            for (RangeMonthDto dto : rangeMonthDtoList) {
-                XSSFRow row = sheet.createRow(rowIndex++);
+            String key = entry.getKey();
+            List<RangeMonthDto> rangeDayDtoList = entry.getValue();
+
+            // Map의 key 병합 처리
+            XSSFCell keyCell = sheet.createRow(rowIndex).createCell(0);
+            keyCell.setCellValue(key);
+            keyCell.setCellStyle(middle); // 중앙 정렬
+
+            sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex + 1, 0, rangeMonthFields.length - 1));
+
+            rowIndex += 2;
+
+            XSSFRow headerRow = sheet.createRow(rowIndex);
+
+            for (int i = 0; i < rangeMonthFields.length; i++) {
+                headerRow.createCell(i).setCellValue(rangeMonthFields[i].getDescription());
+            }
+
+            for (RangeMonthDto dto : rangeDayDtoList) {
+                XSSFRow row = sheet.createRow(++rowIndex);
+
+                // 날짜별 병합 처리
                 if (dto.getStat_month().equals(lastStatMonth)) {
                     row.createCell(0).setCellValue("");
                 } else {
                     if (startMergeRowIndex != -1) {
-                        sheet.addMergedRegion(new CellRangeAddress(startMergeRowIndex, rowIndex - 2, 0, 0));
+                        sheet.addMergedRegion(new CellRangeAddress(startMergeRowIndex, rowIndex - 1, 0, 0)); // 날짜 병합
                     }
-                    startMergeRowIndex = rowIndex - 1;
+                    startMergeRowIndex = rowIndex;
                     row.createCell(0).setCellValue(dto.getStat_month());
                     lastStatMonth = dto.getStat_month();
                 }
+
+                // 나머지 필드 값 입력
                 for (int i = 1; i < rangeMonthDtoFields.length; i++) {
                     Field field = rangeMonthDtoFields[i];
                     field.setAccessible(true);
                     Object value = field.get(dto);
-                    System.out.println("value = " + value);
                     if (value != null) {
                         if (value instanceof Double) {
-                            row.createCell(i).setCellValue((Double) value);
+                            row.createCell(i).setCellValue((Double) value); // 셀 입력
                         } else if (value instanceof String) {
                             row.createCell(i).setCellValue((String) value);
                         } else {
@@ -254,10 +274,14 @@ public class RangeMonthService {
                     }
                 }
             }
+            // 마지막 날짜 병합
+            if (startMergeRowIndex != -1) {
+                sheet.addMergedRegion(new CellRangeAddress(startMergeRowIndex, rowIndex, 0, 0));
+            }
+            rowIndex++;
+            startMergeRowIndex = -1;
         }
-        if (startMergeRowIndex != -1) {
-            sheet.addMergedRegion(new CellRangeAddress(startMergeRowIndex, rowIndex - 1, 0, 0));
-        }
+
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=RangeMonth.xlsx");
         response.setStatus(200);
