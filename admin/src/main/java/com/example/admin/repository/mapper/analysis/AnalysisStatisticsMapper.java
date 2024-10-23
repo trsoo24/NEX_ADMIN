@@ -1,7 +1,7 @@
 package com.example.admin.repository.mapper.analysis;
 
 import com.example.admin.domain.entity.analysis.ApiLogs;
-import com.example.admin.domain.entity.analysis.AnalysisStatistics;
+import com.example.admin.domain.entity.analysis.DayAnalysis;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -10,6 +10,7 @@ import java.util.Map;
 @Mapper
 public interface AnalysisStatisticsMapper {
     void insertApiLogs(ApiLogs apiLogs);
-    void insertLogAnalysis(AnalysisStatistics analysisStatistics);
-    List<AnalysisStatistics> generateAnalysisStatistics(Map<String, Object> map);
+    void insertLogAnalysis(DayAnalysis dayAnalysis);
+    List<DayAnalysis> generateAnalysisStatistics(Map<String, Object> map);
+    List<DayAnalysis> getAnalysisStatisticsList(Map<String, Object> map);
 }

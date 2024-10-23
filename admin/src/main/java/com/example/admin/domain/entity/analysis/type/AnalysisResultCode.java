@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ResultCode {
+public enum AnalysisResultCode {
     SUCCESS("20000000", "성공"),
     DUPLICATED_SUCCESS("20000001", "성공(기존 요청에 대한 성공)"),
     NO_REFERENCE_LGT("51100070", "LGT 고객 정보 없음"),
@@ -20,7 +20,7 @@ public enum ResultCode {
     EXCEED_LIMIT_RBP("52104008", "월 잔여 한도 초과 (RBP)"),
     EXCEED_LIMIT_RCSG("53104008", "월 잔여 한도 초과 (RCSG)"),
     EXPIRED_TOKEN("30000002", "제공된 토큰 만료"),
-    OTHER_REASON("other", "기타 사유"),
+    OTHER_REASON("other", "기타"),
     ;
 
     private final String code;

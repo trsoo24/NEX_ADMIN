@@ -1,6 +1,6 @@
 package com.example.admin.domain.entity.analysis;
 
-import com.example.admin.domain.entity.analysis.type.ResultCode;
+import com.example.admin.domain.entity.analysis.type.AnalysisResultCode;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ public class ApiLogs {
     private String httpStatus; // 응답 상태 코드
     private String custGrdCd;
     @Enumerated(EnumType.STRING)
-    private ResultCode resultCode; // 서비스 상태 코드
+    private AnalysisResultCode resultCode; // 서비스 상태 코드
     private String apiResult; // dcb 결과 코드
     private String amount; // 구매 요청 금액
     private String reqTime;
