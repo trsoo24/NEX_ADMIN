@@ -3,8 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.admin.repository.mapper.refund.RefundMapper">
-    <insert id="insertGdcbAuthInfo" parameterType="com.example.admin.domain.entity.gdcb.AuthInfo">
+<mapper namespace="com.example.admin.refund.mapper.RefundMapper">
+    <insert id="insertGdcbAuthInfo" parameterType="com.example.admin.auth.dto.AuthInfo">
         INSERT INTO TB_AUTH_INFO (AUTH_TRANSACTION_ID, PARTITION_ID, CTN, VERSION, CORRELATION_ID, PURCHASE_TIME,
                                   BILLING_AGREEMENT, OPERATOR_USER_TOKEN, PAYMENT_DESCRIPTION, MERCHANT_NAME, ITEM_NAME, MERCHANT_CONTACT,
                                   ITEM_PRICE, TAX, TOTAL, USER_LOCALE, DCB_TOS_VERSION, RESULT, CANCEL_NOTIFICATION, CANCEL_NOTIFICATION_DT,
@@ -19,7 +19,7 @@
                 #{mpTransactionType})
     </insert>
 
-    <insert id="insertManualRefund" parameterType="com.example.admin.domain.entity.refund.ManualRefund">
+    <insert id="insertManualRefund" parameterType="com.example.admin.refund.dto.ManualRefund">
         INSERT INTO TB_MANUAL_REFUND (AUTH_TRANSACTION_ID, CORRELATION_ID, CTN, ITEM_NAME, MERCHANT_NAME, PAYMENT_DESCRIPTION,
                                       MERCHANT_CONTACT, TOTAL, ITEM_PRICE, TAX, SUB_NO, ACE_NO, BAN, UNIT_MDL, FEE_TYPE, TRANSACTION_TYPE,
                                       TRANSACTION_DT, REFUND_DT, CREATE_DT)
@@ -28,12 +28,12 @@
                 #{transactionType}, #{transactionDt}, #{refundDt}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'))
     </insert>
 
-    <insert id="insertManualRefundFileInfo" parameterType="com.example.admin.domain.entity.refund.ManualRefundFileInfo">
+    <insert id="insertManualRefundFileInfo" parameterType="com.example.admin.refund.dto.ManualRefundFileInfo">
         INSERT INTO TB_MANUAL_REFUND_FILE_INFO (REQUEST_NAME, RESPONSE_NAME, RETRY, UPDATE_DT, CREATE_DT)
         VALUES (#{requestName}, #{responseName}, #{retry}, #{updateDt}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'))
     </insert>
 
-    <insert id="insertEai" parameterType="com.example.admin.domain.entity.refund.vo.LgudcbEaiSdw">
+    <insert id="insertEai" parameterType="com.example.admin.refund.dto.vo.LgudcbEaiSdw">
         INSERT INTO TB_LGUDCB_EAI_SDW(CMD,NEW_CORRELATIONID,NEW_ACCOUNT_TYPE,NEW_SMLS_STLM_DV_CD,NEW_SMLS_STLM_CMPNY_CD,NEW_BAN,NEW_ACE_NO
                                      ,NEW_PRSS_YYMM,NEW_REQUEST_TYPE,NEW_ITEMPRICE,NEW_TAX,NEW_TOTAL,NEW_AUTH_DATE,NEW_TRANSACTION_DATE,NEW_MERCHANTNAME
                                      ,NEW_ITEMNAME,NEW_MERCHANTCONTACT,NEW_PROD_NO)
@@ -41,14 +41,14 @@
                 IFNULL(#{newTotal}, 0), IFNULL(STR_TO_DATE(#{newAuthDate}, '%Y%m%d%H%i%s'), NOW()), IFNULL(STR_TO_DATE(#{newTransactionDate}, '%Y%m%d%H%i%s'), NOW(), IFNULL(#{newMerchantName}, 'NULL'), IFNULL(#{newItemName}, 'NULL'), IFNULL(#{newMerchantContact}, 'NULL'), #{newProdNo})
     </insert>
 
-    <select id="getAuthInfo" parameterType="map" resultType="com.example.admin.domain.entity.gdcb.AuthInfo">
+    <select id="getAuthInfo" parameterType="map" resultType="com.example.admin.auth.dto.AuthInfo">
         SELECT * FROM TB_AUTH_INFO
         WHERE CORRELATION_ID = #{correlationId}
         AND BILLING_AGREEMENT = #{billingAgreement}
         ORDER BY AUTH_TRANSACTION_ID;
     </select>
 
-    <select id="selectManualRefundByCorrelationId" parameterType="String" resultType="com.example.admin.domain.entity.refund.ManualRefund">
+    <select id="selectManualRefundByCorrelationId" parameterType="String" resultType="com.example.admin.refund.dto.ManualRefund">
         SELECT * FROM TB_MANUAL_REFUND
         WHERE CORRELATION_ID = #{correlationId}
     </select>
@@ -60,7 +60,7 @@
         WHERE CORRELATION_ID = #{correlationId}
     </update>
 
-    <select id="selectBillingFileInfo" parameterType="String" resultType="com.example.admin.domain.entity.refund.ManualRefundFileInfo">
+    <select id="selectBillingFileInfo" parameterType="String" resultType="com.example.admin.refund.dto.ManualRefundFileInfo">
         SELECT * FROM TB_MANUAL_REFUND_FILE_INFO
         WHERE REQUEST_NAME = #{requestName}
     </select>

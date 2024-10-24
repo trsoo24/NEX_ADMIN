@@ -2,8 +2,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.admin.repository.mapper.block.BlockCtnMapper">
-    <insert id="insertBlockCtn" parameterType="com.example.admin.domain.dto.block.InsertBlockCtnDto">
+<mapper namespace="com.example.admin.block.ctn.mapper.BlockCtnMapper">
+    <insert id="insertBlockCtn" parameterType="com.example.admin.block.ctn.dto.InsertBlockCtnDto">
         INSERT INTO TB_BLOCK_CTN(CTN, REG_DT, MBR_ID, DCB)
         VALUES (#{ctn}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{dcb})
     </insert>
@@ -14,7 +14,7 @@
         WHERE CTN = #{ctn}
     </select>
 
-    <select id="getAllBlockCtn" parameterType="map" resultType="com.example.admin.domain.dto.block.BlockCtnDto">
+    <select id="getAllBlockCtn" parameterType="map" resultType="com.example.admin.block.ctn.dto.BlockCtnDto">
     SELECT *
         FROM TB_BLOCK_CTN
         WHERE DCB = #{dcb}

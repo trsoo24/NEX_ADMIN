@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.admin.repository.mapper.member.MemberMapper">
+<mapper namespace="com.example.admin.member.mapper.MemberMapper">
     <select id="existsUsername" parameterType="String" resultType="boolean">
         SELECT COUNT(*) > 0
         FROM MEMBER
@@ -28,7 +28,7 @@
         WHERE MEMBER_ID = #{memberId}
     </update>
 
-    <select id="findMemberByMemberId" parameterType="Integer" resultType="com.example.admin.domain.entity.member.Member">
+    <select id="findMemberByMemberId" parameterType="Integer" resultType="com.example.admin.member.dto.Member">
         SELECT *
         FROM MEMBER
         WHERE MEMBER_ID = #{memberId}
@@ -57,16 +57,16 @@
         WHERE MEMBER_ID = #{memberId}
     </delete>
 
-    <select id="findAllMember" resultType="com.example.admin.domain.entity.member.Member">
+    <select id="findAllMember" resultType="com.example.admin.member.dto.Member">
         SELECT * FROM MEMBER
     </select>
 
-    <select id="findMemberByUsername" parameterType="String" resultType="com.example.admin.domain.entity.member.Member">
+    <select id="findMemberByUsername" parameterType="String" resultType="com.example.admin.member.dto.Member">
         SELECT * FROM MEMBER
         WHERE USER_NAME = #{username}
     </select>
 
-    <select id="signIn" parameterType="map" resultType="com.example.admin.domain.entity.member.Member">
+    <select id="signIn" parameterType="map" resultType="com.example.admin.member.dto.Member">
         SELECT * FROM MEMBER
         WHERE USER_NAME = #{username} AND PASSWORD = #{password}
     </select>

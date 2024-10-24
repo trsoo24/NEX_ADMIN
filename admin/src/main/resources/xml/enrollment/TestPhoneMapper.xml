@@ -3,8 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.admin.repository.mapper.enrollment.TestPhoneMapper">
-    <insert id="insertTestPhone" parameterType="com.example.admin.domain.entity.enrollment.TestPhone">
+<mapper namespace="com.example.admin.testphone.mapper.TestPhoneMapper">
+    <insert id="insertTestPhone" parameterType="com.example.admin.testphone.dto.TestPhone">
         INSERT INTO TB_ENROLLMENT_PHONE(CTN, REG_DT, MBR_ID, NAME, EMAIL)
         VALUES (#{ctn}, #{regDt}, #{mbrId}, #{name}, #{email})
     </insert>
@@ -15,7 +15,7 @@
         WHERE CTN = #{ctn}
     </select>
 
-    <select id="getAllTestPhone" parameterType="map" resultType="com.example.admin.domain.entity.enrollment.TestPhone">
+    <select id="getAllTestPhone" parameterType="map" resultType="com.example.admin.testphone.dto.TestPhone">
         SELECT *
         FROM TB_ENROLLMENT_PHONE
         <if test="keyword != null and keyword != ''">

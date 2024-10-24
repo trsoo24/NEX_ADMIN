@@ -2,8 +2,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.admin.repository.mapper.block.BlockFeeTypeMapper">
-    <insert id="insertBlockFeeType" parameterType="com.example.admin.domain.dto.block.InsertBlockFeeTypeDto">
+<mapper namespace="com.example.admin.block.fee_type.mapper.BlockFeeTypeMapper">
+    <insert id="insertBlockFeeType" parameterType="com.example.admin.block.fee_type.dto.InsertBlockFeeTypeDto">
         INSERT INTO TB_BLOCK_FEE_TYPE(FEE_TYPE_CD, REG_DT, MBR_ID, FEE_TYPE_NM, DCB)
         VALUES (#{feeTypeCd}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{feeTypeNm}, #{dcb})
     </insert>
@@ -14,7 +14,7 @@
         WHERE FEE_TYPE_CD = #{feeTypeCd}
     </select>
 
-    <select id="getAllBlockFeeType" parameterType="map" resultType="com.example.admin.domain.dto.block.BlockFeeTypeDto">
+    <select id="getAllBlockFeeType" parameterType="map" resultType="com.example.admin.block.fee_type.dto.BlockFeeTypeDto">
         SELECT *
         FROM TB_BLOCK_FEE_TYPE
         WHERE DCB = #{dcb}

@@ -2,8 +2,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.admin.repository.mapper.monthpayment.NdcbMonthPaymentMapper">
-    <insert id="insertMonthPayment" parameterType="com.example.admin.domain.entity.payment.MonthPayment">
+<mapper namespace="com.example.admin.payment_month.mapper.NdcbMonthPaymentMapper">
+    <insert id="insertMonthPayment" parameterType="com.example.admin.payment_month.dto.MonthPayment">
         INSERT INTO TB_NDCB_MONTH_PAYMENT(STAT_MONTH, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT, H_STAT, I_STAT, J_STAT, K_STAT, L_STAT, M_STAT, N_STAT, P_STAT, R_STAT, T_STAT)
         VALUES (#{stat_month}, #{a_stat}, #{b_stat}, #{c_stat}, #{d_stat}, #{e_stat}, #{f_stat}, #{g_stat}, #{h_stat}, #{i_stat}, #{j_stat}, #{k_stat}, #{l_stat}, #{m_stat}, #{n_stat}, #{p_stat} ,#{r_stat} , #{t_stat})
     </insert>
@@ -19,7 +19,7 @@
         WHERE STAT_MONTH = #{year}
     </select>
 
-    <resultMap id="monthPaymentResultMap" type="com.example.admin.domain.entity.payment.MonthPayment">
+    <resultMap id="monthPaymentResultMap" type="com.example.admin.payment_month.dto.MonthPayment">
         <result column="STAT_MONTH" property="stat_month"/>
         <result column="A_STAT" property="a_stat"/>
         <result column="B_STAT" property="b_stat"/>

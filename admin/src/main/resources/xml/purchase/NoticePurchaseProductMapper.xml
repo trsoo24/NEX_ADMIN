@@ -3,8 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.admin.repository.mapper.purchase.NoticePurchaseProductMapper">
-    <insert id="insertNotiPurchaseProduct" parameterType="com.example.admin.domain.entity.purchase.NoticePurchaseProduct">
+<mapper namespace="com.example.admin.sdcb.purchase.mapper.NoticePurchaseProductMapper">
+    <insert id="insertNotiPurchaseProduct" parameterType="com.example.admin.sdcb.purchase.dto.NoticePurchaseProduct">
         INSERT INTO TB_NOTI_PURCHASE_PRODUCT
         (REQUEST_ID, TRANSACTION_ID, PARTITION_ID, PURCHASE_ID, PRODUCT_ID, PRODUCT_NAME, PRODUCT_AMT,
          AUTO_YN, AUTO_PERIOD_UNIT, AUTO_PERIOD_VALUE, SELLER_COMPANY, SELLER_NAME, SELLER_EMAIL, SELLER_REG_NUM,

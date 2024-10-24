@@ -4,13 +4,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
-<mapper namespace="com.example.admin.repository.mapper.reconcile.sdcb.BillingHistoryMapper">
-    <insert id="insertBillingHistory" parameterType="com.example.admin.domain.entity.reconcile.sdcb.BillingHistory">
+<mapper namespace="com.example.admin.sdcb.billing_history.mapper.BillingHistoryMapper">
+    <insert id="insertBillingHistory" parameterType="com.example.admin.sdcb.billing_history.dto.BillingHistory">
         INSERT INTO TB_SDCB_COMPARE_RESULT(REQUEST_ID, COMPARE_MONTH, EVENT_TIME, CASE_CODE, TRANSACTION_ID, STATUS_CODE, TOT_AMT, CTN, SUB_NO, ACT_TYPE)
         VALUES (#{requestId}, #{compareMonth}, #{eventTime}, #{caseCode}, #{transactionId}, #{statusCode}, #{totAmt}, #{ctn}, #{subNo}, #{actType})
     </insert>
 
-    <select id="selectBillingHistoryList" parameterType="map" resultType="com.example.admin.domain.entity.reconcile.sdcb.BillingHistory">
+    <select id="selectBillingHistoryList" parameterType="map" resultType="com.example.admin.sdcb.billing_history.dto.BillingHistory">
         SELECT * FROM TB_SDCB_COMPARE_RESULT
         WHERE 1 = 1
         <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">

@@ -2,8 +2,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.admin.repository.mapper.daypayment.PdcbDayPaymentMapper">
-    <insert id="insertDayPayment" parameterType="com.example.admin.domain.entity.payment.DayPayment">
+<mapper namespace="com.example.admin.payment_day.mapper.PdcbDayPaymentMapper">
+    <insert id="insertDayPayment" parameterType="com.example.admin.payment_day.dto.DayPayment">
         INSERT INTO TB_PDCB_DAY_PAYMENT(STAT_DAY, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT, H_STAT, I_STAT, J_STAT, K_STAT, L_STAT, M_STAT, N_STAT, P_STAT, R_STAT, T_STAT)
         VALUES (#{stat_day}, #{a_stat}, #{b_stat}, #{c_stat}, #{d_stat}, #{e_stat}, #{f_stat}, #{g_stat}, #{h_stat}, #{i_stat}, #{j_stat}, #{k_stat}, #{l_stat}, #{m_stat}, #{n_stat}, #{p_stat} ,#{r_stat} , #{t_stat})
     </insert>
@@ -18,7 +18,7 @@
         WHERE STAT_DAY = #{month}
     </select>
 
-    <resultMap id="dayPaymentResultMap" type="com.example.admin.domain.entity.payment.DayPayment">
+    <resultMap id="dayPaymentResultMap" type="com.example.admin.payment_day.dto.DayPayment">
         <result column="STAT_DAY" property="stat_day"/>
         <result column="A_STAT" property="a_stat"/>
         <result column="B_STAT" property="b_stat"/>

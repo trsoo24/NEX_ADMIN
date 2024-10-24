@@ -3,13 +3,13 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.admin.repository.mapper.event.EventMapper">
+<mapper namespace="com.example.admin.event.mapper.EventMapper">
     <insert id="insertEvent" parameterType="map">
         INSERT INTO TB_EVENT_INFO(EVENT_NAME, REG_DT, REG_ID, DCB)
         VALUES (#{eventName}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{regId}, #{dcb})
     </insert>
 
-    <select id="getEventList" parameterType="map" resultType="com.example.admin.domain.entity.event.Event">
+    <select id="getEventList" parameterType="map" resultType="com.example.admin.event.dto.Event">
         SELECT * FROM TB_EVENT_INFO
         WHERE DCB = #{dcb}
         <if test="eventName != null and eventName != ''">

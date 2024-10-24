@@ -2,7 +2,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.admin.repository.mapper.range.RangeDayMapper">
+<mapper namespace="com.example.admin.range_day.mapper.RangeDayMapper">
     <insert id="insertRangeDay">
         INSERT INTO TB_STATS_RANGE_DAY(STAT_DAY, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT, DCB)
 
@@ -31,7 +31,7 @@
         </if>
     </select>
 
-    <resultMap id="rangeDayMap" type="com.example.admin.domain.entity.range.RangeDay">
+    <resultMap id="rangeDayMap" type="com.example.admin.range_day.dto.RangeDay">
         <result column="STAT_DAY" property="stat_day"/>
         <result column="A_STAT" property="a_stat"/>
         <result column="B_STAT" property="b_stat"/>

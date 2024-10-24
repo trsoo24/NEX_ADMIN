@@ -1,13 +1,13 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.admin.repository.mapper.item.ItemStatsMonthlyMapper">
-    <insert id="insertItemStatMonthly" parameterType="com.example.admin.domain.entity.item.ItemStatsMonthly">
+<mapper namespace="com.example.admin.item.mapper.ItemStatsMonthlyMapper">
+    <insert id="insertItemStatMonthly" parameterType="com.example.admin.item.dto.ItemStatsMonthly">
         INSERT INTO TB_ITEM_STATS_MONTHLY(YEAR, MONTH, MERCHANT_NAME, ITEM_NAME, SUM_ITEM_PRICE, SUM_TAX, SUM_TOTAL)
         VALUES (#{year}, #{month}, #{merchantName}, #{itemName}, #{sumItemPrice}, #{sumTax}, #{sumTotal})
     </insert>
 
-    <select id="getItemMonthStats" parameterType="map" resultType="com.example.admin.domain.entity.item.ItemStatsMonthly">
+    <select id="getItemMonthStats" parameterType="map" resultType="com.example.admin.item.dto.ItemStatsMonthly">
         SELECT * FROM TB_ITEM_STATS_MONTHLY
         WHERE 1 = 1
         <if test="merchantName != null and merchantName != ''">

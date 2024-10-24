@@ -3,23 +3,23 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.admin.repository.mapper.reconcile.gdcb.ReconcileMapper">
-    <insert id="insertGDCBReconcile" parameterType="com.example.admin.domain.dto.reconcile.gdcb.InsertReconcileDto">
+<mapper namespace="com.example.admin.reconcile.mapper.ReconcileMapper">
+    <insert id="insertGDCBReconcile" parameterType="com.example.admin.reconcile.dto.InsertReconcileDto">
         INSERT INTO TB_GDCB_CREATE_FILE_INFO (`YEAR_MONTH`, FILE_TYPE, FILE_CD, FILE_NAME, FILE_PATH, RESULT, CREATE_DT, UPDATE_DT)
         VALUES (#{yearMonth}, #{fileType}, #{fileCode}, #{fileName}, #{filePath}, #{result}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'))
     </insert>
 
-    <insert id="insertGDCBMonthlyInvoice" parameterType="com.example.admin.domain.entity.reconcile.gdcb.MonthlyInvoiceSum">
+    <insert id="insertGDCBMonthlyInvoice" parameterType="com.example.admin.reconcile.dto.MonthlyInvoiceSum">
         INSERT INTO TB_GDCB_MONTHLY_INVOICE_SUM (YEAR, MONTH, TRANSACTION_TYPE, PAYMENT_TYPE, REVS_CATEGORY, CNT, ITEM_PRICE_SUM, TAX_SUM, TOTAL_AMOUNT_SUM, REVS_IN_INVOICED_CURRENCY_SUM)
         VALUES (#{year}, #{month}, #{transactionType}, #{paymentType}, #{revsCategory}, #{cnt}, #{itemPriceSum}, #{taxSum}, #{totalAmountSum}, #{revsInInvoicedCurrencySum})
     </insert>
 
-    <insert id="insertGoogleMonthlyInvoice" parameterType="com.example.admin.domain.entity.reconcile.gdcb.GoogleMonthlyInvoiceSum">
+    <insert id="insertGoogleMonthlyInvoice" parameterType="com.example.admin.reconcile.dto.GoogleMonthlyInvoiceSum">
         INSERT INTO G_GDCB_MONTHLY_INVOICE_SUM(YEAR, MONTH, REVS_CATEGORY, ITEM_PRICE_SUM, TAX_SUM, TOTAL_AMOUNT_SUM, REV_SHARE_SUM)
         VALUES (#{year}, #{month}, #{revsCategory}, #{itemPriceSum}, #{taxSum}, #{totalAmountSum}, #{revShareSum})
     </insert>
 
-    <select id="getGDCBReconcileList" parameterType="map" resultType="com.example.admin.domain.entity.reconcile.gdcb.Reconcile">
+    <select id="getGDCBReconcileList" parameterType="map" resultType="com.example.admin.reconcile.dto.Reconcile">
         SELECT
             CONCAT(SUBSTRING(A.YEAR_MONTH, 1, 4), '-', SUBSTRING(A.YEAR_MONTH, 5, 2)) AS yearMonth,
             B.CODE_VALUE 	AS fileType,
@@ -60,7 +60,7 @@
         </if>
     </select>
 
-    <select id="selectBuyInvoice" parameterType="map" resultType="com.example.admin.domain.dto.reconcile.gdcb.GDCBMonthlyInvoiceSum">
+    <select id="selectBuyInvoice" parameterType="map" resultType="com.example.admin.reconcile.dto.GDCBMonthlyInvoiceSum">
         SELECT
         TRANSACTION_TYPE,
         REVS_CATEGORY,
@@ -84,7 +84,7 @@
         GROUP BY REVS_CATEGORY
     </select>
 
-    <select id="selectRefundInvoice" parameterType="map" resultType="com.example.admin.domain.dto.reconcile.gdcb.GDCBMonthlyInvoiceSum">
+    <select id="selectRefundInvoice" parameterType="map" resultType="com.example.admin.reconcile.dto.GDCBMonthlyInvoiceSum">
         SELECT
             TRANSACTION_TYPE,
             REVS_CATEGORY,
@@ -108,7 +108,7 @@
         GROUP BY REVS_CATEGORY
     </select>
 
-    <select id="selectGoogleSummary" parameterType="map" resultType="com.example.admin.domain.entity.reconcile.gdcb.GoogleMonthlyInvoiceSum">
+    <select id="selectGoogleSummary" parameterType="map" resultType="com.example.admin.reconcile.dto.GoogleMonthlyInvoiceSum">
         SELECT
             YEAR,
             MONTH,

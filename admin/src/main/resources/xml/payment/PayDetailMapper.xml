@@ -3,8 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.admin.repository.mapper.payment.PayDetailMapper">
-    <select id="selectPaymentDetailByProductName" parameterType="map" resultType="com.example.admin.domain.dto.payment.PayDetailDto">
+<mapper namespace="com.example.admin.sdcb.pay_detail.mapper.PayDetailMapper">
+    <select id="selectPaymentDetailByProductName" parameterType="map" resultType="com.example.admin.sdcb.pay_detail.dto.PayDetailDto">
         SELECT C.CTN, C.PURCHASE_DT AS purchaseDate, C.CANCEL_DT AS cancelDate, A.PAYMENT_AMT AS price, A.PAYMENT_NAME, B.PRODUCT_NAME, B.SELLER_COMPANY, B.SELLER_NAME
         FROM TB_NOTI_PURCHASE_TYPE A
         LEFT OUTER JOIN TB_NOTI_PURCHASE_PRODUCT B ON (A.PARTITION_ID = B.PARTITION_ID AND A.REQUEST_ID = B.REQUEST_ID)
@@ -27,7 +27,7 @@
         ORDER BY purchaseDate
     </select>
 
-    <select id="selectPaymentDetailByCtn" parameterType="map" resultType="com.example.admin.domain.dto.payment.PayDetailDto">
+    <select id="selectPaymentDetailByCtn" parameterType="map" resultType="com.example.admin.sdcb.pay_detail.dto.PayDetailDto">
         SELECT C.CTN, C.PURCHASE_DT AS purchaseDate, C.CANCEL_DT AS cancelDate, A.PAYMENT_AMT AS price, A.PAYMENT_NAME, B.PRODUCT_NAME, B.SELLER_COMPANY, B.SELLER_NAME
         FROM TB_NOTI_PURCHASE_TYPE A
         LEFT OUTER JOIN TB_NOTI_PURCHASE_PRODUCT B ON (A.PARTITION_ID = B.PARTITION_ID AND A.REQUEST_ID = B.REQUEST_ID)
@@ -51,7 +51,7 @@
         ORDER BY purchaseDate
     </select>
 
-    <select id="selectPaymentDetailByCompanyName" parameterType="map" resultType="com.example.admin.domain.dto.payment.PayDetailDto">
+    <select id="selectPaymentDetailByCompanyName" parameterType="map" resultType="com.example.admin.sdcb.pay_detail.dto.PayDetailDto">
         SELECT C.CTN, C.PURCHASE_DT AS purchaseDate, C.CANCEL_DT AS cancelDate, A.PAYMENT_AMT AS price, A.PAYMENT_NAME, B.PRODUCT_NAME, B.SELLER_COMPANY, B.SELLER_NAME
         FROM TB_NOTI_PURCHASE_TYPE A
         LEFT OUTER JOIN TB_NOTI_PURCHASE_PRODUCT B ON (A.PARTITION_ID = B.PARTITION_ID AND A.REQUEST_ID = B.REQUEST_ID)
