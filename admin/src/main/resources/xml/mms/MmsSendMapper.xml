@@ -5,15 +5,14 @@
 
 <mapper namespace="com.example.admin.repository.mapper.mms.MmsSendMapper">
     <insert id="insertMmsHistory" parameterType="com.example.admin.domain.entity.mms.MmsSendHistory">
-        INSERT INTO TB_MMS_SEND_HIS(CREATE_DT, SEQ, PARTITION_ID, TRY_CNT, SEND_DT, SEND_RESULT, TO_CTN, REQUEST_ID, CONTENT, MMS_CATEGORY)
-        VALUES (#{createDt}, #{seq}, #{partitionId}, #{tryCnt}, #{sendDt}, #{sendResult}, #{toCtn},#{reqeustId}, #{content}, #{mmsCategory})
+        INSERT INTO TB_MMS_SEND_HIS(CREATE_DT, SEQ, PARTITION_ID, TRY_CNT, SEND_DT, SEND_RESULT, TO_CTN, REQUEST_ID, CONTENT)
+        VALUES (#{createDt}, #{seq}, #{partitionId}, #{tryCnt}, #{sendDt}, #{sendResult}, #{toCtn},#{requestId}, #{content})
     </insert>
 
     <select id="selectMmsHistoryList" parameterType="map" resultType="com.example.admin.domain.dto.mms.MmsHistoryDto">
         SELECT
             CREATE_DT createDt,
             TO_CTN ctn,
-            MMS_CATEGORY mmsCategory,
             CONTENT content,
             SEND_RESULT sendResult
         FROM TB_MMS_SEND_HIS
