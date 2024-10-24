@@ -5,11 +5,16 @@ import com.example.admin.domain.dto.analysis.DayAnalysisDto;
 import com.example.admin.domain.entity.analysis.DayAnalysis;
 import com.example.admin.domain.entity.analysis.type.AnalysisResultCode;
 import com.example.admin.repository.mapper.analysis.AnalysisStatisticsMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -18,7 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AnalysisStatisticService {
+public class DayAnalysisStatisticService {
     private final AnalysisStatisticsMapper analysisStatisticsMapper;
     private final FunctionUtil functionUtil;
 
@@ -54,10 +59,12 @@ public class AnalysisStatisticService {
             List<DayAnalysis> dayAnalysisList = getDayAnalysisStatistics(dcb, startDate, endDate, codeName);
 
             // 카운트 수 내림차순 TOP 12 지정
-            List<String> top12List = findTop12FromList(dayAnalysisList);
+            Map<String, Integer> countMap = findTop12FromList(dayAnalysisList);
+
+            List<String> sortList = sortMapToList(countMap);
 
             // 실패 사유 상위 12개는 코드 설명 : 카운트 수 로 지정 , 아래로는 토탈 모두 더해서 "기타" 로 통합
-            List<DayAnalysisDto> responseList = transEntityToDtoList(dayAnalysisList, top12List);
+            List<DayAnalysisDto> responseList = transEntityToDtoList(dayAnalysisList, sortList);
 
             responseMap.put(dcb, responseList);
         }
@@ -99,6 +106,27 @@ public class AnalysisStatisticService {
         return responseList;
     }
 
+    private Map<String, Integer> findTop12FromList(List<DayAnalysis> dayAnalysisList) {
+        Map<String, Integer> countMap = new LinkedHashMap<>(); // 결과 코드별 분류
+
+        for (DayAnalysis dayAnalysis : dayAnalysisList) {
+            countMap.put(dayAnalysis.getResultCode(), countMap.getOrDefault(dayAnalysis.getResultCode(), 0) + dayAnalysis.getCodeCount());
+        }
+
+        return countMap;
+    }
+
+    private List<String> sortMapToList(Map<String, Integer> countMap) {
+        List<String> resultCodeList = new ArrayList<>();
+
+        countMap.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .limit(12)
+                .forEach(entry -> resultCodeList.add(entry.getKey()));
+
+        return resultCodeList;
+    }
+
     // 발생 건수가 많은 결과 코드에 포함되는 값
     private void isContainsResultCode(List<String> top12List, DayAnalysisDto dto, DayAnalysis dayAnalysis) {
         if (top12List.contains(dayAnalysis.getResultCode())) {
@@ -108,33 +136,22 @@ public class AnalysisStatisticService {
         }
     }
 
-    private List<String> findTop12FromList(List<DayAnalysis> dayAnalysisList) {
-        Map<String, Integer> countMap = new LinkedHashMap<>(); // 결과 코드별 분류
-
-        for (DayAnalysis dayAnalysis : dayAnalysisList) {
-            countMap.put(dayAnalysis.getResultCode(), countMap.getOrDefault(dayAnalysis.getResultCode(), 0) + dayAnalysis.getCodeCount());
-        }
-
-        return countMap.entrySet().stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .limit(12)
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-    }
-
     private void sortDtoMap(List<DayAnalysisDto> dtoList, List<String> top12List) {
         for (DayAnalysisDto dto : dtoList) {
             // 기타 값 추출
             Integer otherValue = dto.getResultCodeMap().remove("기타");
             Map<String, Integer> resultCodeMap = dto.getResultCodeMap();
 
-            top12List.stream()
+            Map<String, Integer> sortedMap = top12List.stream()
                     .filter(resultCodeMap::containsKey)
                     .collect(Collectors.toMap(
                             key -> key,
                             resultCodeMap::get,
                             (e1, e2) -> e1,
                             LinkedHashMap::new));
+
+            // 정렬된 맵으로 교체
+            dto.setResultCodeMap(sortedMap);
 
             // 기타 값 재설정
             dto.addEtcCount(otherValue);
@@ -151,6 +168,7 @@ public class AnalysisStatisticService {
             if (j < 10) {
                 month = "0" + month;
             }
+            sb1.append("-");
             sb1.append(month);
             month = sb1.toString();
 
@@ -180,5 +198,86 @@ public class AnalysisStatisticService {
                 }
             }
         }
+    }
+
+    public void exportDayAnalysisStatisticExcel(List<String> dcbs, String startDate, String endDate, String codeName, HttpServletResponse response) throws IOException {
+        Map<String, List<DayAnalysisDto>> dayAnalysisStatisticsMap = getDayAnalysisStatisticsMap(dcbs, startDate, endDate, codeName);
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("일별 통계 분석");
+        XSSFCellStyle middle = workbook.createCellStyle();
+        middle.setAlignment(HorizontalAlignment.CENTER);
+
+        int rowIdx = 0;
+        int colIdx = 1;
+        for (Map.Entry<String, List<DayAnalysisDto>> entry : dayAnalysisStatisticsMap.entrySet()) {
+            String key = entry.getKey();
+            List<DayAnalysisDto> dtoList = entry.getValue();
+
+            // Map의 key 병합 처리
+            XSSFCell keyCell = sheet.createRow(rowIdx).createCell(0);
+            keyCell.setCellValue(key);
+            keyCell.setCellStyle(middle); // 중앙 정렬
+
+            sheet.addMergedRegion(new CellRangeAddress(rowIdx++, rowIdx++, 0, dtoList.size()));
+
+            // 상위 실패 사유 리스트
+            List<String> topResultCodeList = getTopResultList(dtoList.get(0).getResultCodeMap());
+
+            int rowIdxForResultCode = rowIdx;
+            for (String topResultCode : topResultCodeList) {
+                sheet.createRow(1 + rowIdx++).createCell(0).setCellValue(topResultCode);
+            }
+
+            int rowIdxForDto = rowIdxForResultCode;
+
+            int colIdxForDayAnalysisDto = colIdx;
+            for (DayAnalysisDto dayAnalysisDto : dtoList) {
+                XSSFRow row = sheet.getRow(rowIdxForDto);
+
+                if (row == null) {
+                    row = sheet.createRow(rowIdxForDto);
+                }
+
+                rowIdxForDto++;
+
+                row.createCell(colIdxForDayAnalysisDto).setCellValue(dayAnalysisDto.getCreateDt());
+
+                for (Integer value : dayAnalysisDto.getResultCodeMap().values()) {
+                    row = sheet.getRow(rowIdxForDto);
+
+                    if (row == null) {
+                        row = sheet.createRow(rowIdxForDto);
+                    }
+
+                    rowIdxForDto++;
+
+                    row.createCell(colIdxForDayAnalysisDto).setCellValue(value);
+                }
+                colIdxForDayAnalysisDto++;
+                rowIdxForDto = rowIdxForResultCode;
+            }
+            rowIdx++;
+        }
+
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=DayAnalysisStatistic.xlsx");
+        response.setStatus(200);
+        workbook.write(response.getOutputStream());
+        response.getOutputStream().flush();
+        response.getOutputStream().close();
+        workbook.close();
+    }
+
+    private List<String> getTopResultList(Map<String, Integer> resultCodeMap) {
+        List<String> responseList = new ArrayList<>();
+
+        for (Map.Entry<String, Integer> entry : resultCodeMap.entrySet()) {
+            String key = entry.getKey();
+
+            responseList.add(key);
+        }
+
+        return responseList;
     }
 }

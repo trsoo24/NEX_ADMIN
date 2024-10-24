@@ -33,4 +33,8 @@ public class DayAnalysisDto {
 
         this.resultCodeMap.put(key, this.resultCodeMap.getOrDefault(key, 0) + codeCount);
     }
+
+    public void setResultCodeMap(Map<String, Integer> resultCodeMap) {
+        this.resultCodeMap = resultCodeMap;
+    }
 }

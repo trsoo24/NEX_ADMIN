@@ -79,6 +79,7 @@ public class MerchantController {
         return new PageResult<>(true, itemDayStatDtoPage);
     }
 
+    // 통합 ADMIN 스케줄러 호출용 API
     @GetMapping("/day/2")
     public List<MerchantDayStat> getMerchantStatsDailyList(@RequestParam("dcb") @Valid String dcb,
                                                            @RequestParam("month") @Valid String month,
@@ -105,6 +106,7 @@ public class MerchantController {
         return new PageResult<>(true, itemMonthStatDtoPage);
     }
 
+    // 통합 ADMIN 스케줄러 호출용 API
     @GetMapping("/month/2")
     public List<MerchantMonthStat> getMerchantStatMonthly(@RequestParam("dcb") @Valid String dcb,
                                                           @RequestParam("year") @Valid String year,

@@ -10,9 +10,33 @@
     </insert>
 
     <insert id="insertLogAnalysis" parameterType="com.example.admin.domain.entity.analysis.DayAnalysis">
-        INSERT INTO TB_LOG_ANALYSIS (CREATE_DT, RESULT_CODE, CODE_COUNT,DCB)
+        INSERT INTO TB_LOG_ANALYSIS_DAY (CREATE_DT, RESULT_CODE, CODE_COUNT,DCB)
         VALUES (#{createDt}, #{resultCode}, #{codeCount}, #{dcb})
     </insert>
+
+    <insert id="insertMonthAnalysis" parameterType="com.example.admin.domain.entity.analysis.MonthAnalysis">
+        INSERT INTO TB_LOG_ANALYSIS_MONTH (CREATE_MONTH, RESULT_CODE, CODE_COUNT,DCB)
+        VALUES (#{createMonth}, #{resultCode}, #{codeCount}, #{dcb})
+    </insert>
+
+    <select id="generateMonthData" parameterType="Map" resultType="com.example.admin.domain.entity.analysis.MonthAnalysis">
+        WITH FILTER AS(
+        SELECT *
+        FROM TB_LOG_ANALYSIS_DAY
+        WHERE 1 = 1
+        <if test="startDate != null and startDate != '' and endDate != null and endDate !=''">
+            AND CREATE_DT BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d') AND STR_TO_DATE(#{endDate}, '%Y-%m-%d')
+        </if>
+        )
+
+        SELECT
+        DATE_FORMAT(CREATE_DT, '%Y-%m') AS CREATE_MONTH,
+        RESULT_CODE,
+        SUM(CODE_COUNT) AS codeCount,
+        DCB
+        FROM FILTER
+        GROUP BY CREATE_MONTH, RESULT_CODE, DCB
+    </select>
 
     <select id="generateAnalysisStatistics" parameterType="map" resultType="com.example.admin.domain.entity.analysis.DayAnalysis">
     WITH FILTER AS (
@@ -33,13 +57,30 @@
     </select>
 
     <select id="getAnalysisStatisticsList" parameterType="map" resultType="com.example.admin.domain.entity.analysis.DayAnalysis">
-        SELECT * FROM TB_LOG_ANALYSIS
+        SELECT * FROM TB_LOG_ANALYSIS_DAY
         WHERE 1 = 1
         <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
             AND CREATE_DT BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d') AND STR_TO_DATE(#{endDate}, '%Y-%m-%d')
         </if>
         <if test="codeName != null and codeName != ''">
             AND RESULT_CODE LIKE CONCAT('%', #{codeName}, '%')
+        </if>
+        <if test="dcb != null and dcb != ''">
+            AND DCB = #{dcb}
+        </if>
+    </select>
+
+    <select id="getAnalysisMonthStatisticsList" parameterType="map" resultType="com.example.admin.domain.entity.analysis.MonthAnalysis">
+        SELECT * FROM TB_LOG_ANALYSIS_MONTH
+        WHERE 1 = 1
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            AND CREATE_MONTH BETWEEN #{startDate} AND #{endDate}
+        </if>
+        <if test="codeName != null and codeName != ''">
+            AND RESULT_CODE LIKE CONCAT('%', #{codeName}, '%')
+        </if>
+        <if test="dcb != null and dcb != ''">
+            AND DCB = #{dcb}
         </if>
     </select>
 </mapper>
