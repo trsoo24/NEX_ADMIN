@@ -37,6 +37,12 @@ public class DayPaymentController {
         return new MapResult<>(true, dayPaymentMap);
     }
 
+    @GetMapping("/excel")
+    public void exportExcel(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException {
+        dayPaymentService.exportDayPaymentExcel(month, dcbs, response);
+    }
+
+    // 통합 ADMIN 스케줄러 호출용 API
     @GetMapping("/2")
     public MapResult<String, List<DayPayment>> getDayPayments2(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month) {
         // DayPayment List 날짜별 값 ~
@@ -44,15 +50,5 @@ public class DayPaymentController {
         Map<String, List<DayPayment>> dayPaymentMap = dayPaymentService.getDayPayment(dcbs, month);
 
         return new MapResult<>(true, dayPaymentMap);
-    }
-
-    @GetMapping("/excel")
-    public void exportExcel(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException {
-        dayPaymentService.exportDayPaymentExcel(month, dcbs, response);
-    }
-
-    @GetMapping("/excel/2")
-    public void exportExcel2(HttpServletRequest request, @RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException, IllegalAccessException {
-        dayPaymentService.exportDayPaymentExcel2(request, month, dcbs, response);
     }
 }

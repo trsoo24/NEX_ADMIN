@@ -26,16 +26,20 @@ public class MmsSendHistoryController {
 
     @GetMapping("/history/mms")
     public PageResult<MmsHistoryDto> getMmsHistoryPage(@RequestParam("ctn") @Valid String ctn,
+                                                       @RequestParam("startDate") @Valid String startDate,
+                                                       @RequestParam("endDate") @Valid String endDate,
                                                        @RequestParam("page") @Valid int page,
                                                        @RequestParam("pageSize") @Valid int pageSize) {
-        Page<MmsHistoryDto> mmsHistoryDtoPage = mmsSendHistoryService.getMmsSendHistoryPage(ctn, page, pageSize);
+        Page<MmsHistoryDto> mmsHistoryDtoPage = mmsSendHistoryService.getMmsSendHistoryPage(ctn, startDate, endDate, page, pageSize);
 
         return new PageResult<>(true, mmsHistoryDtoPage);
     }
 
     @GetMapping("/history/mms/excel")
     public void exportMmsHistoryExcel(@RequestParam("ctn") @Valid String ctn,
+                                      @RequestParam("startDate") @Valid String startDate,
+                                      @RequestParam("endDate") @Valid String endDate,
                                       HttpServletResponse response) throws IOException {
-        mmsSendHistoryService.exportExcel(ctn, response);
+        mmsSendHistoryService.exportExcel(ctn, startDate, endDate, response);
     }
 }

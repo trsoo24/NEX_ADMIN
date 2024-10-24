@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VocClassification {
+public class VocDivision {
     private Integer vocId;
     private Date regDate;
     private String ctn;

@@ -28,20 +28,21 @@ public class RangeDayController {
         return new StatusResult(true);
     }
 
-    @GetMapping()
+    @GetMapping
     public MapResult<String, List<RangeDayDto>> getRangeDayMap(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("startDate") @Valid String startDate, @RequestParam("endDate") @Valid String endDate) throws IllegalAccessException {
         Map<String, List<RangeDayDto>> rangeDayDtoMap = rangeDayService.getRangeDayMap(startDate, endDate, dcbs);
 
         return new MapResult<>(true, rangeDayDtoMap);
     }
 
-    @GetMapping("/2")
-    public List<RangeDay> getRangeDayList(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("day") @Valid String day) {
-        return rangeDayService.getRangeDay(day, dcbs);
-    }
-
     @GetMapping("/excel")
     public void exportRangeDayExcel(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
         rangeDayService.exportExcel(startDate, endDate, dcbs, response);
+    }
+
+    // 통합 ADMIN 스케줄러 호출용 API
+    @GetMapping("/2")
+    public List<RangeDay> getRangeDayList(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("day") @Valid String day) {
+        return rangeDayService.getRangeDay(day, dcbs);
     }
 }

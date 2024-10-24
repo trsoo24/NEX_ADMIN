@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/block/fee")
+@RequestMapping("/block/fee-types")
 public class BlockFeeTypeController {
     private final BlockFeeTypeService blockFeeTypeService;
 
@@ -27,10 +27,9 @@ public class BlockFeeTypeController {
 
     @GetMapping
     public PageResult<BlockFeeTypeDto> getBlockFeeTypes(@RequestParam("dcb") @Valid String dcb,
-                                                        @RequestParam("feeTypeCd") @Valid String feeTypeCd,
                                                         @RequestParam("page") @Valid Integer page,
                                                         @RequestParam("pageSize") @Valid Integer pageSize) {
-        Page<BlockFeeTypeDto> dtoPage = blockFeeTypeService.getAllBlockFeeType(dcb, feeTypeCd, page, pageSize);
+        Page<BlockFeeTypeDto> dtoPage = blockFeeTypeService.getAllBlockFeeType(dcb, page, pageSize);
 
         return new PageResult<>(true, dtoPage);
     }

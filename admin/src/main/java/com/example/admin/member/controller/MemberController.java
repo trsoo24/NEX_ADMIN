@@ -36,13 +36,6 @@ public class MemberController {
         return new StatusResult(true);
     }
 
-    @GetMapping("/info")
-    public DataResult<MemberInfo> getMemberInfo(HttpServletRequest request) {
-        MemberInfo memberInfo = memberService.findMemberByRequest(request);
-
-        return new DataResult<>(true, memberInfo);
-    }
-
     @PutMapping
     public StatusResult updateMemberInfo(HttpServletRequest request, @RequestBody @Valid UpdateMemberRequestDto updateMemberRequestDto) {
         memberService.updateMemberInfo(request, updateMemberRequestDto);
@@ -62,5 +55,13 @@ public class MemberController {
         memberService.generateMember(signUpDto);
 
         return new StatusResult(true);
+    }
+
+    // 사용하는지 모르겠음
+    @GetMapping("/info")
+    public DataResult<MemberInfo> getMemberInfo(HttpServletRequest request) {
+        MemberInfo memberInfo = memberService.findMemberByRequest(request);
+
+        return new DataResult<>(true, memberInfo);
     }
 }

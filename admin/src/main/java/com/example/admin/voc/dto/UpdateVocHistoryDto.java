@@ -10,9 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateVocHistoryDto {
     private Integer vocId;
-    private Classification classification1;
-    private Classification classification2;
-    private Classification classification3;
     private String content;
     private String answer1;
     private String answer2;

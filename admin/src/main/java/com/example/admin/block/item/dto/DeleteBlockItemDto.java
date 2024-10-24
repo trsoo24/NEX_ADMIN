@@ -11,5 +11,5 @@ import java.util.List;
 @AllArgsConstructor
 public class DeleteBlockItemDto {
     private String dcb;
-    private List<Long> items;
+    private List<Long> products;
 }

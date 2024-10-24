@@ -18,9 +18,6 @@
         SELECT *
         FROM TB_BLOCK_FEE_TYPE
         WHERE DCB = #{dcb}
-        <if test="feeTypeCd != null and feeTypeCd != ''">
-            AND FEE_TYPE_CD LIKE CONCAT('%', #{feeTypeCd}, '%')
-        </if>
         ORDER BY REG_DT
     </select>
 

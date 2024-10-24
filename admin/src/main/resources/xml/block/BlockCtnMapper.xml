@@ -18,9 +18,6 @@
     SELECT *
         FROM TB_BLOCK_CTN
         WHERE DCB = #{dcb}
-        <if test="ctn != null and ctn != ''">
-            AND CTN LIKE CONCAT('%', #{ctn}, '%')
-        </if>
         ORDER BY REG_DT
     </select>
 

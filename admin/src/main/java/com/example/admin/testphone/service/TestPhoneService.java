@@ -32,9 +32,9 @@ public class TestPhoneService {
         testPhoneMapper.insertTestPhone(TestPhone.toTestPhone(dto));
     }
 
-    public Page<TestPhone> getAllTestPhones(int page, int pageSize, String ctn, String dcb) {
+    public Page<TestPhone> getAllTestPhones(int page, int pageSize, String dcb) {
         Map<String, Object> map = new HashMap<>();
-        map.put("ctn", ctn);
+        map.put("dcb", dcb);
 
         List<TestPhone> testPhoneList = testPhoneMapper.getAllTestPhone(map);
 

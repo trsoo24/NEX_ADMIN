@@ -34,15 +34,16 @@ public class MonthPaymentController {
         return new MapResult<>(true, monthPaymentMap);
     }
 
+    @GetMapping("/excel")
+    public void exportExcel(@RequestParam("dcbs") List<String> dcbs, @RequestParam("year") String year, HttpServletResponse response) throws IOException,IllegalAccessException {
+        monthPaymentService.exportMonthPaymentExcel(year, dcbs, response);
+    }
+
+    // 통합 ADMIN 스케줄러 호출용 API
     @GetMapping("/2")
     public MapResult<String, List<MonthPayment>> getDayPayments2(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month) {
         Map<String, List<MonthPayment>> monthPaymentMap = monthPaymentService.getMonthPayment(dcbs, month);
 
         return new MapResult<>(true, monthPaymentMap);
-    }
-
-    @GetMapping("/excel")
-    public void exportExcel(@RequestParam("dcbs") List<String> dcbs, @RequestParam("year") String year, HttpServletResponse response) throws IOException,IllegalAccessException {
-        monthPaymentService.exportMonthPaymentExcel(year, dcbs, response);
     }
 }

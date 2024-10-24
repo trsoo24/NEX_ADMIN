@@ -26,7 +26,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/seller")
+@RequestMapping("/sellers")
 public class SellerController {
     private final AdmMerchantService admMerchantService;
     private final MerchantStatDailyService merchantStatDailyService;
@@ -42,23 +42,23 @@ public class SellerController {
 
     @GetMapping
     public PageResult<AdmMerchant> searchAllMerchant(@RequestParam("dcb") @Valid String dcb,
-                                                     @RequestParam("merchantName") String merchantName,
+                                                     @RequestParam("sellerName") String sellerName,
                                                      @RequestParam("startDate") @Valid String startDate,
                                                      @RequestParam("endDate") @Valid String endDate,
                                                      @RequestParam("page") @Valid int page,
                                                      @RequestParam("pageSize") @Valid int pageSize) {
-        Page<AdmMerchant> admMerchantPage = admMerchantService.searchMerchantToPage(dcb, merchantName, startDate, endDate, page, pageSize);
+        Page<AdmMerchant> admMerchantPage = admMerchantService.searchMerchantToPage(dcb, sellerName, startDate, endDate, page, pageSize);
 
         return new PageResult<>(true, admMerchantPage);
     }
 
     @GetMapping("/excel")
     public void exportMerchantListExcel(@RequestParam("dcb") @Valid String dcb,
-                                        @RequestParam("merchantName") String merchantName,
+                                        @RequestParam("sellerName") String sellerName,
                                         @RequestParam("startDate") @Valid String startDate,
                                         @RequestParam("endDate") @Valid String endDate,
                                         HttpServletResponse response) throws IllegalAccessException, IOException {
-        admMerchantService.exportMerchantListExcel(dcb, merchantName, startDate, endDate, response);
+        admMerchantService.exportMerchantListExcel(dcb, sellerName, startDate, endDate, response);
     }
 
     @PutMapping
@@ -77,14 +77,6 @@ public class SellerController {
         Page<MerchantDayStatDto> itemDayStatDtoPage = merchantStatDailyService.getMerchantStatDailyPage(dcb, month, merchantName, page, pageSize);
 
         return new PageResult<>(true, itemDayStatDtoPage);
-    }
-
-    // 통합 ADMIN 스케줄러 호출용 API
-    @GetMapping("/day/2")
-    public List<MerchantDayStat> getMerchantStatsDailyList(@RequestParam("dcb") @Valid String dcb,
-                                                           @RequestParam("month") @Valid String month,
-                                                           @RequestParam("merchantName") @Valid String merchantName) {
-        return merchantStatDailyService.getMerchantStatsDaily(dcb, month, merchantName);
     }
 
     @GetMapping("/day/excel")
@@ -106,14 +98,6 @@ public class SellerController {
         return new PageResult<>(true, itemMonthStatDtoPage);
     }
 
-    // 통합 ADMIN 스케줄러 호출용 API
-    @GetMapping("/month/2")
-    public List<MerchantMonthStat> getMerchantStatMonthly(@RequestParam("dcb") @Valid String dcb,
-                                                          @RequestParam("year") @Valid String year,
-                                                          @RequestParam("merchantName") @Valid String merchantName) {
-        return merchantStatsMonthlyService.getMerchantStatsMonthly(dcb, year, merchantName);
-    }
-
 
     @GetMapping("/month/excel")
     public void getItemStatMonthlyExcel(@RequestParam("dcb") @Valid String dcb,
@@ -121,6 +105,22 @@ public class SellerController {
                                                                @RequestParam("merchantName") @Valid String merchantName,
                                                                 HttpServletResponse response) throws IOException {
         merchantStatsMonthlyService.exportMerchantStatMonthlyExcel(dcb, year, merchantName, response);
+    }
+
+    // 통합 ADMIN 스케줄러 호출용 API
+    @GetMapping("/day/2")
+    public List<MerchantDayStat> getMerchantStatsDailyList(@RequestParam("dcb") @Valid String dcb,
+                                                           @RequestParam("month") @Valid String month,
+                                                           @RequestParam("merchantName") @Valid String merchantName) {
+        return merchantStatDailyService.getMerchantStatsDaily(dcb, month, merchantName);
+    }
+
+    // 통합 ADMIN 스케줄러 호출용 API
+    @GetMapping("/month/2")
+    public List<MerchantMonthStat> getMerchantStatMonthly(@RequestParam("dcb") @Valid String dcb,
+                                                          @RequestParam("year") @Valid String year,
+                                                          @RequestParam("merchantName") @Valid String merchantName) {
+        return merchantStatsMonthlyService.getMerchantStatsMonthly(dcb, year, merchantName);
     }
 
     @PostMapping("/day/add")

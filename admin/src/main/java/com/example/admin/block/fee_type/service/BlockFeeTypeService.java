@@ -25,10 +25,9 @@ public class BlockFeeTypeService {
         }
     }
 
-    public Page<BlockFeeTypeDto> getAllBlockFeeType(String dcb, String feeTypeCd, int page, int pageSize) {
+    public Page<BlockFeeTypeDto> getAllBlockFeeType(String dcb, int page, int pageSize) {
         Map<String, Object> map = new HashMap<>();
         map.put("dcb", dcb);
-        map.put("feeTypeCd", feeTypeCd);
 
         List<BlockFeeTypeDto> blockFeeTypeDtoList = blockFeeTypeMapper.getAllBlockFeeType(map);
 

@@ -26,14 +26,16 @@ public class MmsSendHistoryService {
     private final FunctionUtil functionUtil;
     private final String[] header = {"문자 발송 일시", "CTN", "발송 내용", "발송 결과"};
 
-    public Page<MmsHistoryDto> getMmsSendHistoryPage(String ctn, int page, int pageSize) {
-        List<MmsHistoryDto> mmsHistoryDtoList = getMmsSendHistoryList(ctn);
+    public Page<MmsHistoryDto> getMmsSendHistoryPage(String ctn, String startDate, String endDate, int page, int pageSize) {
+        List<MmsHistoryDto> mmsHistoryDtoList = getMmsSendHistoryList(ctn, startDate, endDate);
 
         return functionUtil.toPage(mmsHistoryDtoList, page, pageSize);
     }
 
-    private List<MmsHistoryDto> getMmsSendHistoryList(String ctn) {
+    private List<MmsHistoryDto> getMmsSendHistoryList(String ctn, String startDate, String endDate) {
         Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("startDate", startDate);
+        requestMap.put("endDate", endDate);
         requestMap.put("ctn", ctn);
 
         List<MmsHistoryDto> mmsHistoryDtoList = mmsSendMapper.selectMmsHistoryList(requestMap);
@@ -50,13 +52,13 @@ public class MmsSendHistoryService {
     }
 
 
-    public void exportExcel(String ctn, HttpServletResponse response) throws IOException {
+    public void exportExcel(String ctn, String startDate, String endDate, HttpServletResponse response) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("문자 발송 이력 조회");
         XSSFCellStyle middle = workbook.createCellStyle();
         middle.setAlignment(HorizontalAlignment.CENTER);
 
-        List<MmsHistoryDto> mmsHistoryDtoList = getMmsSendHistoryList(ctn);
+        List<MmsHistoryDto> mmsHistoryDtoList = getMmsSendHistoryList(ctn, startDate, endDate);
 
         int rowIdx = 0;
         int colIdx = 0;

@@ -25,10 +25,9 @@ public class BlockCtnService {
         }
     }
 
-    public Page<BlockCtnDto> getAllBlockCtn(String dcb, String ctn, int page, int pageSize) {
+    public Page<BlockCtnDto> getAllBlockCtn(String dcb, int page, int pageSize) {
         Map<String, Object> map = new HashMap<>();
         map.put("dcb", dcb);
-        map.put("ctn", ctn);
 
         List<BlockCtnDto> blockCtnDtoList = blockCtnMapper.getAllBlockCtn(map);
         return functionUtil.toPage(blockCtnDtoList, page, pageSize);

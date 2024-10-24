@@ -118,7 +118,7 @@ public class AdmMerchantService {
         // TODO Okta 연동 후에 adminId 를 Session & HttpServletRequest 에서 가져오는 로직으로 변경할 것
         String adminId = "test12";
 
-        List<String> merchantNmList = dto.getMerchantNames();
+        List<String> merchantNmList = dto.getSellerNames();
 
         for (String s : merchantNmList) {
             AdmMerchant admMerchant = searchMerchant(s);

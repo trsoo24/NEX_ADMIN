@@ -60,14 +60,14 @@ public class ReconcileController {
         gdcbReconcileService.getGDCBReconcileFile(dcb, month, fileType, fileName, response);
     }
 
-    @GetMapping("/gdcb/invoice")
+    @GetMapping("/adjustment/gdcb")
     public MapResult<String, List<GDCBDetailCompare>> getGDCBInvoiceDetailList(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) {
         Map<String, List<GDCBDetailCompare>> invoiceDetailMap = gdcbInvoiceDetailService.getGDCBInvoiceDetailMap(dcb, month);
 
         return new MapResult<>(true, invoiceDetailMap);
     }
 
-    @GetMapping("/excel/gdcb/invoice")
+    @GetMapping("/adjustment/gdcb/excel")
     public void getGDCBInvoiceDetailExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException {
         gdcbInvoiceDetailService.exportInvoiceDetailExcel(dcb, month, response);
     }

@@ -18,7 +18,10 @@
         FROM TB_MMS_SEND_HIS
         WHERE 1 = 1
         <if test="ctn != null and ctn != ''">
-            AND TO_CTN LIKE CONCAT('%', #{ctn}, '%')
+            AND TO_CTN = #{ctn}
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            AND CREATE_DT BETWEEN #{startDate} AND #{endDate}
         </if>
     </select>
 </mapper>

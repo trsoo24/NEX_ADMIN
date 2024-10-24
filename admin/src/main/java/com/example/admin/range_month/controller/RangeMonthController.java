@@ -32,13 +32,14 @@ public class RangeMonthController {
         return new MapResult<>(true, rangMonthDtoMap);
     }
 
-    @GetMapping("/2")
-    public List<RangeMonth> getRangeMonthList(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month) {
-        return rangeMonthService.getRangeMonth(month, dcbs);
-    }
-
     @GetMapping("/excel")
     public void exportRangeMonthExcel(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("startDate")@Valid String startDate, @RequestParam("endDate")@Valid String endDate, HttpServletResponse response) throws IllegalAccessException, IOException, NoSuchFieldException {
         rangeMonthService.exportExcel(startDate, endDate, dcbs, response);
+    }
+
+    // 통합 ADMIN 스케줄러 호출용 API
+    @GetMapping("/2")
+    public List<RangeMonth> getRangeMonthList(@RequestParam("dcbs") @Valid List<String> dcbs, @RequestParam("month") @Valid String month) {
+        return rangeMonthService.getRangeMonth(month, dcbs);
     }
 }

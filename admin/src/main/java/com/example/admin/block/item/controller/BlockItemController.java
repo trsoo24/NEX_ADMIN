@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/block/item")
+@RequestMapping("/block/products")
 public class BlockItemController {
     private final BlockItemService blockItemService;
 
@@ -27,10 +27,10 @@ public class BlockItemController {
 
     @GetMapping
     public PageResult<BlockItem> getBlockItemList(@RequestParam("dcb") @Valid String dcb,
-                                                  @RequestParam("item") @Valid String item,
+                                                  @RequestParam("product") @Valid String product,
                                                   @RequestParam("page") @Valid int page,
                                                   @RequestParam("pageSize") @Valid int pageSize) {
-        Page<BlockItem> itemPage = blockItemService.getBlockItemList(dcb, item, page, pageSize);
+        Page<BlockItem> itemPage = blockItemService.getBlockItemList(dcb, product, page, pageSize);
 
         return new PageResult<>(true, itemPage);
     }

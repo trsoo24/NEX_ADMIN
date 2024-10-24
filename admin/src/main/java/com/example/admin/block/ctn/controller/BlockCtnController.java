@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/block/ctn")
+@RequestMapping("/block/ctns")
 public class BlockCtnController {
     private final BlockCtnService blockCtnService;
 
@@ -27,10 +27,9 @@ public class BlockCtnController {
 
     @GetMapping()
     public PageResult<BlockCtnDto> getBlockDtoList(@RequestParam("dcb") @Valid String dcb,
-                                                   @RequestParam("ctn") @Valid String ctn,
                                                    @RequestParam("page") @Valid Integer page,
                                                    @RequestParam("pageSize") @Valid Integer pageSize) {
-        Page<BlockCtnDto> dtoPage = blockCtnService.getAllBlockCtn(dcb, ctn, page, pageSize);
+        Page<BlockCtnDto> dtoPage = blockCtnService.getAllBlockCtn(dcb, page, pageSize);
 
         return new PageResult<>(true, dtoPage);
     }

@@ -18,9 +18,6 @@
     <select id="getAllTestPhone" parameterType="map" resultType="com.example.admin.testphone.dto.TestPhone">
         SELECT *
         FROM TB_ENROLLMENT_PHONE
-        <if test="keyword != null and keyword != ''">
-        WHERE CTN LIKE CONCAT('%', #{ctn}, '%')
-        </if>
         ORDER BY REG_DT
     </select>
 

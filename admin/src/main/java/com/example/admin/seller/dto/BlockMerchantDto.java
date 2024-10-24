@@ -11,5 +11,5 @@ import java.util.List;
 @AllArgsConstructor
 public class BlockMerchantDto {
     private String dcb;
-    private List<String> merchantNames;
+    private List<String> sellerNames;
 }

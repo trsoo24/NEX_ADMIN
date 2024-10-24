@@ -52,29 +52,35 @@
         </if>
     </select>
 
-    <insert id="insertVocHistory" parameterType="com.example.admin.voc.dto.InsertVocClassification">
-        INSERT INTO TB_VOC_HISTORY(REG_DATE, CTN, DCB, CONTENT
-        <if test="classification1 != null">, CLASSIFICATION_1</if>
-        <if test="classification2 != null">, CLASSIFICATION_2</if>
-        <if test="classification3 != null">, CLASSIFICATION_3</if>
+    <delete id="deleteVocHistory" parameterType="Integer">
+        DELETE FROM TB_VOC_HISTORY
+        WHERE 1 = 1
+        <if test="id != null and id != ''">
+            AND VOC_ID = #{id}
+        </if>
+    </delete>
+
+    <insert id="insertVocHistory" parameterType="com.example.admin.voc.dto.InsertVocDivision">
+        INSERT INTO TB_VOC_HISTORY(REG_DATE, CTN, DCB, CONTENT, WRITER
+        <if test="division1 != null">, DIVISION_1</if>
+        <if test="division2 != null">, DIVISION_2</if>
+        <if test="division3 != null">, DIVISION_3</if>
         <if test="answer1 != null">, ANSWER_1</if>
         <if test="answer2 != null">, ANSWER_2</if>
         <if test="answer3 != null">, ANSWER_3</if>)
         VALUES (DATE_FORMAT(NOW(), '%Y-%m-%d'), #{ctn}, #{dcb}, #{content}
-        <if test="classification1 != null">, #{classification1}</if>
-        <if test="classification2 != null">, #{classification2}</if>
-        <if test="classification3 != null">, #{classification3}</if>
+        <if test="division1 != null">, #{division1}</if>
+        <if test="division2 != null">, #{division2}</if>
+        <if test="division3 != null">, #{division3}</if>
         <if test="answer1 != null">, #{answer1}</if>
         <if test="answer2 != null">, #{answer2}</if>
-        <if test="answer3 != null">, #{answer3}</if>)
+        <if test="answer3 != null">, #{answer3}</if>
+        )
     </insert>
 
     <update id="updateVocHistory" parameterType="com.example.admin.voc.dto.UpdateVocHistoryDto">
         UPDATE TB_VOC_HISTORY
         <set>
-            <if test="classification1 != null">CLASSIFICATION_1 = #{classification1},</if>
-            <if test="classification2 != null">CLASSIFICATION_2 = #{classification2},</if>
-            <if test="classification3 != null">CLASSIFICATION_3 = #{classification3},</if>
             <if test="answer1 != null">ANSWER_1 = #{answer1},</if>
             <if test="answer2 != null">ANSWER_2 = #{answer2},</if>
             <if test="answer3 != null">ANSWER_3 = #{answer3}</if>
@@ -82,11 +88,11 @@
         WHERE VOC_ID = #{vocId}
     </update>
 
-    <select id="selectVocHistory" parameterType="map" resultType="com.example.admin.voc.dto.VocClassification">
+    <select id="selectVocHistory" parameterType="map" resultType="com.example.admin.voc.dto.VocDivision">
         SELECT * FROM TB_VOC_HISTORY
         WHERE 1 = 1
-        <if test="ctn != null and ctn != ''">
-            AND CTN = #{ctn}
+        <if test="writer != null and writer != ''">
+            AND WRITER LIKE CONCAT('%', #{writer}, '%')
         </if>
     </select>
 </mapper>

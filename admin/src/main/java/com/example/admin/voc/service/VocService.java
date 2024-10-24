@@ -1,17 +1,12 @@
 package com.example.admin.voc.service;
 
 import com.example.admin.common.service.FunctionUtil;
-import com.example.admin.voc.dto.InsertVocClassification;
-import com.example.admin.voc.dto.ProvisionInfoDto;
-import com.example.admin.voc.dto.SmsInfoDto;
-import com.example.admin.voc.dto.UpdateVocHistoryDto;
-import com.example.admin.voc.dto.ProvisioningInfo;
-import com.example.admin.voc.dto.SmsInfo;
-import com.example.admin.voc.dto.VocClassification;
+import com.example.admin.voc.dto.*;
 import com.example.admin.voc.mapper.VocMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -56,26 +51,35 @@ public class VocService {
         return vocMapper.selectSmsmoListByCtn(requestMap);
     }
 
-    public void insertVocClassification(InsertVocClassification insertVocClassification) {
+    public void insertVocDivision(InsertVocDivision insertVocDivision) {
         // CTN 값 내 "-" 제거 및 01012345678 형식으로 변경
-        insertVocClassification.setCtn(functionUtil.transCtn(insertVocClassification.getCtn()));
+        insertVocDivision.setCtn(functionUtil.transCtn(insertVocDivision.getCtn()));
 
-        vocMapper.insertVocHistory(insertVocClassification);
+        vocMapper.insertVocHistory(insertVocDivision);
     }
 
-    public void updateVocClassification(UpdateVocHistoryDto updateVocHistoryDto) {
+    public void updateVocDivision(UpdateVocHistoryDto updateVocHistoryDto) {
         vocMapper.updateVocHistory(updateVocHistoryDto);
     }
 
-    public Page<VocClassification> getVocClassificationList(String dcb, String ctn, int page, int pageSize) {
-        return functionUtil.toPage(getVocClassificationList(dcb, ctn), page, pageSize);
+    public Page<VocDivision> getVocDivisionList(String dcb, String writer, String startDate, String endDate, int page, int pageSize) {
+        return functionUtil.toPage(getVocDivisionList(dcb, writer, startDate, endDate), page, pageSize);
     }
 
-    private List<VocClassification> getVocClassificationList(String dcb, String ctn) {
+    private List<VocDivision> getVocDivisionList(String dcb, String writer, String startDate, String endDate) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("dcb", dcb);
-        requestMap.put("ctn", functionUtil.transCtn(ctn));
+        requestMap.put("writer", writer);
+        requestMap.put("startDate", startDate);
+        requestMap.put("endDate", endDate);
 
         return vocMapper.selectVocHistory(requestMap);
+    }
+
+    @Transactional
+    public void deleteVocHistory(List<Integer> vocIdList) {
+        for (Integer vocId : vocIdList) {
+            vocMapper.deleteVocHistory(vocId);
+        }
     }
 }

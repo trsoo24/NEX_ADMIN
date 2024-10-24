@@ -35,9 +35,9 @@ public class BlockItemService {
     public void deleteBlockItem(DeleteBlockItemDto dto) {
         Map<String, Object> map = new HashMap<>();
 
-        for (int i = 0; i < dto.getItems().size(); i++) {
+        for (int i = 0; i < dto.getProducts().size(); i++) {
             map.put("dcb", dto.getDcb().toUpperCase());
-            map.put("itemNo", dto.getItems().get(i));
+            map.put("itemNo", dto.getProducts().get(i));
 
             blockItemMapper.deleteBlockItem(map);
         }
