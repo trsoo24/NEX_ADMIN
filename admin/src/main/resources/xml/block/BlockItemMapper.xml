@@ -5,7 +5,7 @@
 <mapper namespace="com.example.admin.block.item.mapper.BlockItemMapper">
     <insert id="insertBlockItem" parameterType="com.example.admin.block.item.dto.InsertBlockItemDto">
         INSERT INTO TB_BLOCK_ITEM(ITEM_NM, REG_DT, REG_ID, DCB)
-        VALUES (#{item}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{dcb})
+        VALUES (#{product}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{dcb})
     </insert>
 
     <select id="getBlockItemList" parameterType="map" resultType="com.example.admin.block.item.dto.BlockItem">
