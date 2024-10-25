@@ -1,20 +1,19 @@
 package com.example.admin.refund.service;
 
+import com.example.admin.common.service.FunctionUtil;
 import com.example.admin.common.service.gdcb.util.GdcbSshClient;
 import com.example.admin.common.service.gdcb.util.GoogleFtpclient;
 import com.example.admin.common.service.gdcb.util.LogUtil;
-import com.example.admin.refund.dto.RefundDto;
-import com.example.admin.refund.dto.RefundJob;
+import com.example.admin.refund.dto.*;
 import com.example.admin.auth.dto.AuthInfo;
 import com.example.admin.refund.dto.type.BillingState;
 import com.example.admin.refund.dto.type.JobType;
-import com.example.admin.refund.dto.ManualRefund;
-import com.example.admin.refund.dto.ManualRefundFileInfo;
 import com.example.admin.refund.mapper.RefundMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -28,6 +27,7 @@ public class GdcbRefundService {
     private final GoogleFtpclient googleClient;
     private final BillingProcessService billingProcessService;
     private final LogUtil logUtil;
+    private final FunctionUtil functionUtil;
     @Value("${LGUDCB.BILLING.TLO}")
     private String billingTlo;
     @Value("${Billing.Work.Path}")
@@ -37,7 +37,7 @@ public class GdcbRefundService {
     @Value("${FTP.Google.Upload.Path}")
     private String googleUploadPath;
 
-    public List<RefundDto> getRefundDtoList(String dcb, String correlationId) throws Exception {
+    public Page<RefundDto> getRefundDtoList(String correlationId, int page, int pageSize) throws Exception {
         List<RefundJob> refundJobList = findCorrelationID(correlationId);
         List<RefundDto> responseList = new ArrayList<>();
 
@@ -48,18 +48,18 @@ public class GdcbRefundService {
             responseList.add(refundDto);
         }
 
-        return responseList;
+        return functionUtil.toPage(responseList, page, pageSize);
     }
 
-    public boolean refundProcess(HttpServletRequest request, RefundDto refundDto) {
+    public boolean refundProcess(HttpServletRequest request, RefundProcessDto refundProcessDto) {
         logUtil.umkInfoLogging(request,"processRefund start~!", "");
 
         try {
-            String ctn =  refundDto.getCtn();
-            String correlationId = refundDto.getCorrelationId();
+            String ctn =  refundProcessDto.getCtn();
+            String correlationId = refundProcessDto.getCorrelationId();
             log.info("환불작업 시작 : {}, {}", ctn, correlationId);
 
-            if (correlationId != null && !refundDto.getCorrelationId().isEmpty()) {
+            if (correlationId != null && !refundProcessDto.getCorrelationId().isEmpty()) {
 
                 // 구매이력 조회
                 List<RefundJob> CorrelationIdList = findCorrelationID(correlationId);

@@ -1,15 +1,18 @@
 package com.example.admin.refund.controller;
 
 import com.example.admin.common.response.ListResult;
+import com.example.admin.common.response.PageResult;
 import com.example.admin.common.response.StatusResult;
 import com.example.admin.refund.dto.RefundDto;
 import com.example.admin.auth.dto.AuthInfo;
 import com.example.admin.refund.dto.ManualRefund;
 import com.example.admin.refund.dto.ManualRefundFileInfo;
+import com.example.admin.refund.dto.RefundProcessDto;
 import com.example.admin.refund.service.GdcbRefundService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,23 +38,24 @@ public class RefundController {
         gdcbRefundService.insertManualRefundFileInfo(manualRefundFileInfo);
     }
 
-    @GetMapping("/purchase-history/gdcb")
-    public ListResult<RefundDto> getGdcbRefundHistory(@RequestParam("dcb") @Valid String dcb,
-                                                      @RequestParam("correlationId") @Valid String correlationId) throws Exception {
-        List<RefundDto> refundDtoList = gdcbRefundService.getRefundDtoList(dcb, correlationId);
+    @GetMapping("/gdcb")
+    public PageResult<RefundDto> getGdcbRefundHistory(@RequestParam("correlationId") @Valid String correlationId,
+                                                      @RequestParam("page") int page,
+                                                      @RequestParam("pageSize") int pageSize) throws Exception {
+        Page<RefundDto> refundDtoPage = gdcbRefundService.getRefundDtoList(correlationId, page, pageSize);
 
-        return new ListResult<>(true, refundDtoList);
+        return new PageResult<>(true, refundDtoPage);
     }
 
     @PostMapping("/process/gdcb") // GDCB 환불 프로세스 실행
-    public StatusResult refundProcess(HttpServletRequest request, @RequestBody RefundDto refundDto) {
-        boolean done = gdcbRefundService.refundProcess(request, refundDto);
+    public StatusResult refundProcess(HttpServletRequest request, @RequestBody RefundProcessDto refundProcessDto) {
+        boolean done = gdcbRefundService.refundProcess(request, refundProcessDto);
 
         return new StatusResult(done);
     }
 
 
-    @PutMapping("/purchase-history/gdcb/{correlationId}")
+    @PutMapping("/gdcb/{correlationId}")
     public StatusResult updateManualRefund(@PathVariable(name = "correlationId") @Valid String correlationId) {
         gdcbRefundService.updateRefundAuth("gdcb", correlationId);
 

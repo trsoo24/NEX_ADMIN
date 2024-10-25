@@ -17,7 +17,6 @@ public class RefundDto {
     private String itemName;
     private Long itemPrice;
     private String transactionType;
-    private String dcb;
 
     public static RefundDto toRefundDto(AuthInfo authInfo) {
         return RefundDto.builder()
