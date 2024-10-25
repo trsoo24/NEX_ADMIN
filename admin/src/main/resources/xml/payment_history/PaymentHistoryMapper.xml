@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.admin.payment_history.mapper.PaymentHistoryMapper">
+    <select id="getPaymentHistoryList" parameterType="map" resultType="com.example.admin.payment_history.dto.PaymentHistory">
+        SELECT
+        CTN,
+        TRASACTION_DT,
+        CANCEL_NOFITICATION_DT,
+        TOTAL,
+        ITEM_NAME,
+        MERCHANTNAME
+        FROM TB_AUTH_INFO
+        WHERE 1 = 1
+        <if test="ctn != null and ctn != ''">
+            AND CTN = #{ctn}
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            AND TRANSACTION_DT BETWEEN #{startDate} AND #{endDate}
+        </if>
+        ORDER BY TRANSACTION_DT
+    </select>
+
+    <!-- 테스트 데이터 INSERT -->
+    <insert id="insertPaymentHistory" parameterType="com.example.admin.auth.dto.AuthInfo">
+        INSERT INTO TB_AUTH_INFO (
+            AUTH_TRANSACTION_ID, PARTITION_ID, CTN, VERSION, CORRELATION_ID,
+            PURCHASE_TIME, BILLING_AGREEMENT, OPERATOR_USER_TOKEN, PAYMENT_DESCRIPTION,
+            MERCHANT_NAME, ITEM_NAME, MERCHANT_CONTACT, ITEM_PRICE, TAX, TOTAL,
+            USER_LOCALE, DCB_TOS_VERSION, RESULT, CANCEL_NOTIFICATION, CANCEL_NOTIFICATION_DT,
+            SUB_NO, ACE_NO, BAN, UNIT_MDL, TRANSACTION_TYPE, TRANSACTION_DT,
+            TRANSACTION_RESULT, PAYMENT_TYPE, REFUND_DT, CREATE_DT, FEE_TYPE,
+            CURRENCY, UPDATE_DT, CUST_GRD_CD, ADJ_INFO, BAN_UNPAID_YN_CODE,
+            MP_TRANSACTION_ID, MP_TRANSACTION_TYPE
+        ) VALUES (
+                     #{authTransactionId}, #{partitionId}, #{ctn}, #{version}, #{correlationId},
+                     #{purchaseTime}, #{billingAgreement}, #{operatorUserToken}, #{paymentDescription},
+                     #{merchantName}, #{itemName}, #{merchantContact}, #{itemPrice}, #{tax}, #{total},
+                     #{userLocale}, #{dcbTosVersion}, #{result}, #{cancelNotification}, #{cancelNotificationDt},
+                     #{subNo}, #{aceNo}, #{ban}, #{unitMdl}, #{transactionType}, #{transactionDt},
+                     #{transactionResult}, #{paymentType}, #{refundDt}, #{createDt}, #{feeType},
+                     #{currency}, #{updateDt}, #{custGrdCd}, #{adjInfo}, #{banUnpaidYnCode},
+                     #{mpTransactionId}, #{mpTransactionType}
+                 )
+    </insert>
+</mapper>
