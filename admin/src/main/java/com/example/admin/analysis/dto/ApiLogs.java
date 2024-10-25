@@ -27,6 +27,7 @@ public class ApiLogs {
     private String seqId; // 로그 단위 unique id
     private String authTransactionId; // google 내부 KEY
     private String merchantName; // 가맹점 이름
+    private String itemName; // 상품명
     private String correlationId; // 요청에 대한 고유 ID
     private String issuerId; // 요청에 대한 DCB ID
 }

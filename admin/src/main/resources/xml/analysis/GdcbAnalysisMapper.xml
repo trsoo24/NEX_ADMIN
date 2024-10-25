@@ -5,8 +5,8 @@
 
 <mapper namespace="com.example.admin.analysis.mapper.AnalysisStatisticsMapper">
     <insert id="insertApiLogs" parameterType="com.example.admin.analysis.dto.ApiLogs">
-        INSERT INTO TB_API_LOGS (CREATE_DT, SEQ, BAN_UNPAID_YN_CODE, HTTP_STATUS, CUST_GRD_CD, RESULT_CODE, API_RESULT, AMOUNT,REQ_TIME, RSP_TIME, OPERATOR_USER_TOKEN, API_TYPE, SEQ_ID, AUTH_TRANSACTION_ID, MERCHANT_NAME, CORRELATION_ID, ISSUER_ID)
-        VALUES (#{createDt}, #{seq}, #{banUnpaidYnCode}, #{httpStatus}, #{custGrdCd}, #{resultCode}, #{apiResult}, #{amount},#{reqTime}, #{rspTime}, #{operatorUserToken}, #{apiType}, #{seqId}, #{authTransactionId}, #{merchantName}, #{correlationId}, #{issuerId})
+        INSERT INTO TB_API_LOGS (CREATE_DT, SEQ, BAN_UNPAID_YN_CODE, HTTP_STATUS, CUST_GRD_CD, RESULT_CODE, API_RESULT, AMOUNT,REQ_TIME, RSP_TIME, OPERATOR_USER_TOKEN, API_TYPE, SEQ_ID, AUTH_TRANSACTION_ID, MERCHANT_NAME, ITEM_NAME, CORRELATION_ID, ISSUER_ID)
+        VALUES (#{createDt}, #{seq}, #{banUnpaidYnCode}, #{httpStatus}, #{custGrdCd}, #{resultCode}, #{apiResult}, #{amount},#{reqTime}, #{rspTime}, #{operatorUserToken}, #{apiType}, #{seqId}, #{authTransactionId}, #{merchantName}, #{itemName}, #{correlationId}, #{issuerId})
     </insert>
 
     <insert id="insertLogAnalysis" parameterType="com.example.admin.analysis.dto.DayAnalysis">
