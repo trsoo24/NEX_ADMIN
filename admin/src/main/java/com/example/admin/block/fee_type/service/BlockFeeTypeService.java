@@ -20,7 +20,7 @@ public class BlockFeeTypeService {
     private final FunctionUtil functionUtil;
 
     public void insertBlockFeeType(InsertBlockFeeTypeDto blockFeeTypeDto) {
-        if (!existFeeType(blockFeeTypeDto.getFeeTypeCd())) {
+        if (!existFeeType(blockFeeTypeDto.getFeeTypeCode())) {
             blockFeeTypeMapper.insertBlockFeeType(blockFeeTypeDto);
         }
     }
@@ -35,7 +35,7 @@ public class BlockFeeTypeService {
     }
 
     public void deleteBlockFeeType(DeleteFeeTypeDto dto) {
-        List<String> feeTypeCode = dto.getFeeTypeCds();
+        List<String> feeTypeCode = dto.getFeeTypeCodes();
         Map<String, String> map = new HashMap<>();
         map.put("dcb", dto.getDcb());
         for (String feeType : feeTypeCode) {

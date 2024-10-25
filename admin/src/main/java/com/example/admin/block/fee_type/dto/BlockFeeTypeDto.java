@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class BlockFeeTypeDto {
-    private String feeTypeCd; // 요금제 코드
+    private String feeTypeCode; // 요금제 코드
     private String regDt;
     private String mbrId;
-    private String feeTypeNm; // 요금제명
+    private String feeTypeName; // 요금제명
     private String dcb;
 }
