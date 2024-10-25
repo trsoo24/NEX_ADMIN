@@ -11,5 +11,5 @@ import java.util.List;
 @AllArgsConstructor
 public class DeleteFeeTypeDto {
     private String dcb;
-    private List<String> feeTypeCds;
+    private List<String> feeTypeCodes;
 }
