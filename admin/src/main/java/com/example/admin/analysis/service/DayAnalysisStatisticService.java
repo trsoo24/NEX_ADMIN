@@ -27,6 +27,9 @@ public class DayAnalysisStatisticService {
     private final AnalysisStatisticsMapper analysisStatisticsMapper;
     private final FunctionUtil functionUtil;
 
+    private static final Map<String, String> codeToDescriptionMap = Arrays.stream(AnalysisResultCode.values())
+            .collect(Collectors.toMap(AnalysisResultCode::getCode, AnalysisResultCode::getDescription));
+
     private Map<String, Object> putYesterdayDateTime(String day) {
         Map<String, Object> requestMap = new HashMap<>();
 //        LocalDate yesterday = LocalDate.now().minusDays(1);
@@ -145,7 +148,7 @@ public class DayAnalysisStatisticService {
             Map<String, Integer> sortedMap = top12List.stream()
                     .filter(resultCodeMap::containsKey)
                     .collect(Collectors.toMap(
-                            key -> key,
+                            key -> codeToDescriptionMap.getOrDefault(key, key),
                             resultCodeMap::get,
                             (e1, e2) -> e1,
                             LinkedHashMap::new));
@@ -225,8 +228,10 @@ public class DayAnalysisStatisticService {
             List<String> topResultCodeList = getTopResultList(dtoList.get(0).getResultCodeMap());
 
             int rowIdxForResultCode = rowIdx;
+
             for (String topResultCode : topResultCodeList) {
-                sheet.createRow(1 + rowIdx++).createCell(0).setCellValue(topResultCode);
+                String reasonDescription = getAnalysisResultCode(topResultCode);
+                sheet.createRow(1 + rowIdx++).createCell(0).setCellValue(reasonDescription);
             }
 
             int rowIdxForDto = rowIdxForResultCode;
@@ -279,5 +284,12 @@ public class DayAnalysisStatisticService {
         }
 
         return responseList;
+    }
+
+    private String getAnalysisResultCode(String resultCode) {
+        if(codeToDescriptionMap.containsKey(resultCode)) {
+            return codeToDescriptionMap.get(resultCode);
+        }
+        return "기타";
     }
 }

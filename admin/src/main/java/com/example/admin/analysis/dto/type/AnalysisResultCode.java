@@ -30,7 +30,7 @@ public enum AnalysisResultCode {
     RBP_BLOCK_GRADE7("52000003", "7등급 연체자 결제 불가"),
     BLOCK_AUTHORITY("52101200", "직권 차단"),
     EXCEED_LIMIT_RBP("52104008", "월 잔여 한도 초과 (RBP)"),
-    EXCEED_LIMIT_RCSG("53104008", "월 잔여 한도 초과 (RCSG)")
+    EXCEED_LIMIT_RCSG("53104008", "월 잔여 한도 초과 (RCSG)"),
     ;
 
     private final String code;

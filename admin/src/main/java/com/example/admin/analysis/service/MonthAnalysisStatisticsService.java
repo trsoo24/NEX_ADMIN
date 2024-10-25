@@ -2,6 +2,7 @@ package com.example.admin.analysis.service;
 
 import com.example.admin.analysis.dto.MonthAnalysisDto;
 import com.example.admin.analysis.dto.MonthAnalysis;
+import com.example.admin.analysis.dto.type.AnalysisResultCode;
 import com.example.admin.analysis.mapper.AnalysisStatisticsMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MonthAnalysisStatisticsService {
     private final AnalysisStatisticsMapper analysisStatisticsMapper;
+
+    private static final Map<String, String> codeToDescriptionMap = Arrays.stream(AnalysisResultCode.values())
+            .collect(Collectors.toMap(AnalysisResultCode::getCode, AnalysisResultCode::getDescription));
 
     @Transactional
     public void insertMonthAnalysis(String date) {
@@ -124,7 +128,7 @@ public class MonthAnalysisStatisticsService {
             Map<String, Long> sortedMap = top12List.stream()
                     .filter(resultCodeMap::containsKey)
                     .collect(Collectors.toMap(
-                            key -> key,
+                            key -> codeToDescriptionMap.getOrDefault(key, key),
                             resultCodeMap::get,
                             (e1, e2) -> e1,
                             LinkedHashMap::new));
@@ -162,8 +166,10 @@ public class MonthAnalysisStatisticsService {
             List<String> topResultCodeList = getTopResultList(dtoList.get(0).getResultCodeMap());
 
             int rowIdxForResultCode = rowIdx;
+
             for (String topResultCode : topResultCodeList) {
-                sheet.createRow(1 + rowIdx++).createCell(0).setCellValue(topResultCode);
+                String reasonDescription = getAnalysisResultCode(topResultCode);
+                sheet.createRow(1 + rowIdx++).createCell(0).setCellValue(reasonDescription);
             }
 
             int rowIdxForDto = rowIdxForResultCode;
@@ -216,5 +222,12 @@ public class MonthAnalysisStatisticsService {
         }
 
         return responseList;
+    }
+
+    private String getAnalysisResultCode(String resultCode) {
+        if(codeToDescriptionMap.containsKey(resultCode)) {
+            return codeToDescriptionMap.get(resultCode);
+        }
+        return "기타";
     }
 }

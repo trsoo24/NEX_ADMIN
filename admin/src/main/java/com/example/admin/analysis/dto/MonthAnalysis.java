@@ -12,4 +12,8 @@ public class MonthAnalysis {
     private String resultCode;
     private Long codeCount;
     private String dcb;
+
+    public void setResultCode(String resultCode) {
+        this.resultCode = resultCode;
+    }
 }
