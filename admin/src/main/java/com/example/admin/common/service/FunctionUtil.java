@@ -7,10 +7,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 public class FunctionUtil {
+    private final DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
+
     public <T> Page<T> toPage(List<T> list, int page, int pageSize) {
         Pageable pageable = PageRequest.of(page - 1, pageSize);
         int start = (int) pageable.getOffset();
@@ -38,7 +42,7 @@ public class FunctionUtil {
         }
     }
 
-    public static String maskingCtn(String ctn) {
+    public String maskingCtn(String ctn) {
         // 숫자만 추출
         String cleanCtn = ctn.replaceAll("[^0-9]", "");
 
@@ -55,5 +59,17 @@ public class FunctionUtil {
                     : cleanCtn.replaceAll("(\\d{4})(\\d{4})(\\d{4})", "$1****$3");
         }
         return ctn;
+    }
+
+    public String monthToStartDate(String startDate) {
+        YearMonth yearMonth = YearMonth.parse(startDate, monthFormatter);
+
+        return yearMonth.atDay(1).toString();
+    }
+
+    public String monthToEndDate(String endDate) {
+        YearMonth yearMonth = YearMonth.parse(endDate, monthFormatter);
+
+        return yearMonth.atEndOfMonth().toString();
     }
 }

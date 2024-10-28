@@ -1,5 +1,6 @@
 package com.example.admin.payment_history.service;
 
+import com.example.admin.common.service.FunctionUtil;
 import com.example.admin.payment_history.dto.PaymentHistory;
 import com.example.admin.payment_history.dto.PaymentHistoryDto;
 import com.example.admin.payment_history.mapper.PaymentHistoryMapper;
@@ -17,6 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PaymentHistoryService {
     private final PaymentHistoryMapper paymentHistoryMapper;
+    private final FunctionUtil functionUtil;
 
     // 건별 상세 이력 조회 API 메서드
     public List<PaymentHistoryDto> getPaymentHistoryDtoPage(String startDate, String endDate, String ctn) {
@@ -27,8 +29,8 @@ public class PaymentHistoryService {
 
     public List<PaymentHistory> getPaymentHistoryList(String startDate, String endDate, String ctn) {
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("startDate", startDate);
-        requestMap.put("endDate", endDate);
+        requestMap.put("startDate", functionUtil.monthToStartDate(startDate));
+        requestMap.put("endDate", functionUtil.monthToEndDate(endDate));
         requestMap.put("ctn", ctn);
 
         return paymentHistoryMapper.getPaymentHistoryList(requestMap);
