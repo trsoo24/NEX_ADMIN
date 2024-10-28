@@ -7,18 +7,18 @@
     <select id="getPaymentHistoryList" parameterType="map" resultType="com.example.admin.payment_history.dto.PaymentHistory">
         SELECT
         CTN,
-        TRASACTION_DT,
-        CANCEL_NOFITICATION_DT,
+        TRANSACTION_DT,
+        CANCEL_NOTIFICATION_DT,
         TOTAL,
         ITEM_NAME,
-        MERCHANTNAME
+        MERCHANT_NAME
         FROM TB_AUTH_INFO
         WHERE 1 = 1
         <if test="ctn != null and ctn != ''">
             AND CTN = #{ctn}
         </if>
         <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-            AND TRANSACTION_DT BETWEEN #{startDate} AND #{endDate}
+            AND TRANSACTION_DT BETWEEN CONCAT(#{startDate}, ' 00:00:00') AND CONCAT(#{endDate}, ' 23:59:59')
         </if>
         ORDER BY TRANSACTION_DT
     </select>

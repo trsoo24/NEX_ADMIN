@@ -16,15 +16,14 @@ public class PaymentHistoryDto {
     private Integer total; // itemPrice + tax
     private String itemName;
     private String merchantName;
-    private String dcb;
 
     public static PaymentHistoryDto toDto(PaymentHistory paymentHistory) {
         return PaymentHistoryDto.builder()
-                .transactionDt(paymentHistory.getTransactionDt())
-                .dcb("GDCB")
-                .itemName(paymentHistory.getItemName())
                 .ctn(paymentHistory.getCtn())
+                .transactionDt(paymentHistory.getTransactionDt())
+                .cancelNotificationDt(paymentHistory.getCancelNotificationDt())
                 .total(paymentHistory.getTotal())
+                .itemName(paymentHistory.getItemName())
                 .merchantName(paymentHistory.getMerchantName())
                 .build();
     }
