@@ -24,13 +24,13 @@ public class AnalysisController {
     private final MonthAnalysisStatisticsService monthAnalysisStatisticsService;
 
     // 통합 ADMIN 스케줄러 호출 API
-    @GetMapping("/gdcb")
+    @GetMapping("/payment")
     public List<DayAnalysis> getAnalysisStatistics(@RequestParam("day") String day) {
         return dayAnalysisStatisticService.getAnalysisStatisticsList(day);
     }
 
     // 일별 통계 분석 ( 한 달 데이터까지만 조회 가능 )
-    @GetMapping("/gdcb/day")
+    @GetMapping("/payment/day")
     public MapResult<String, List<DayAnalysisDto>> getDayAnalysisStatisticMap(@RequestParam("dcbs") List<String> dcbs,
                                                                               @RequestParam("startDate") String startDate,
                                                                               @RequestParam("endDate") String endDate,
@@ -40,7 +40,7 @@ public class AnalysisController {
         return new MapResult<>(true, analysisMap);
     }
 
-    @GetMapping("/gdcb/day/excel")
+    @GetMapping("/payment/day/excel")
     public void exportDayAnalysisStatisticExcel(@RequestParam("dcbs") List<String> dcbs,
                                                 @RequestParam("startDate") String startDate,
                                                 @RequestParam("endDate") String endDate,
@@ -65,7 +65,7 @@ public class AnalysisController {
         return new StatusResult(true);
     }
 
-    @GetMapping("/gdcb/month")
+    @GetMapping("/payment/month")
     public MapResult<String, List<MonthAnalysisDto>> getMonthAnalysisStatisticMap(@RequestParam("dcbs") List<String> dcbs,
                                                                                   @RequestParam("startDate") String startDate,
                                                                                   @RequestParam("endDate") String endDate,
@@ -75,7 +75,7 @@ public class AnalysisController {
         return new MapResult<>(true, monthAnalysisMap);
     }
 
-    @GetMapping("/gdcb/month/excel")
+    @GetMapping("/payment/month/excel")
     public void exportMonthAnalysisStatisticExcel(@RequestParam("dcbs") List<String> dcbs,
                                                   @RequestParam("startDate") String startDate,
                                                   @RequestParam("endDate") String endDate,
