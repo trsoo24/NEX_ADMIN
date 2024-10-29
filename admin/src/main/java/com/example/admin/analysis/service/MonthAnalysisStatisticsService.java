@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class MonthAnalysisStatisticsService {
     private final AnalysisStatisticsMapper analysisStatisticsMapper;
 
+    // 통계 분석에 표시될 ResultCode 값에 대한 설명을 Map<에러 코드, 설명> 으로 저장
     private static final Map<String, String> codeToDescriptionMap = Arrays.stream(AnalysisResultCode.values())
             .collect(Collectors.toMap(AnalysisResultCode::getCode, AnalysisResultCode::getDescription));
 
@@ -72,6 +73,7 @@ public class MonthAnalysisStatisticsService {
         return analysisStatisticsMapper.getAnalysisMonthStatisticsList(requestMap);
     }
 
+    // DTO 로 변경
     public List<MonthAnalysisDto> transEntityToDtoList(List<MonthAnalysis> monthAnalysisList, List<String> top12List) {
         Map<String, MonthAnalysisDto> responseMap = new LinkedHashMap<>();
 
@@ -105,6 +107,7 @@ public class MonthAnalysisStatisticsService {
         }
     }
 
+    // 상위 표시될 12개 에러 코드를 찾는다.
     private List<String> findTop12FromList(List<MonthAnalysis> monthAnalysisList) {
         Map<String, Long> countMap = new LinkedHashMap<>(); // 결과 코드별 분류
 
@@ -121,12 +124,12 @@ public class MonthAnalysisStatisticsService {
 
     private void sortDtoMap(List<MonthAnalysisDto> dtoList, List<String> top12List) {
         for (MonthAnalysisDto dto : dtoList) {
-            // 기타 값 추출
+            // 기타 값 추출 ( 정렬 제외 )
             Long otherValue = dto.getResultCodeMap().remove("기타");
             Map<String, Long> resultCodeMap = dto.getResultCodeMap();
 
             Map<String, Long> sortedMap = top12List.stream()
-                    .filter(resultCodeMap::containsKey)
+                    .filter(resultCodeMap::containsKey) // 상위 12 개 에러 코드 키를 codeToDescriptionMap 의 Map<에러코드, 설명> 에 저장된 설명 값으로 변환
                     .collect(Collectors.toMap(
                             key -> codeToDescriptionMap.getOrDefault(key, key),
                             resultCodeMap::get,
