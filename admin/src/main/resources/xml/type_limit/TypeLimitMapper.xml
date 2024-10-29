@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.admin.type_limit.mapper.TypeLimitMapper">
+    <select id="selectTypeLimitList" resultType="com.example.admin.type_limit.dto.GetTypeLimitDto">
+        SELECT
+            A.ELAPSE_MONTH elapseMonth
+             , A.FEE_TYPE_CD feeTypeCode1
+             , A.FEE_TYPE_NM feeTypeName1
+             , A.LIMIT_ONCE limitOnce1
+             , A.LIMIT_TOTAL limitTotal1
+             , B.FEE_TYPE_CD feeTypeCode2
+             , B.FEE_TYPE_NM feeTypeName2
+             , B.LIMIT_ONCE limitOnce2
+             , B.LIMIT_TOTAL limitTotal2
+        FROM TB_FEE_TYPE_LIMIT A
+                 LEFT OUTER JOIN TB_FEE_TYPE_LIMIT B
+                                 ON A.ELAPSE_MONTH =B.ELAPSE_MONTH
+        WHERE A.FEE_TYPE_CD ='100'
+          AND B.FEE_TYPE_CD= '200'
+    </select>
+
+    <update id="updateTypeLimit" parameterType="com.example.admin.type_limit.dto.UpdateTypeLimitDto">
+        UPDATE TB_FEE_TYPE_LIMIT
+        <set>
+            <if test="limitOnce != null and limitOnce != ''">
+                LIMIT_ONCE = #{limitOnce},
+            </if>
+            <if test="limitTotal != null and limitTotal != ''">
+                LIMIT_TOTAL = #{limitTotal}
+            </if>
+        </set>
+        WHERE 1 = 1
+        <if test="feeTypeCode != null and feeTypeCode != ''">
+            AND FEE_TYPE_CD = #{feeTypeCode}
+        </if>
+        <if test="elapseMonth != null and elapseMonth != ''">
+            AND ELAPSE_MONTH = #{elapseMonth}
+        </if>
+    </update>
+</mapper>
