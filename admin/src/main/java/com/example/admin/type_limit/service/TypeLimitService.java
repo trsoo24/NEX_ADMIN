@@ -7,7 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -16,10 +19,18 @@ public class TypeLimitService {
     private final TypeLimitMapper typeLimitMapper;
 
     public List<GetTypeLimitDto> getTypeLimitDtoList() {
-        return typeLimitMapper.selectTypeLimitList();
+        List<GetTypeLimitDto> typeLimitDtoList = typeLimitMapper.selectTypeLimitList();
+
+        return sortList(typeLimitDtoList);
     }
 
     public void updateTypeLimit(UpdateTypeLimitDto updateTypeLimitDto) {
         typeLimitMapper.updateTypeLimit(updateTypeLimitDto);
+    }
+
+    private List<GetTypeLimitDto> sortList(List<GetTypeLimitDto> list) {
+        return list.stream()
+                .sorted(Comparator.comparingInt(dto -> Integer.parseInt(dto.getElapseMonth()))) // GetTypeLimitDto 내 elapseMonth 값 0, 1, 2, 3, 6, 12 순으로 정렬하기 위해 Integer 로 변환 후 비교하여 정렬
+                .collect(Collectors.toList());
     }
 }
