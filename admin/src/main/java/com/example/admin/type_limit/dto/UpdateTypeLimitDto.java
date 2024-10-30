@@ -9,7 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateTypeLimitDto {
     private String elapseMonth;
-    private Long limitOnce;
-    private Long limitTotal;
-    private String feeTypeCode;
+    private String feeTypeCode1;
+    private String feeTypeName1;
+    private Long limitOnce1;
+    private Long limitTotal1;
+    private String feeTypeCode2;
+    private String feeTypeName2;
+    private Long limitOnce2;
+    private Long limitTotal2;
 }
