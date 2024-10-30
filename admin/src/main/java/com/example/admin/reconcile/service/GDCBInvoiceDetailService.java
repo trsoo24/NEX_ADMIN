@@ -31,20 +31,10 @@ public class GDCBInvoiceDetailService {
     public Map<String, List<GDCBDetailCompare>> getGDCBInvoiceDetailMap(String dcb, String month) {
         Map<String, Object> requestMap = new HashMap<>();
         String[] monthArray = month.split("-");
-        String previousMonth = calculatePreviousDate(month);
-        String[] preMonthArray = previousMonth.split("-");
         List<GDCBDetailCompare> responseList = new ArrayList<>();
         Map<String, List<GDCBDetailCompare>> responseMap = new LinkedHashMap<>();
 
         requestMap.put("dcb", dcb);
-
-        // 지난 달 값
-        requestMap.put("year", preMonthArray[0]);
-        requestMap.put("month", preMonthArray[1]);
-        gdcbMonthlyInvoiceSumToGDCBCompareDtoList(previousMonth, paymentTypeArray[0], getDetails("전체", requestMap), responseList);
-        gdcbMonthlyInvoiceSumToGDCBCompareDtoList(previousMonth, paymentTypeArray[1], getDetails("00", requestMap), responseList);
-        gdcbMonthlyInvoiceSumToGDCBCompareDtoList(previousMonth, paymentTypeArray[2], getDetails("PG", requestMap), responseList);
-        gdcbMonthlyInvoiceSumToGDCBCompareDtoList(previousMonth, paymentTypeArray[3], getDetails("99", requestMap), responseList);
 
         // 이번 달 값
         requestMap.put("year", monthArray[0]);
@@ -56,6 +46,7 @@ public class GDCBInvoiceDetailService {
         gdcbMonthlyInvoiceSumToGDCBCompareDtoList(month, paymentTypeArray[3], getDetails("99", requestMap), responseList);
 
         responseMap.put("invoiceDetailsFileContents", responseList);
+
         // Google Summary File
         List<GoogleMonthlyInvoiceSum> googleMonthlySumList = getGoogleMonthlySum(requestMap);
         googleMonthlySumToGDCBCompareDtoList(month, googleMonthlySumList, responseMap);
@@ -184,31 +175,26 @@ public class GDCBInvoiceDetailService {
 
         int rowNum = 0;
         XSSFRow row = sheet.createRow(rowNum++);
-        String previousDate = calculatePreviousDate(month);
         XSSFRow subRow = sheet.createRow(rowNum++);
         String[] subHeaders = {"결제 건수(건)", "거래 금액(원)", "U+ 매출(원)", "수수료(%)"};
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 5; i++) {
             XSSFCell cell = row.createCell(i);
             XSSFCell subCell = subRow.createCell(i);
-            int subHeaderIdx = (i - 1) % subHeaders.length;
 
             if (i == 0) {
                 cell.setCellValue("거래 유형");
                 cell.setCellStyle(leftAlignStyle);
-            } else if (i < 5) {
-                cell.setCellValue(previousDate);
-                subCell.setCellValue(subHeaders[subHeaderIdx]);
-                cell.setCellStyle(centerAlignStyle);
             } else {
                 cell.setCellValue(month);
-                subCell.setCellValue(subHeaders[subHeaderIdx]);
+                subCell.setCellValue(subHeaders[i - 1]);
                 cell.setCellStyle(centerAlignStyle);
             }
         }
 
         // "거래 유형" 병합
         sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 0));
+
         // 날짜 값 병합
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 1, 4));
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 5, 8));
@@ -227,9 +213,15 @@ public class GDCBInvoiceDetailService {
             }
         }
 
+        // 칸 띄우기
+        sheet.createRow(rowNum++);
+
         // Google Summary File
         XSSFRow googleSummaryRow = sheet.createRow(rowNum);
-        googleSummaryRow.createCell(0).setCellValue("Google Summary File");
+        XSSFCell googleSummaryCell = googleSummaryRow.createCell(0);
+        googleSummaryCell.setCellValue("Google Summary File");
+        googleSummaryCell.setCellStyle(centerAlignStyle);
+
         sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum++,0,4));
 
         XSSFRow googleSummaryCol = sheet.createRow(rowNum++);
@@ -260,19 +252,6 @@ public class GDCBInvoiceDetailService {
         response.getOutputStream().flush();
         response.getOutputStream().close();
         workbook.close();
-    }
-
-    private String calculatePreviousDate(String month) {
-        int monthInt = Integer.parseInt(month.substring(month.indexOf("-") + 1));
-        String year = month.substring(0, month.indexOf("-"));
-
-        if (monthInt == 1) { // 1월이면 전년 12월
-            int prevYear = Integer.parseInt(year) - 1;
-            return prevYear + "-12";
-        } else {
-            monthInt -= 1;
-            return year + "-" + String.format("%02d", monthInt);
-        }
     }
 
     @Transactional
