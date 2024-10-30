@@ -26,8 +26,8 @@ public class TypeLimitController {
     }
 
     @PutMapping
-    public StatusResult updateTypeLimit(@RequestBody @Valid UpdateTypeLimitDto typeLimitDto) {
-        typeLimitService.updateTypeLimit(typeLimitDto);
+    public StatusResult updateTypeLimit(@RequestBody @Valid List<UpdateTypeLimitDto> typeLimitDtoList) {
+        typeLimitService.updateTypeLimit(typeLimitDtoList);
 
         return new StatusResult(true);
     }

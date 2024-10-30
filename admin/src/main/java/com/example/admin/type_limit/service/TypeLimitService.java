@@ -6,6 +6,7 @@ import com.example.admin.type_limit.mapper.TypeLimitMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -24,8 +25,11 @@ public class TypeLimitService {
         return sortList(typeLimitDtoList);
     }
 
-    public void updateTypeLimit(UpdateTypeLimitDto updateTypeLimitDto) {
-        typeLimitMapper.updateTypeLimit(updateTypeLimitDto);
+    @Transactional
+    public void updateTypeLimit(List<UpdateTypeLimitDto> updateTypeLimitDto) {
+        for (UpdateTypeLimitDto dto : updateTypeLimitDto) {
+            typeLimitMapper.updateTypeLimit(dto);
+        }
     }
 
     private List<GetTypeLimitDto> sortList(List<GetTypeLimitDto> list) {
