@@ -38,7 +38,7 @@ public class RefundController {
         gdcbRefundService.insertManualRefundFileInfo(manualRefundFileInfo);
     }
 
-    @GetMapping("/gdcb")
+    @GetMapping("/purchase-history")
     public PageResult<RefundDto> getGdcbRefundHistory(@RequestParam("correlationId") @Valid String correlationId,
                                                       @RequestParam("page") int page,
                                                       @RequestParam("pageSize") int pageSize) throws Exception {
@@ -47,7 +47,7 @@ public class RefundController {
         return new PageResult<>(true, refundDtoPage);
     }
 
-    @PostMapping("/process/gdcb") // GDCB 환불 프로세스 실행
+    @PostMapping("/process") // GDCB 환불 프로세스 실행
     public StatusResult refundProcess(HttpServletRequest request, @RequestBody RefundProcessDto refundProcessDto) {
         boolean done = gdcbRefundService.refundProcess(request, refundProcessDto);
 
@@ -55,7 +55,7 @@ public class RefundController {
     }
 
 
-    @PutMapping("/gdcb/{correlationId}")
+    @PutMapping("/purchase-history/{correlationId}")
     public StatusResult updateManualRefund(@PathVariable(name = "correlationId") @Valid String correlationId) {
         gdcbRefundService.updateRefundAuth("gdcb", correlationId);
 
