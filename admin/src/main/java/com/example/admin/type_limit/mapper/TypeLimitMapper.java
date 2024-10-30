@@ -5,10 +5,10 @@ import com.example.admin.type_limit.dto.UpdateTypeLimitDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface TypeLimitMapper {
     List<GetTypeLimitDto> selectTypeLimitList();
-    void updateTypeLimit(UpdateTypeLimitDto updateTypeLimitDto);
+    void updateTypeLimit1(UpdateTypeLimitDto updateTypeLimitDto);
+    void updateTypeLimit2(UpdateTypeLimitDto updateTypeLimitDto);
 }

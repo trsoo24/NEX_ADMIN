@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +27,8 @@ public class TypeLimitService {
     @Transactional
     public void updateTypeLimit(List<UpdateTypeLimitDto> updateTypeLimitDto) {
         for (UpdateTypeLimitDto dto : updateTypeLimitDto) {
-            typeLimitMapper.updateTypeLimit(dto);
+            typeLimitMapper.updateTypeLimit1(dto);
+            typeLimitMapper.updateTypeLimit2(dto);
         }
     }
 

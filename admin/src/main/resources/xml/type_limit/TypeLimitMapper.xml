@@ -22,22 +22,31 @@
           AND B.FEE_TYPE_CD= '200'
     </select>
 
-    <update id="updateTypeLimit" parameterType="com.example.admin.type_limit.dto.UpdateTypeLimitDto">
+    <update id="updateTypeLimit1" parameterType="com.example.admin.type_limit.dto.UpdateTypeLimitDto">
         UPDATE TB_FEE_TYPE_LIMIT
         <set>
-            <if test="limitOnce != null and limitOnce != ''">
-                LIMIT_ONCE = #{limitOnce},
+            <if test="limitOnce1 != null">
+                LIMIT_ONCE = #{limitOnce1},
             </if>
-            <if test="limitTotal != null and limitTotal != ''">
-                LIMIT_TOTAL = #{limitTotal}
+            <if test="limitTotal1 != null">
+                LIMIT_TOTAL = #{limitTotal1}
             </if>
         </set>
-        WHERE 1 = 1
-        <if test="feeTypeCode != null and feeTypeCode != ''">
-            AND FEE_TYPE_CD = #{feeTypeCode}
-        </if>
-        <if test="elapseMonth != null and elapseMonth != ''">
-            AND ELAPSE_MONTH = #{elapseMonth}
-        </if>
+        WHERE FEE_TYPE_CD = #{feeTypeCode1}
+        AND ELAPSE_MONTH = #{elapseMonth}
+    </update>
+
+    <update id="updateTypeLimit2" parameterType="com.example.admin.type_limit.dto.UpdateTypeLimitDto">
+        UPDATE TB_FEE_TYPE_LIMIT
+        <set>
+            <if test="limitOnce2 != null">
+                LIMIT_ONCE = #{limitOnce2},
+            </if>
+            <if test="limitTotal2 != null">
+                LIMIT_TOTAL = #{limitTotal2}
+            </if>
+        </set>
+        WHERE FEE_TYPE_CD = #{feeTypeCode2}
+        AND ELAPSE_MONTH = #{elapseMonth}
     </update>
 </mapper>
