@@ -33,7 +33,7 @@
         FROM TB_SMSMO_INFO
         WHERE 1 = 1
         <if test="ctn != null and ctn != ''">
-            AND REPLACE(CTN, '-', '') LIKE CONCAT('%', #{ctn}, '%')
+            AND REPLACE(CTN, '-', '') = #{ctn}
         </if>
     </select>
 
@@ -48,7 +48,7 @@
         FROM TB_PROVISIONING_INFO
         WHERE 1 = 1
         <if test="ctn != null and ctn != ''">
-            AND REPLACE(CTN, '-', '') LIKE CONCAT('%', #{ctn}, '%')
+            AND REPLACE(CTN, '-', '') = #{ctn}
         </if>
     </select>
 
