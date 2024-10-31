@@ -24,7 +24,7 @@ public class GDCBMonthlyInvoiceSum {
 
     public static GDCBMonthlyInvoiceSum toTransactionTypeTotal(GDCBMonthlyInvoiceSum buySum, GDCBMonthlyInvoiceSum refundSum) {
         GDCBMonthlyInvoiceSum transactionTypeTotal = GDCBMonthlyInvoiceSum.builder()
-                .transactionType("B - R")
+                .transactionType("SUM")
                 .revsCategory(buySum.getRevsCategory())
                 .paymentType(buySum.getPaymentType())
                 .transactionCnt(buySum.getTransactionCnt() + refundSum.getTransactionCnt())
