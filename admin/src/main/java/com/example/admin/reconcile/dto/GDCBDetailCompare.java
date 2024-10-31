@@ -41,7 +41,7 @@ public class GDCBDetailCompare {
                 .tYear(monthArray[0])
                 .tMonth(monthArray[1])
                 .paymentType(sum.getPaymentType())
-                .transactionType(sum.getTransactionType())
+                .transactionType(transTransactionTypeToDescription(sum.getTransactionType()))
                 .transactionCnt(sum.getTransactionCnt())
                 .revsInInvoicedCurrencySum(sum.getRevsInInvoicedCurrencySum())
                 .chargeSum(sum.getChargeSum())
@@ -60,5 +60,15 @@ public class GDCBDetailCompare {
                 .taxSum(sum.getTaxSum())
                 .revShareSum(sum.getRevShareSum())
                 .build();
+    }
+
+    private static String transTransactionTypeToDescription(String transactionType) {
+        if (transactionType.equals("B")) {
+            return "Charge";
+        } else if (transactionType.equals("C")) {
+            return "Refund";
+        } else {
+            return transactionType;
+        }
     }
 }
