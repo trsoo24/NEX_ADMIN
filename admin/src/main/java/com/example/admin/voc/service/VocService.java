@@ -29,8 +29,8 @@ public class VocService {
         List<SmsInfoDto> smsInfoList = getSmsInfoList(dcb, ctn);
 
         Map<String, Object> responseMap = new LinkedHashMap<>();
-        responseMap.put("smsmo 이력", smsInfoList);
-        responseMap.put("provisioning 이력", provisioningInfoList);
+        responseMap.put("smsmoContents", smsInfoList);
+        responseMap.put("provisioningContents", provisioningInfoList);
 
         return responseMap;
     }
