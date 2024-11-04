@@ -3,9 +3,9 @@ package com.example.admin.seller.dto.field;
 import lombok.Getter;
 
 @Getter
-public enum AdmMerchantInfoField {
-    merchantNm("판매자 이름"),
-    merchantContact("연락처"),
+public enum AdmSellerInfoField {
+    sellerName("판매자 이름"),
+    sellerContact("연락처"),
     stdDt("최종 결제일"),
     blockYn("차단 여부"),
     regDt("등록일자"),
@@ -18,5 +18,5 @@ public enum AdmMerchantInfoField {
 
     private final String description;
 
-    AdmMerchantInfoField(String description) {this.description = description;}
+    AdmSellerInfoField(String description) {this.description = description;}
 }

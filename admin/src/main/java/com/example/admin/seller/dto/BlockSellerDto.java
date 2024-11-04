@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InsertMerchantDayStat {
-    private String year;
-    private String month;
-    private String merchantName;
+public class BlockSellerDto {
+    private String dcb;
+    private List<String> sellerNames;
 }

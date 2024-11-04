@@ -10,19 +10,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MerchantMonthStat {
+public class SellerMonthStat {
     private String year;
     private String month;
-    private String merchantName;
+    private String sellerName;
     private Double sumPrice;
     private Double sumTax;
     private Double sumTotal;
 
-    public static MerchantMonthStat toMonthStat(String year, String month, String merchantName, Double sumPrice, Double sumTax, Double sumTotal) {
-        return MerchantMonthStat.builder()
+    public static SellerMonthStat toMonthStat(String year, String month, String sellerName, Double sumPrice, Double sumTax, Double sumTotal) {
+        return SellerMonthStat.builder()
                 .year(year)
                 .month(month)
-                .merchantName(merchantName)
+                .sellerName(sellerName)
                 .sumPrice(sumPrice)
                 .sumTax(sumTax)
                 .sumTotal(sumTotal)

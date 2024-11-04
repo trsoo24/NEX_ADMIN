@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InsertMerchantInfo {
-    private String merchantNm;
-    private String merchantContact;
+public class InsertSellerInfo {
+    private String sellerName;
+    private String sellerContact;
     private String stdDt;
 }

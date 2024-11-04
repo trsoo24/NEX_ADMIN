@@ -1,0 +1,18 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.admin.seller.mapper.SellerStatsMonthlyMapper">
+    <insert id="insertSellerMonthStat" parameterType="com.example.admin.seller.dto.SellerMonthStat">
+        INSERT INTO TB_SELLER_STATS_MONTHLY(YEAR, MONTH, SELLER_NAME, SUM_PRICE, SUM_TAX, SUM_TOTAL)
+        VALUES (#{year}, #{month}, #{sellerName}, #{sumPrice}, #{sumTax}, #{sumTotal})
+    </insert>
+
+    <select id="getSellerMonthStats" parameterType="map" resultType="com.example.admin.seller.dto.SellerMonthStat">
+        SELECT * FROM TB_SELLER_STATS_MONTHLY
+        WHERE 1 = 1
+        <if test="sellerName != null and sellerName != ''">
+            AND SELLER_NAME LIKE CONCAT('%', #{sellerName}, '%')
+        </if>
+        AND YEAR = #{year}
+    </select>
+</mapper>

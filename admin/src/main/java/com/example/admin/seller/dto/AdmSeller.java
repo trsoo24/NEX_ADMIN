@@ -9,9 +9,9 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdmMerchant {
-    private String merchantNm;
-    private String merchantContact;
+public class AdmSeller {
+    private String sellerName;
+    private String sellerContact;
     private String stdDt;
     private String blockYn;
     private LocalDate regDt;

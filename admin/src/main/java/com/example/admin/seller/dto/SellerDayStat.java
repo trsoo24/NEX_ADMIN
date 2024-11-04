@@ -9,21 +9,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MerchantDayStat {
+public class SellerDayStat {
     private String year;
     private String month;
     private String day;
-    private String merchantName;
+    private String sellerName;
     private Double sumPrice; // 판매액 합계
     private Double sumTax; // 세금 합계
     private Double sumTotal; // 결제 금액 합계
 
-    public static MerchantDayStat to(String year, String month, String day, String merchantName, double sumPrice, double sumTax, double sumTotal) {
-        return MerchantDayStat.builder()
+    public static SellerDayStat to(String year, String month, String day, String sellerName, double sumPrice, double sumTax, double sumTotal) {
+        return SellerDayStat.builder()
                 .year(year)
                 .month(month)
                 .day(day)
-                .merchantName(merchantName)
+                .sellerName(sellerName)
                 .sumPrice(sumPrice)
                 .sumTax(sumTax)
                 .sumTotal(sumTotal)

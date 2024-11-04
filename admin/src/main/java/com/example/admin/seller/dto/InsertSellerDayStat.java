@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InsertMerchantMonthStat {
+public class InsertSellerDayStat {
     private String year;
-    private String merchantName;
+    private String month;
+    private String sellerName;
 }
