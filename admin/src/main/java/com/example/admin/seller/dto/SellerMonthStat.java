@@ -17,6 +17,7 @@ public class SellerMonthStat {
     private Double sumPrice;
     private Double sumTax;
     private Double sumTotal;
+    private final String dcb = "GDCB";
 
     public static SellerMonthStat toMonthStat(String year, String month, String sellerName, Double sumPrice, Double sumTax, Double sumTotal) {
         return SellerMonthStat.builder()
