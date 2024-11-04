@@ -26,4 +26,5 @@ public class Member {
     private Boolean NDCB;
     private Boolean PDCB;
     private Boolean SDCB;
+    private String sendMail;
 }
