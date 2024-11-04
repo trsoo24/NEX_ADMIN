@@ -16,13 +16,13 @@ public class MonthlyInvoiceSum { // google Invoice Detail 파일 값 합계
     private String paymentType; // 결제 구분 A. 00 : 기존결재 {DCB 로 예상} B. PG : 소액결재 C. 99 : 기타
     private String revsCategory; // 결제 유형 ( APP, APP_SUBSCRIPTION, CONTENT, NA (기타), SPECIAL_APP )
     private Double cnt;
-    private Double itemPriceSum; // 아이템 금액 합
+    private Double productPriceSum; // 아이템 금액 합
     private Double taxSum; // 세금 합
     private Double totalAmountSum; // 총 금액 합
     private Double revsInInvoicedCurrencySum; // 유플러스 매출 합
 
     public static MonthlyInvoiceSum toEntity(String year, String month, String transactionType,
-                                             String paymentType, String revsCategory, Double cnt, Double itemPriceSum,
+                                             String paymentType, String revsCategory, Double cnt, Double productPriceSum,
                                              Double taxSum, Double totalAmountSum, Double revsInInvoicedCurrencySum) {
         return MonthlyInvoiceSum.builder()
                 .year(year)
@@ -31,7 +31,7 @@ public class MonthlyInvoiceSum { // google Invoice Detail 파일 값 합계
                 .paymentType(paymentType)
                 .revsCategory(revsCategory)
                 .cnt(cnt)
-                .itemPriceSum(itemPriceSum)
+                .productPriceSum(productPriceSum)
                 .taxSum(taxSum)
                 .totalAmountSum(totalAmountSum)
                 .revsInInvoicedCurrencySum(revsInInvoicedCurrencySum)

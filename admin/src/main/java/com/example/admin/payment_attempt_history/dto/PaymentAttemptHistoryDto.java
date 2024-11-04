@@ -13,7 +13,7 @@ public class PaymentAttemptHistoryDto {
     private String ctn;
     private String createDt;
     private String dcb;
-    private String itemName;
+    private String productName;
     private String amount;
     private String resultCode;
 
@@ -22,7 +22,7 @@ public class PaymentAttemptHistoryDto {
                 .ctn(paymentAttemptHistory.getCtn())
                 .createDt(paymentAttemptHistory.getCreateDt())
                 .dcb("GDCB")
-                .itemName(paymentAttemptHistory.getItemName())
+                .productName(paymentAttemptHistory.getProductName())
                 .amount(paymentAttemptHistory.getAmount())
                 .resultCode(paymentAttemptHistory.getResultCode())
                 .build();

@@ -30,7 +30,7 @@ import java.util.List;
 public class SellerController {
     private final AdmSellerService admSellerService;
     private final SellerStatDailyService sellerStatDailyService;
-    private final SellerStatsMonthlyService merchantStatsMonthlyService;
+    private final SellerStatsMonthlyService sellerStatsMonthlyService;
 
 
     @PostMapping
@@ -69,58 +69,58 @@ public class SellerController {
     }
 
     @GetMapping("/day")
-    public PageResult<SellerDayStatDto> getItemStatDailyPage(@RequestParam("dcb") @Valid String dcb,
+    public PageResult<SellerDayStatDto> getProductStatDailyPage(@RequestParam("dcb") @Valid String dcb,
                                                              @RequestParam("month") @Valid String month,
-                                                             @RequestParam("merchantName") @Valid String merchantName,
+                                                             @RequestParam("sellerName") @Valid String sellerName,
                                                              @RequestParam("page") @Valid int page,
                                                              @RequestParam("pageSize") @Valid int pageSize) {
-        Page<SellerDayStatDto> itemDayStatDtoPage = sellerStatDailyService.getSellerStatDailyPage(dcb, month, merchantName, page, pageSize);
+        Page<SellerDayStatDto> productDayStatDtoPage = sellerStatDailyService.getSellerStatDailyPage(dcb, month, sellerName, page, pageSize);
 
-        return new PageResult<>(true, itemDayStatDtoPage);
+        return new PageResult<>(true, productDayStatDtoPage);
     }
 
     @GetMapping("/day/excel")
-    public void getItemStatDailyExcel(@RequestParam("dcb") @Valid String dcb,
+    public void getProductStatDailyExcel(@RequestParam("dcb") @Valid String dcb,
                                                            @RequestParam("month") @Valid String month,
-                                                           @RequestParam("merchantName") @Valid String merchantName,
+                                                           @RequestParam("sellerName") @Valid String sellerName,
                                                            HttpServletResponse response) throws IOException {
-        sellerStatDailyService.exportSellerStatDailyExcel(dcb, month, merchantName, response);
+        sellerStatDailyService.exportSellerStatDailyExcel(dcb, month, sellerName, response);
     }
 
     @GetMapping("/month")
-    public PageResult<SellerMonthStatDto> getItemStatMonthlyPage(@RequestParam("dcb") @Valid String dcb,
+    public PageResult<SellerMonthStatDto> getProductStatMonthlyPage(@RequestParam("dcb") @Valid String dcb,
                                                                  @RequestParam("year") @Valid String year,
-                                                                 @RequestParam("merchantName") @Valid String merchantName,
+                                                                 @RequestParam("sellerName") @Valid String sellerName,
                                                                  @RequestParam("page") @Valid int page,
                                                                  @RequestParam("pageSize") @Valid int pageSize) {
-        Page<SellerMonthStatDto> itemMonthStatDtoPage = merchantStatsMonthlyService.getSellerStatsMonthlyPage(dcb, year, merchantName, page, pageSize);
+        Page<SellerMonthStatDto> productMonthStatDtoPage = sellerStatsMonthlyService.getSellerStatsMonthlyPage(dcb, year, sellerName, page, pageSize);
 
-        return new PageResult<>(true, itemMonthStatDtoPage);
+        return new PageResult<>(true, productMonthStatDtoPage);
     }
 
 
     @GetMapping("/month/excel")
-    public void getItemStatMonthlyExcel(@RequestParam("dcb") @Valid String dcb,
+    public void getProductStatMonthlyExcel(@RequestParam("dcb") @Valid String dcb,
                                                                @RequestParam("year") @Valid String year,
-                                                               @RequestParam("merchantName") @Valid String merchantName,
+                                                               @RequestParam("sellerName") @Valid String sellerName,
                                                                 HttpServletResponse response) throws IOException {
-        merchantStatsMonthlyService.exportSellerStatMonthlyExcel(dcb, year, merchantName, response);
+        sellerStatsMonthlyService.exportSellerStatMonthlyExcel(dcb, year, sellerName, response);
     }
 
     // 통합 ADMIN 스케줄러 호출용 API
     @GetMapping("/day/2")
     public List<SellerDayStat> getSellerStatsDailyList(@RequestParam("dcb") @Valid String dcb,
                                                          @RequestParam("month") @Valid String month,
-                                                         @RequestParam("merchantName") @Valid String merchantName) {
-        return sellerStatDailyService.getSellerStatsDaily(dcb, month, merchantName);
+                                                         @RequestParam("sellerName") @Valid String sellerName) {
+        return sellerStatDailyService.getSellerStatsDaily(dcb, month, sellerName);
     }
 
     // 통합 ADMIN 스케줄러 호출용 API
     @GetMapping("/month/2")
     public List<SellerMonthStat> getSellerStatMonthly(@RequestParam("dcb") @Valid String dcb,
                                                         @RequestParam("year") @Valid String year,
-                                                        @RequestParam("merchantName") @Valid String merchantName) {
-        return merchantStatsMonthlyService.getSellerStatsMonthly(dcb, year, merchantName);
+                                                        @RequestParam("sellerName") @Valid String sellerName) {
+        return sellerStatsMonthlyService.getSellerStatsMonthly(dcb, year, sellerName);
     }
 
     @PostMapping("/day/add")
@@ -130,6 +130,6 @@ public class SellerController {
 
     @PostMapping("/month/add")
     public void insertMonthTest(@RequestBody @Valid InsertSellerMonthStat dayStat) {
-        merchantStatsMonthlyService.insertMonthlyStat(dayStat);
+        sellerStatsMonthlyService.insertMonthlyStat(dayStat);
     }
 }

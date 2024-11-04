@@ -63,9 +63,9 @@ public class ProductController {
                                                                   @RequestParam("productName") @Valid String productName,
                                                                   @RequestParam("page") @Valid int page,
                                                                   @RequestParam("pageSize") @Valid int pageSize) {
-        Page<ProductStatsDailyDto> itemStatsDailyDtoPage = productStatsDailyService.getProductStatsDailyPage(dcb, month, productName, page, pageSize);
+        Page<ProductStatsDailyDto> productStatsDailyDtoPage = productStatsDailyService.getProductStatsDailyPage(dcb, month, productName, page, pageSize);
 
-        return new PageResult<>(true, itemStatsDailyDtoPage);
+        return new PageResult<>(true, productStatsDailyDtoPage);
     }
 
     @GetMapping("/day/excel")
@@ -82,9 +82,9 @@ public class ProductController {
                                                                    @RequestParam("productName") @Valid String productName,
                                                                    @RequestParam("page") @Valid int page,
                                                                    @RequestParam("pageSize") @Valid int pageSize) {
-        Page<ProductStatsMonthlyDto> itemStatsMonthlyDtoPage = productStatsMonthlyService.getProductStatsMonthlyPage(dcb, year, productName, page, pageSize);
+        Page<ProductStatsMonthlyDto> productStatsMonthlyDtoPage = productStatsMonthlyService.getProductStatsMonthlyPage(dcb, year, productName, page, pageSize);
 
-        return new PageResult<>(true, itemStatsMonthlyDtoPage);
+        return new PageResult<>(true, productStatsMonthlyDtoPage);
     }
 
     @GetMapping("/month/2")
@@ -103,12 +103,12 @@ public class ProductController {
     }
 
     @PostMapping("/month/add")
-    public void addProductStatMonthTest(@RequestBody @Valid InsertProductMonthStat itemMonthStat) {
-        productStatsMonthlyService.insertStatMonthly(itemMonthStat);
+    public void addProductStatMonthTest(@RequestBody @Valid InsertProductMonthStat productMonthStat) {
+        productStatsMonthlyService.insertStatMonthly(productMonthStat);
     }
 
     @PostMapping("/day/add")
-    public void addProductStatDayTest(@RequestBody @Valid InsertProductDayStat itemDayStat) {
-        productStatsDailyService.insertStatDaily(itemDayStat);
+    public void addProductStatDayTest(@RequestBody @Valid InsertProductDayStat productDayStat) {
+        productStatsDailyService.insertStatDaily(productDayStat);
     }
 }

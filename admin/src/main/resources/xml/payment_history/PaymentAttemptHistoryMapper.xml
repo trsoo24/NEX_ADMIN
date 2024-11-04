@@ -8,7 +8,7 @@
         SELECT
         CTN,
         CREATE_DT,
-        ITEM_NAME,
+        ITEM_NAME AS productName
         AMOUNT,
         RESULT_CODE
         FROM TB_API_LOGS

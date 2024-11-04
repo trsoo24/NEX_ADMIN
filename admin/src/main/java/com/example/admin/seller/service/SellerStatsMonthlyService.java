@@ -48,25 +48,25 @@ public class SellerStatsMonthlyService {
     }
 
     private List<SellerMonthStatDto> toSellerMonthStatDtoList(List<SellerMonthStat> sellerMonthStatList) {
-        Map<String , SellerMonthStatDto> itemMonthStatDtoMap = new HashMap<>();
+        Map<String , SellerMonthStatDto> productMonthStatDtoMap = new HashMap<>();
         SellerMonthStatDto sellerMonthStatTotal = SellerMonthStatDto.generateTotal();
 
         for (SellerMonthStat sellerMonthStat : sellerMonthStatList) {
-            if (itemMonthStatDtoMap.get(sellerMonthStat.getSellerName()) != null) {
-                SellerMonthStatDto sellerMonthStatDto = itemMonthStatDtoMap.get(sellerMonthStat.getSellerName());
+            if (productMonthStatDtoMap.get(sellerMonthStat.getSellerName()) != null) {
+                SellerMonthStatDto sellerMonthStatDto = productMonthStatDtoMap.get(sellerMonthStat.getSellerName());
                 sellerMonthStatDto.addMonthlySales(sellerMonthStat);
                 sellerMonthStatTotal.addTotalMonthlySales(sellerMonthStat);
             } else {
                 SellerMonthStatDto sellerMonthStatDto = SellerMonthStatDto.toSellerMonthStatDto(sellerMonthStat);
                 sellerMonthStatDto.addMonthlySales(sellerMonthStat);
-                itemMonthStatDtoMap.put(sellerMonthStat.getSellerName(), sellerMonthStatDto);
+                productMonthStatDtoMap.put(sellerMonthStat.getSellerName(), sellerMonthStatDto);
                 sellerMonthStatTotal.addTotalMonthlySales(sellerMonthStat);
             }
         }
         List<SellerMonthStatDto> sellerMonthStatDtoList = new ArrayList<>();
         sellerMonthStatDtoList.add(sellerMonthStatTotal);
 
-        for (SellerMonthStatDto sellerMonthStatDto : itemMonthStatDtoMap.values()) {
+        for (SellerMonthStatDto sellerMonthStatDto : productMonthStatDtoMap.values()) {
             sellerMonthStatDto.setPercent(sellerMonthStatTotal.getTotal());
             sellerMonthStatDtoList.add(sellerMonthStatDto);
         }
@@ -95,12 +95,12 @@ public class SellerStatsMonthlyService {
             }
         }
 
-        for (SellerMonthStatDto itemMonthStat : sellerMonthStatDtoList) {
+        for (SellerMonthStatDto productMonthStat : sellerMonthStatDtoList) {
             Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(itemMonthStat.getSellerName());
-            row.createCell(1).setCellValue(itemMonthStat.getTotal());
-            row.createCell(2).setCellValue(itemMonthStat.getPercent());
-            Map<Integer, Double> dtoMap = itemMonthStat.getMonthlySales();
+            row.createCell(0).setCellValue(productMonthStat.getSellerName());
+            row.createCell(1).setCellValue(productMonthStat.getTotal());
+            row.createCell(2).setCellValue(productMonthStat.getPercent());
+            Map<Integer, Double> dtoMap = productMonthStat.getMonthlySales();
             for (int i = 1; i <= 12; i++) {
                 if (map.containsKey(i)) {
                     row.createCell(i + 2).setCellValue(dtoMap.get(i));

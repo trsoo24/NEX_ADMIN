@@ -152,7 +152,7 @@ public class GDCBInvoiceDetailService {
         GoogleMonthlyInvoiceSum total = GoogleMonthlyInvoiceSum.toRevsCategoryTotal(sumList.get(0).getYear(), sumList.get(0).getMonth());
 
         for (GoogleMonthlyInvoiceSum sum : sumList) {
-            total.addItemPriceSum(sum.getItemPriceSum());
+            total.addProductPriceSum(sum.getProductPriceSum());
             total.addTaxSum(sum.getTaxSum());
             total.addTotalAmountSum(sum.getTotalAmountSum());
             total.addRevShareSum(sum.getRevShareSum());
@@ -226,7 +226,7 @@ public class GDCBInvoiceDetailService {
 
         XSSFRow googleSummaryCol = sheet.createRow(rowNum++);
         googleSummaryCol.createCell(0).setCellValue("아이템 구분");
-        googleSummaryCol.createCell(1).setCellValue("ItemPriceSum");
+        googleSummaryCol.createCell(1).setCellValue("ProductPriceSum");
         googleSummaryCol.createCell(2).setCellValue("TaxSum");
         googleSummaryCol.createCell(3).setCellValue("TotalAmountSum");
         googleSummaryCol.createCell(4).setCellValue("RevShareSum");
@@ -237,7 +237,7 @@ public class GDCBInvoiceDetailService {
             XSSFRow idxRow = sheet.createRow(rowNum++);
             if (compare.getGYear() != null && compare.getTYear() == null) { // Google Invoice
                 idxRow.createCell(0).setCellValue(compare.getRevsCategory());
-                idxRow.createCell(1).setCellValue(compare.getItemPriceSum());
+                idxRow.createCell(1).setCellValue(compare.getProductPriceSum());
                 idxRow.createCell(2).setCellValue(compare.getTaxSum());
                 idxRow.createCell(3).setCellValue(compare.getTotalAmountSum());
                 idxRow.createCell(4).setCellValue(compare.getRevShareSum());
@@ -275,12 +275,12 @@ public class GDCBInvoiceDetailService {
                     for (int l = 0; l < revsCategoryArray.length; l++) {
                         String revsCategory = revsCategoryArray[l];
                         double cnt = Math.floor(random.nextDouble(1000));
-                        double itemPriceSum = Math.floor(random.nextDouble(100000));
+                        double productPriceSum = Math.floor(random.nextDouble(100000));
                         double taxSum = Math.floor(random.nextDouble(10000));
                         double totalAmountSum = Math.floor(random.nextDouble(1000000));
                         double revsInInvoicedSum = Math.floor(random.nextDouble(1000000));
                         MonthlyInvoiceSum monthlyInvoiceSum = MonthlyInvoiceSum.toEntity(year, month, transactionType, paymentType, revsCategory,
-                                cnt, itemPriceSum, taxSum, totalAmountSum, revsInInvoicedSum);
+                                cnt, productPriceSum, taxSum, totalAmountSum, revsInInvoicedSum);
                         reconcileMapper.insertGDCBMonthlyInvoice(monthlyInvoiceSum);
                     }
                 }
@@ -288,12 +288,12 @@ public class GDCBInvoiceDetailService {
 
             for (int l = 0; l < revsCategoryArray.length; l++) {
                 String revsCategory = revsCategoryArray[l];
-                double itemPriceSum = Math.floor(random.nextDouble(100000));
+                double productPriceSum = Math.floor(random.nextDouble(100000));
                 double taxSum = Math.floor(random.nextDouble(10000));
                 double totalAmountSum = Math.floor(random.nextDouble(1000000));
                 double revShareSum = Math.floor(random.nextDouble(10000));
 
-                GoogleMonthlyInvoiceSum googleInvoiceSum = GoogleMonthlyInvoiceSum.toEntity(year, month, revsCategory, itemPriceSum, taxSum, totalAmountSum, revShareSum);
+                GoogleMonthlyInvoiceSum googleInvoiceSum = GoogleMonthlyInvoiceSum.toEntity(year, month, revsCategory, productPriceSum, taxSum, totalAmountSum, revShareSum);
                 reconcileMapper.insertGoogleMonthlyInvoice(googleInvoiceSum);
             }
         }

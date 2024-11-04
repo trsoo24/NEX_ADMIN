@@ -91,12 +91,12 @@ public class SellerStatDailyService {
             }
         }
 
-        for (SellerDayStatDto itemDayStat : sellerDayStatDtoList) {
+        for (SellerDayStatDto productDayStat : sellerDayStatDtoList) {
             Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(itemDayStat.getSellerName());
-            row.createCell(1).setCellValue(itemDayStat.getTotal());
-            row.createCell(2).setCellValue(itemDayStat.getPercent());
-            Map<Integer, Double> dtoMap = itemDayStat.getDailySales();
+            row.createCell(0).setCellValue(productDayStat.getSellerName());
+            row.createCell(1).setCellValue(productDayStat.getTotal());
+            row.createCell(2).setCellValue(productDayStat.getPercent());
+            Map<Integer, Double> dtoMap = productDayStat.getDailySales();
             for (int i = 1; i <= 31; i++) {
                 if (map.containsKey(i)) {
                     row.createCell(i + 2).setCellValue(dtoMap.get(i));
