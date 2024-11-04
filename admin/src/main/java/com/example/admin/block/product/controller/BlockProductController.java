@@ -30,9 +30,9 @@ public class BlockProductController {
                                                   @RequestParam("product") @Valid String product,
                                                   @RequestParam("page") @Valid int page,
                                                   @RequestParam("pageSize") @Valid int pageSize) {
-        Page<BlockProduct> itemPage = blockProductService.getBlockProductList(dcb, product, page, pageSize);
+        Page<BlockProduct> productPage = blockProductService.getBlockProductList(dcb, product, page, pageSize);
 
-        return new PageResult<>(true, itemPage);
+        return new PageResult<>(true, productPage);
     }
 
     @DeleteMapping
