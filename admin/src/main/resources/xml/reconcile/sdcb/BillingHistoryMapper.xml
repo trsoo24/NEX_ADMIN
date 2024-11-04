@@ -20,7 +20,7 @@
             AND CASE_CODE = #{caseCode}
         </if>
         <if test="ctn != null and ctn != ''">
-            AND CTN LIKE CONCAT('%', #{ctn}, '%')
+            AND CTN = #{ctn}
         </if>
     </select>
 </mapper>
