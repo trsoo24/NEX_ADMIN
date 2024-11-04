@@ -13,7 +13,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/limit/gdcb")
+@RequestMapping("/limit")
 @RequiredArgsConstructor
 public class TypeLimitController {
     private final TypeLimitService typeLimitService;

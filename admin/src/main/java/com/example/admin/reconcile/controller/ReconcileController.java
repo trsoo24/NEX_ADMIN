@@ -33,7 +33,7 @@ public class ReconcileController {
         return new StatusResult(true);
     }
 
-    @GetMapping("/gdcb")
+    @GetMapping
     public PageResult<Reconcile> getGDCBReconcilePage(@RequestParam("dcb") @Valid String dcb,
                                                   @RequestParam("month") @Valid String month,
                                                   @RequestParam("fileType") @Valid String fileType,
@@ -44,7 +44,7 @@ public class ReconcileController {
         return new PageResult<>(true, reconcilPage);
     }
 
-    @GetMapping("/excel/gdcb")
+    @GetMapping("/excel")
     public void getGDCBReconcileExcel(@RequestParam("dcb") @Valid String dcb,
                                   @RequestParam("month") @Valid String month,
                                   @RequestParam("fileType") @Valid String fileType,
@@ -52,7 +52,7 @@ public class ReconcileController {
         gdcbReconcileService.exportGDCBExcel(dcb, month, fileType, response);
     }
 
-    @GetMapping("/gdcb/download")
+    @GetMapping("/download")
     public void getGDCBReconcileFile(@RequestParam("dcb") @Valid String dcb,
                                      @RequestParam("month") @Valid String month,
                                      @RequestParam("fileType") @Valid String fileType,
@@ -60,16 +60,11 @@ public class ReconcileController {
         gdcbReconcileService.getGDCBReconcileFile(dcb, month, fileType, fileName, response);
     }
 
-    @GetMapping("/adjustment/gdcb")
+    @GetMapping("/adjustment")
     public MapResult<String, List<GDCBDetailCompare>> getGDCBInvoiceDetailList(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) {
         Map<String, List<GDCBDetailCompare>> invoiceDetailMap = gdcbInvoiceDetailService.getGDCBInvoiceDetailMap(dcb, month);
 
         return new MapResult<>(true, invoiceDetailMap);
-    }
-
-    @GetMapping("/adjustment/gdcb/excel")
-    public void getGDCBInvoiceDetailExcel(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month, HttpServletResponse response) throws IOException {
-        gdcbInvoiceDetailService.exportInvoiceDetailExcel(dcb, month, response);
     }
 
     @PostMapping("/gdcb/add")
