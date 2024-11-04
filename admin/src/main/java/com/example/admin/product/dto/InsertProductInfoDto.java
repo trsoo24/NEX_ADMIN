@@ -1,19 +1,13 @@
-package com.example.admin.item.dto;
+package com.example.admin.product.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Product {
+public class InsertProductInfoDto {
     private String productName; // 상품명
     private String stdDt; // 마지막 구매 일자
     private Double price;
@@ -28,15 +22,11 @@ public class Product {
     private String blockId;
     private String dcb;
 
-    public void updateUpdInfo(String updId) {
-        this.updDt = today();
-        this.updId = updId;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
-    private String today() {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG);
-
-        return now.format(formatter);
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }

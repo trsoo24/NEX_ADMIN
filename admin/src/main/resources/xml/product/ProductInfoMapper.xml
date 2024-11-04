@@ -2,8 +2,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.admin.item.mapper.ProductInfoMapper">
-    <insert id="insertProductInfo" parameterType="com.example.admin.item.dto.Product">
+<mapper namespace="com.example.admin.product.mapper.ProductInfoMapper">
+    <insert id="insertProductInfo" parameterType="com.example.admin.product.dto.Product">
         INSERT INTO TB_PRODUCT(PRODUCT_NAME, STD_DT, PRICE, SELLER_COMPANY, SELLER_NAME, BLOCK_YN, REG_DT, REG_ID, UPD_DT, UPD_ID, BLOCK_DT, BLOCK_ID, DCB)
         VALUES (#{productName}, #{stdDt}, #{price}, #{sellerCompany}, #{sellerName}, #{blockYn}, STR_TO_DATE(#{regDt}, '%Y-%m-%d'), #{regId}, STR_TO_DATE(#{updDt}, '%Y-%m-%d'), #{updId}, STR_TO_DATE(#{blockDt}, '%Y-%m-%d'), #{blockId}, #{dcb})
     </insert>
@@ -14,7 +14,7 @@
         WHERE PRODUCT_NAME = #{productName}
     </select>
 
-    <select id="getAllProductInfo" parameterType="map" resultType="com.example.admin.item.dto.ProductInfo">
+    <select id="getAllProductInfo" parameterType="map" resultType="com.example.admin.product.dto.ProductInfo">
         SELECT PRODUCT_NAME, SELLER_COMPANY, STD_DT
         FROM TB_PRODUCT
         WHERE

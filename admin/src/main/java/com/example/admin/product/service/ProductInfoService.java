@@ -1,9 +1,9 @@
-package com.example.admin.item.service;
+package com.example.admin.product.service;
 
-import com.example.admin.item.dto.InsertProductInfoDto;
-import com.example.admin.item.dto.ProductInfo;
-import com.example.admin.item.dto.field.ProductInfoField;
-import com.example.admin.item.mapper.ProductInfoMapper;
+import com.example.admin.product.dto.InsertProductInfoDto;
+import com.example.admin.product.dto.ProductInfo;
+import com.example.admin.product.dto.field.ProductInfoField;
+import com.example.admin.product.mapper.ProductInfoMapper;
 import com.example.admin.common.service.FunctionUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.example.admin.item.dto.field;
+package com.example.admin.product.dto.field;
 
 import lombok.Getter;
 

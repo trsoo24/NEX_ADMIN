@@ -1,7 +1,7 @@
-package com.example.admin.item.mapper;
+package com.example.admin.product.mapper;
 
-import com.example.admin.item.dto.InsertProductInfoDto;
-import com.example.admin.item.dto.ProductInfo;
+import com.example.admin.product.dto.InsertProductInfoDto;
+import com.example.admin.product.dto.ProductInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.admin.item.dto;
+package com.example.admin.product.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InsertItemMonthStat {
+public class InsertProductMonthStat {
     private String year;
-    private String merchantName;
-    private String itemName;
+    private String sellerName;
+    private String productName;
 }

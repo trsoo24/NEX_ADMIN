@@ -1,13 +1,13 @@
-package com.example.admin.item.controller;
+package com.example.admin.product.controller;
 
 import com.example.admin.common.response.PageResult;
 import com.example.admin.common.response.StatusResult;
-import com.example.admin.item.dto.ItemStatsDaily;
-import com.example.admin.item.dto.ItemStatsMonthly;
-import com.example.admin.item.dto.*;
-import com.example.admin.item.service.ItemStatsDailyService;
-import com.example.admin.item.service.ItemStatsMonthlyService;
-import com.example.admin.item.service.ProductInfoService;
+import com.example.admin.product.dto.ProductStatsDaily;
+import com.example.admin.product.dto.ProductStatsMonthly;
+import com.example.admin.product.dto.*;
+import com.example.admin.product.service.ProductStatsDailyService;
+import com.example.admin.product.service.ProductStatsMonthlyService;
+import com.example.admin.product.service.ProductInfoService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +21,10 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/products")
-public class ItemController {
+public class ProductController {
     private final ProductInfoService productInfoService;
-    private final ItemStatsDailyService itemStatsDailyService;
-    private final ItemStatsMonthlyService itemStatsMonthlyService;
+    private final ProductStatsDailyService productStatsDailyService;
+    private final ProductStatsMonthlyService productStatsMonthlyService;
 
 
     @PostMapping()
@@ -51,64 +51,64 @@ public class ItemController {
     }
 
     @GetMapping("/day/2")
-    public List<ItemStatsDaily> getItemStatsDailyList(@RequestParam("dcb") @Valid String dcb,
-                                                            @RequestParam("month") @Valid String month,
-                                                            @RequestParam("productName") @Valid String productName) {
-        return itemStatsDailyService.getItemStatsDailyList(dcb, month, productName);
+    public List<ProductStatsDaily> getProductStatsDailyList(@RequestParam("dcb") @Valid String dcb,
+                                                         @RequestParam("month") @Valid String month,
+                                                         @RequestParam("productName") @Valid String productName) {
+        return productStatsDailyService.getProductStatsDailyList(dcb, month, productName);
     }
 
     @GetMapping("/day")
-    public PageResult<ItemStatsDailyDto> getItemStatsDailyPage(@RequestParam("dcb") @Valid String dcb,
-                                                               @RequestParam("month") @Valid String month,
-                                                               @RequestParam("productName") @Valid String productName,
-                                                               @RequestParam("page") @Valid int page,
-                                                               @RequestParam("pageSize") @Valid int pageSize) {
-        Page<ItemStatsDailyDto> itemStatsDailyDtoPage = itemStatsDailyService.getItemStatsDailyPage(dcb, month, productName, page, pageSize);
+    public PageResult<ProductStatsDailyDto> getProductStatsDailyPage(@RequestParam("dcb") @Valid String dcb,
+                                                                  @RequestParam("month") @Valid String month,
+                                                                  @RequestParam("productName") @Valid String productName,
+                                                                  @RequestParam("page") @Valid int page,
+                                                                  @RequestParam("pageSize") @Valid int pageSize) {
+        Page<ProductStatsDailyDto> itemStatsDailyDtoPage = productStatsDailyService.getProductStatsDailyPage(dcb, month, productName, page, pageSize);
 
         return new PageResult<>(true, itemStatsDailyDtoPage);
     }
 
     @GetMapping("/day/excel")
-    public void getItemStatsDailyExcel(@RequestParam("dcb") @Valid String dcb,
+    public void getProductStatsDailyExcel(@RequestParam("dcb") @Valid String dcb,
                                        @RequestParam("month") @Valid String month,
                                        @RequestParam("productName") @Valid String productName,
                                        HttpServletResponse response) throws IOException {
-        itemStatsDailyService.exportItemStatDailyExcel(dcb, month, productName, response);
+        productStatsDailyService.exportProductStatDailyExcel(dcb, month, productName, response);
     }
 
     @GetMapping("/month")
-    public PageResult<ItemStatsMonthlyDto> getItemStatsMonthlyPage(@RequestParam("dcb") @Valid String dcb,
+    public PageResult<ProductStatsMonthlyDto> getProductStatsMonthlyPage(@RequestParam("dcb") @Valid String dcb,
                                                                    @RequestParam("year") @Valid String year,
                                                                    @RequestParam("productName") @Valid String productName,
                                                                    @RequestParam("page") @Valid int page,
                                                                    @RequestParam("pageSize") @Valid int pageSize) {
-        Page<ItemStatsMonthlyDto> itemStatsMonthlyDtoPage = itemStatsMonthlyService.getItemStatsMonthlyPage(dcb, year, productName, page, pageSize);
+        Page<ProductStatsMonthlyDto> itemStatsMonthlyDtoPage = productStatsMonthlyService.getProductStatsMonthlyPage(dcb, year, productName, page, pageSize);
 
         return new PageResult<>(true, itemStatsMonthlyDtoPage);
     }
 
     @GetMapping("/month/2")
-    public List<ItemStatsMonthly> getItemStatsMonthlyList(@RequestParam("dcb") @Valid String dcb,
-                                                          @RequestParam("year") @Valid String year,
-                                                          @RequestParam("productName") @Valid String productName) {
-        return itemStatsMonthlyService.getItemStatsMonthlyList(dcb, year, productName);
+    public List<ProductStatsMonthly> getProductStatsMonthlyList(@RequestParam("dcb") @Valid String dcb,
+                                                             @RequestParam("year") @Valid String year,
+                                                             @RequestParam("productName") @Valid String productName) {
+        return productStatsMonthlyService.getProductStatsMonthlyList(dcb, year, productName);
     }
 
     @GetMapping("/month/excel")
-    public void getItemStatsMonthlyExcel(@RequestParam("dcb") @Valid String dcb,
+    public void getProductStatsMonthlyExcel(@RequestParam("dcb") @Valid String dcb,
                                          @RequestParam("year") @Valid String year,
                                          @RequestParam("productName") @Valid String productName,
                                          HttpServletResponse response) throws IOException {
-        itemStatsMonthlyService.exportItemStatsMonthlyExcel(dcb, year, productName, response);
+        productStatsMonthlyService.exportProductStatsMonthlyExcel(dcb, year, productName, response);
     }
 
     @PostMapping("/month/add")
-    public void addItemStatMonthTest(@RequestBody @Valid InsertItemMonthStat itemMonthStat) {
-        itemStatsMonthlyService.insertStatMonthly(itemMonthStat);
+    public void addProductStatMonthTest(@RequestBody @Valid InsertProductMonthStat itemMonthStat) {
+        productStatsMonthlyService.insertStatMonthly(itemMonthStat);
     }
 
     @PostMapping("/day/add")
-    public void addItemStatDayTest(@RequestBody @Valid InsertItemDayStat itemDayStat) {
-        itemStatsDailyService.insertStatDaily(itemDayStat);
+    public void addProductStatDayTest(@RequestBody @Valid InsertProductDayStat itemDayStat) {
+        productStatsDailyService.insertStatDaily(itemDayStat);
     }
 }
