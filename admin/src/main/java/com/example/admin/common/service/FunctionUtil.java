@@ -1,19 +1,26 @@
 package com.example.admin.common.service;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
 public class FunctionUtil {
-    private final DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
+    private static final DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
+
+    @Value("${stats.last.month.try.cnt}")
+    private static String monthTryCnt;
 
     public <T> Page<T> toPage(List<T> list, int page, int pageSize) {
         Pageable pageable = PageRequest.of(page - 1, pageSize);
@@ -61,15 +68,37 @@ public class FunctionUtil {
         return ctn;
     }
 
-    public String monthToStartDate(String startDate) {
+    public static String monthToStartDate(String startDate) {
         YearMonth yearMonth = YearMonth.parse(startDate, monthFormatter);
 
         return yearMonth.atDay(1).toString();
     }
 
-    public String monthToEndDate(String endDate) {
+    public static String monthToEndDate(String endDate) {
         YearMonth yearMonth = YearMonth.parse(endDate, monthFormatter);
 
         return yearMonth.atEndOfMonth().toString();
+    }
+
+    public static List<String> getlastMonthTryList(){
+        List<String> lastMonthList = new ArrayList<>();
+
+        try {
+            int cnt = Integer.parseInt(monthTryCnt);
+
+            Calendar cal = Calendar.getInstance();
+            if(cnt > 0) {
+                cal.add(Calendar.MONTH, -1);
+                for(int i=0; i<cnt; i++) {
+                    cal.add(Calendar.MONTH, -1);
+                    String lastMonth = new SimpleDateFormat("yyyyMM").format(cal.getTime());
+                    lastMonthList.add(lastMonth + "," + lastMonth + "01," + lastMonth + cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                }
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return lastMonthList;
     }
 }

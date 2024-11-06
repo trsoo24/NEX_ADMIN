@@ -1,14 +1,16 @@
 package com.example.admin.billing_grade.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.example.admin.billing_grade.dto.type.BillingGradeResultCode;
+import lombok.*;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 @Getter
-@NoArgsConstructor
+@Setter
 @AllArgsConstructor
 @Builder
+@ToString
 public class BillingGrade { // 월별 청구 현황 ( 등급별 ) 조회
     private String custGrdCd; // 고객 등급
     private String statYyMm;
@@ -22,23 +24,24 @@ public class BillingGrade { // 월별 청구 현황 ( 등급별 ) 조회
     private Integer unpaidAceCnt; // 연체
     private Integer unpaidCnt;
     private Integer unpaidAmount;
-    private String dcb;
+    private String dcb = "GDCB";
 
-    public static BillingGrade toBillingGrade(String custGrdCd, String statYyMm, String regDt, int allAceCnt, int allCnt, int allAmount,
-                                              int paidAceCnt, int paidCnt, int paidAmount, int unpaidAceCnt, int unpaidCnt, int unpaidAmount, String dcb) {
-        return BillingGrade.builder()
-                .custGrdCd(custGrdCd)
-                .statYyMm(statYyMm)
-                .regDt(regDt)
-                .allAceCnt(allAceCnt)
-                .allCnt(allCnt)
-                .allAmount(allAmount)
-                .paidAceCnt(paidAceCnt)
-                .paidCnt(paidCnt)
-                .paidAmount(paidAmount)
-                .unpaidAceCnt(unpaidAceCnt)
-                .unpaidCnt(unpaidCnt)
-                .unpaidAmount(unpaidAmount)
-                .dcb(dcb).build();
+    private String resultCode;
+    private String api_type1 = "charge";
+    private String api_type2 = "reversal";
+    private String api_type3 = "refund";
+    private String paid = "N";
+    private String unpaid = "Y";
+    private String firstDay;
+    private String lastDay;
+
+
+    public BillingGrade() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        setStatYyMm(new SimpleDateFormat("yyyyMM").format(cal.getTime()));
+        setResultCode(BillingGradeResultCode.SUCCESS.getValue());
+        setFirstDay(getStatYyMm()+"01000000");
+        setLastDay(getStatYyMm()+cal.getActualMaximum(Calendar.DAY_OF_MONTH)+"235959");
     }
 }
