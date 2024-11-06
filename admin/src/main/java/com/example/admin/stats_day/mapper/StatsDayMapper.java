@@ -8,5 +8,5 @@ import java.util.Map;
 
 @Mapper
 public interface StatsDayMapper {
-    List<StatsDay> getDayPaymentList(Map<String, Object> map);
+    List<StatsDay> getStatsDayList(Map<String, Object> map);
 }
