@@ -1,0 +1,43 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.admin.stats_day.mapper.StatsDayMapper">
+    <select id="getDayPaymentList" parameterType="map" resultMap="com.example.admin.stats_day.dto.StatsDay">
+        SELECT
+            CONCAT(YEAR, '-', LPAD(MONTH, 2, '0'), '-', LPAD(DAY, 2, '0')) AS stat_day,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN CHARGE_AMOUNT ELSE 0 END) AS b_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN CANCEL_AMOUNT ELSE 0 END) AS d_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN REFUND_AMOUNT ELSE 0 END) AS f_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN 1 ELSE NULL END) AS i_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN 1 ELSE NULL END) AS k_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN 1 ELSE NULL END) AS m_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN CHARGE_AMOUNT ELSE NULL END) AS p_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN CANCEL_AMOUNT ELSE NULL END) AS r_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN REFUND_AMOUNT ELSE NULL END) AS t_stat
+        FROM TB_AUTH_STATS_DAILY
+        WHERE YEAR = #{year} AND MONTH = #{month} AND DAY = #{day}
+        GROUP BY YEAR, MONTH, DAY
+    </select>
+
+    <resultMap id="dayPaymentResultMap" type="com.example.admin.stats_day.dto.StatsDay">
+        <result column="STAT_DAY" property="stat_day"/>
+        <result column="A_STAT" property="a_stat"/>
+        <result column="B_STAT" property="b_stat"/>
+        <result column="C_STAT" property="c_stat"/>
+        <result column="D_STAT" property="d_stat"/>
+        <result column="E_STAT" property="e_stat"/>
+        <result column="F_STAT" property="f_stat"/>
+        <result column="G_STAT" property="g_stat"/>
+        <result column="H_STAT" property="h_stat"/>
+        <result column="I_STAT" property="i_stat"/>
+        <result column="J_STAT" property="j_stat"/>
+        <result column="K_STAT" property="k_stat"/>
+        <result column="L_STAT" property="l_stat"/>
+        <result column="M_STAT" property="m_stat"/>
+        <result column="N_STAT" property="n_stat"/>
+        <result column="P_STAT" property="p_stat"/>
+        <result column="R_STAT" property="r_stat"/>
+        <result column="T_STAT" property="t_stat"/>
+    </resultMap>
+</mapper>

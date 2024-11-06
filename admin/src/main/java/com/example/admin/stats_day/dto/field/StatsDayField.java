@@ -1,9 +1,9 @@
-package com.example.admin.payment_day.dto.field;
+package com.example.admin.stats_day.dto.field;
 
 import lombok.Getter;
 
 @Getter
-public enum DayPaymentField {
+public enum StatsDayField {
     statDay( "일별"),
     totalAmount("결제 금액 합"),
     buyAmount("구매 금액"),
@@ -25,7 +25,7 @@ public enum DayPaymentField {
 
     private final String description;
 
-    DayPaymentField(String description) {
+    StatsDayField(String description) {
         this.description = description;
     }
 }
