@@ -5,7 +5,7 @@
 <mapper namespace="com.example.admin.stats_month.mapper.StatsMonthMapper">
     <select id="getStatsMonthList" parameterType="map" resultMap="com.example.admin.stats_month.dto.StatsMonth">
         SELECT
-            CONCAT(YEAR, '-', LPAD(MONTH, 2, '0'), '-') AS stat_month,
+            CONCAT(YEAR, '-', LPAD(MONTH, 2, '0')) AS stat_month,
             SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN CHARGE_AMOUNT ELSE 0 END) AS b_stat,
             SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN CANCEL_AMOUNT ELSE 0 END) AS d_stat,
             SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN REFUND_AMOUNT ELSE 0 END) AS f_stat,
