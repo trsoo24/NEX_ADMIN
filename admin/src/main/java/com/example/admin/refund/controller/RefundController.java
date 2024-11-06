@@ -39,12 +39,10 @@ public class RefundController {
     }
 
     @GetMapping("/purchase-history")
-    public PageResult<RefundDto> getGdcbRefundHistory(@RequestParam("correlationId") @Valid String correlationId,
-                                                      @RequestParam("page") int page,
-                                                      @RequestParam("pageSize") int pageSize) throws Exception {
-        Page<RefundDto> refundDtoPage = gdcbRefundService.getRefundDtoList(correlationId, page, pageSize);
+    public ListResult<RefundDto> getGdcbRefundHistory(@RequestParam("correlationId") @Valid String correlationId) throws Exception {
+        List<RefundDto> refundDtoPage = gdcbRefundService.getRefundDtoList(correlationId);
 
-        return new PageResult<>(true, refundDtoPage);
+        return new ListResult<>(true, refundDtoPage);
     }
 
     @PostMapping("/process") // GDCB 환불 프로세스 실행

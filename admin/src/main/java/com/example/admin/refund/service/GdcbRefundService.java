@@ -1,6 +1,5 @@
 package com.example.admin.refund.service;
 
-import com.example.admin.common.service.FunctionUtil;
 import com.example.admin.common.service.gdcb.util.GdcbSshClient;
 import com.example.admin.common.service.gdcb.util.GoogleFtpclient;
 import com.example.admin.common.service.gdcb.util.LogUtil;
@@ -13,7 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,7 +25,6 @@ public class GdcbRefundService {
     private final GoogleFtpclient googleClient;
     private final BillingProcessService billingProcessService;
     private final LogUtil logUtil;
-    private final FunctionUtil functionUtil;
     @Value("${LGUDCB.BILLING.TLO}")
     private String billingTlo;
     @Value("${Billing.Work.Path}")
@@ -37,7 +34,7 @@ public class GdcbRefundService {
     @Value("${FTP.Google.Upload.Path}")
     private String googleUploadPath;
 
-    public Page<RefundDto> getRefundDtoList(String correlationId, int page, int pageSize) throws Exception {
+    public List<RefundDto> getRefundDtoList(String correlationId) throws Exception {
         List<RefundJob> refundJobList = findCorrelationID(correlationId);
         List<RefundDto> responseList = new ArrayList<>();
 
@@ -48,7 +45,7 @@ public class GdcbRefundService {
             responseList.add(refundDto);
         }
 
-        return functionUtil.toPage(responseList, page, pageSize);
+        return responseList;
     }
 
     public boolean refundProcess(HttpServletRequest request, RefundProcessDto refundProcessDto) {
