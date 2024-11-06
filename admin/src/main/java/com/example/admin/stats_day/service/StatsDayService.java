@@ -17,7 +17,7 @@ public class StatsDayService {
 
     // 통합 ADMIN 일별 결제 현황 데이터 수집
     public List<StatsDay> getStatsDayList() {
-        log.info("getDayPaymentList");
+        log.info("getStatsDayList");
 
         List<StatsDay> statsDayList = new ArrayList<>();
 
@@ -34,7 +34,7 @@ public class StatsDayService {
             requestMap.put("month", month);
             requestMap.put("day", day);
 
-            statsDayList = statsDayMapper.getDayPaymentList(requestMap);
+            statsDayList = statsDayMapper.getStatsDayList(requestMap);
 
             if (!statsDayList.isEmpty()) {
                 // 내부 비율 계산

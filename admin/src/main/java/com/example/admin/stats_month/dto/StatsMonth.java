@@ -1,4 +1,4 @@
-package com.example.admin.stats_day.dto;
+package com.example.admin.stats_month.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StatsDay {
-    private String stat_day; // '2024-07-04' 방식 저장
+public class StatsMonth {
+    private String stat_month; // '2024-07' 방식 저장
     private Double a_stat; // 총 금액
     private Double b_stat; // 구매 금액
     private String c_stat; // 구매 금액 비율
