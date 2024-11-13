@@ -38,4 +38,5 @@ out/
 
 
 ### DB ###
-admin/mariadb/**
+mariadb/**
+src/main/resources/static/**
