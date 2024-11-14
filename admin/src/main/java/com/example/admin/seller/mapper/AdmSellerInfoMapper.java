@@ -9,11 +9,6 @@ import java.util.Map;
 
 @Mapper
 public interface AdmSellerInfoMapper {
-    void insertAdmSeller(InsertSellerInfo insertSellerInfo);
-    boolean existSeller(String sellerName);
-    AdmSeller selectSeller(String sellerName);
-    List<AdmSeller> selectAllSeller(Map<String, String> map);
     List<AdmSeller> searchSellers(Map<String, String> map);
-    void blockSeller(Map<String, String> map);
-    int countSeller();
+    void blockSeller(Map<String, Object> map);
 }
