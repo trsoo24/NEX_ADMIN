@@ -8,7 +8,7 @@
     <update id="updatePolicyInfo" parameterType="com.example.admin.policy.dto.UpdatePolicyInfoDto">
         UPDATE TB_POLICY_INFO
         SET
-        POLICY_RESPONSE_DT = NULL,
+        POLICY_RS_DT = NULL,
         RESERVATION_YN = 'N',
         UPDATE_DT = NOW(),
         FLAG = #{flag}
@@ -25,7 +25,7 @@
             POLICY_CODE,
             FLAG,
             RESERVATION_YN,
-            POLICY_RESPONSE_DT,
+            POLICY_RS_DT,
             CREATE_DT,
             UPDATE_DT
         FROM TB_POLICY_INFO
