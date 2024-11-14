@@ -4,6 +4,7 @@ import com.example.admin.block.product.dto.DeleteBlockProductDto;
 import com.example.admin.block.product.dto.InsertBlockProductDto;
 import com.example.admin.block.product.dto.BlockProductDto;
 import com.example.admin.block.product.service.BlockProductService;
+import com.example.admin.common.response.StatusResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,10 @@ public class BlockProductController {
     private final BlockProductService blockProductService;
 
     @PostMapping
-    public void insertBlockProduct(@RequestBody @Valid InsertBlockProductDto dto) {
+    public StatusResult insertBlockProduct(@RequestBody @Valid InsertBlockProductDto dto) {
         blockProductService.insertBlockProduct(dto);
+
+        return new StatusResult(true);
     }
 
     @GetMapping
@@ -28,7 +31,9 @@ public class BlockProductController {
     }
 
     @DeleteMapping
-    public void deleteBlockProduct(@RequestBody @Valid DeleteBlockProductDto dto) {
+    public StatusResult deleteBlockProduct(@RequestBody @Valid DeleteBlockProductDto dto) {
         blockProductService.deleteBlockProduct(dto);
+
+        return new StatusResult(true);
     }
 }
