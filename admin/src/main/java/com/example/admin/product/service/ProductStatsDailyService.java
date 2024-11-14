@@ -15,8 +15,8 @@ public class ProductStatsDailyService {
 
     public List<ProductStatsDaily> getProductStatsDailyList() {
         Map<String, Object> requestMap = new HashMap<>();
-        String year = FunctionUtil.yearOfPreviousMonth();
-        String month = FunctionUtil.previousMonth();
+        String year = FunctionUtil.yearOfYesterday();
+        String month = FunctionUtil.monthOfYesterday();
         String day = FunctionUtil.yesterday();
 
         requestMap.put("year", year);
