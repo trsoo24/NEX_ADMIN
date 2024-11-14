@@ -13,9 +13,7 @@ public interface BlockCtnMapper {
 
     boolean existsCtn(String ctn);
 
-    List<BlockCtnDto> getAllBlockCtn(Map<String, Object> map);
+    List<BlockCtnDto> getAllBlockCtn();
 
-    int countBlockCtn();
-
-    void deleteBlockCtn(Map<String, String> map);
+    void deleteBlockCtn(List<String> ctns);
 }
