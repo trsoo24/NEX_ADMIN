@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BlockSellerDto {
-    private String dcb;
+    private String updId;
+    private String blockId;
     private List<String> sellerNames;
 }
