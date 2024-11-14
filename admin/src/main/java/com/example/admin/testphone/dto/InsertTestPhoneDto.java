@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 public class InsertTestPhoneDto {
     private String dcb;
     private String ctn;
-    private String name;
-    private String email;
+    private String regId; // 등록 유저 ID
 }
