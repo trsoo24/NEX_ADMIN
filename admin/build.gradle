@@ -104,9 +104,7 @@ dependencies {
 ////	implementation 'com.okta.spring:okta-spring-boot-starter:3.0.6'
 ////	implementation "com.okta.sdk:okta-sdk-api:16.0.0"
 ////	runtimeOnly "com.okta.sdk:okta-sdk-impl:16.0.0"
-//	// Page 처리
-//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//
+
 //	//GDCB SSH Tool
 //	implementation group: 'com.sshtools', name: 'sshapi-j2ssh', version: '1.1.0'
 //
