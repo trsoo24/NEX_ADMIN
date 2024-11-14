@@ -4,11 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.mms_history.mapper.MmsSendMapper">
-    <insert id="insertMmsHistory" parameterType="com.example.admin.mms_history.dto.MmsSendHistory">
-        INSERT INTO TB_MMS_SEND_HIS(CREATE_DT, SEQ, PARTITION_ID, TRY_CNT, SEND_DT, SEND_RESULT, TO_CTN, REQUEST_ID, CONTENT)
-        VALUES (#{createDt}, #{seq}, #{partitionId}, #{tryCnt}, #{sendDt}, #{sendResult}, #{toCtn},#{requestId}, #{content})
-    </insert>
-
     <select id="selectMmsHistoryList" parameterType="map" resultType="com.example.admin.mms_history.dto.MmsHistoryDto">
         SELECT
             CREATE_DT createDt,
