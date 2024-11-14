@@ -32,48 +32,9 @@ public class VocController {
         return new MapResult<>(true, responseMap);
     }
 
-
-    @PostMapping("/sms")
-    public void insertSmsInfo(@RequestBody @Valid SmsInfo smsInfo) {
-        vocService.insertSmsInfo(smsInfo);
-    }
-
     @PostMapping("/provisioning")
     public StatusResult insertProvisioningInfo(@RequestBody @Valid ProvisioningInfo provisioningInfo) {
         vocService.insertProvisioningInfo(provisioningInfo);
-
-        return new StatusResult(true);
-    }
-
-    @PostMapping("/voc")
-    public StatusResult insertVocHistory(@RequestBody @Valid InsertVocDivision insertVocDivision) {
-        vocService.insertVocDivision(insertVocDivision);
-
-        return new StatusResult(true);
-    }
-
-    @PutMapping("/voc")
-    public StatusResult updateVoccHistory(@RequestBody @Valid UpdateVocHistoryDto updateVocHistoryDto) {
-        vocService.updateVocDivision(updateVocHistoryDto);
-
-        return new StatusResult(true);
-    }
-
-    @GetMapping("/voc")
-    public PageResult<VocDivision> getVocHistoryPage(@RequestParam("dcb") @Valid String dcb,
-                                                     @RequestParam("writer") @Valid String writer,
-                                                     @RequestParam("startDate") @Valid String startDate,
-                                                     @RequestParam("endDate") @Valid String endDate,
-                                                     @RequestParam("page") @Valid int page,
-                                                     @RequestParam("pageSize") @Valid int pageSize) {
-        Page<VocDivision> vocDivisionPage = vocService.getVocDivisionList(dcb, writer, startDate, endDate, page, pageSize);
-
-        return new PageResult<>(true, vocDivisionPage);
-    }
-
-    @DeleteMapping("/voc")
-    public StatusResult deleteVocHistory(@RequestParam("ids") @Valid List<Integer> ids) {
-        vocService.deleteVocHistory(ids);
 
         return new StatusResult(true);
     }
