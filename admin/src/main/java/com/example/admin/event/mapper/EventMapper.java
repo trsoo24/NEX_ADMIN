@@ -13,5 +13,5 @@ public interface EventMapper {
     void insertEvent(InsertEventDto dto);
     List<Event> getEventList(Map<String, String> map);
     void updateEvent(UpdateEventDto dto);
-    void deleteEvent(List<String> eventName);
+    void deleteEvent(List<String> eventNames);
 }

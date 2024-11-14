@@ -23,8 +23,8 @@
     <delete id="deleteBlockCtn" parameterType="java.util.List">
         DELETE FROM TB_BLOCK_CTN
         WHERE CTN IN
-        <foreach item="ctns" collection="list" open="(" separator="," close=")">
-            #{ctns}
+        <foreach item="ctn" collection="ctns" open="(" separator="," close=")">
+            #{ctn}
         </foreach>
     </delete>
 </mapper>

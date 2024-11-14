@@ -21,7 +21,7 @@
     <delete id="deleteEvent" parameterType="java.util.List">
         DELETE FROM TB_EVENT_INFO
         WHERE EVT_NAME IN
-        <foreach item="eventName" collection="list" open="(" separator="," close=")">
+        <foreach item="eventName" collection="eventNames" open="(" separator="," close=")">
             #{eventName}
         </foreach>
     </delete>

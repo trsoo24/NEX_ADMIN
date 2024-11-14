@@ -11,5 +11,5 @@ import java.util.Map;
 public interface BlockProductMapper {
     void insertBlockProduct(InsertBlockProductDto insertBlockProductDto);
     List<BlockProductDto> getBlockProductList(Map<String, Object> map);
-    void deleteBlockProduct(List<Long> productNo);
+    void deleteBlockProduct(List<Long> productNos);
 }

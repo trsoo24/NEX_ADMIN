@@ -23,7 +23,7 @@
     <delete id="deleteBlockFeeType" parameterType="java.util.List">
         DELETE FROM TB_BLOCK_FEE_TYPE
         WHERE FEE_TYPE_CD IN
-        <foreach item="feeTypeCd" collection="list" open="(" separator="," close=")">
+        <foreach item="feeTypeCd" collection="feeTypeCds" open="(" separator="," close=")">
             #{feeTypeCd}
         </foreach>
     </delete>

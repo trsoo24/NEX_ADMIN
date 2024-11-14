@@ -20,7 +20,7 @@
     <delete id="deleteBlockProduct" parameterType="java.util.List">
         DELETE FROM TB_BLOCK_PRODUCT
         WHERE PRODUCT_NO IN
-        <foreach item="productNo" collection="list" open="(" separator="," close=")">
+        <foreach item="productNo" collection="productNos" open="(" separator="," close=")">
             #{productNo}
         </foreach>
     </delete>
