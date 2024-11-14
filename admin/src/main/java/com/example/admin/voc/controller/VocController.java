@@ -1,20 +1,13 @@
 package com.example.admin.voc.controller;
 
 import com.example.admin.common.response.MapResult;
-import com.example.admin.common.response.PageResult;
 import com.example.admin.common.response.StatusResult;
-import com.example.admin.voc.dto.InsertVocDivision;
-import com.example.admin.voc.dto.UpdateVocHistoryDto;
 import com.example.admin.voc.dto.ProvisioningInfo;
-import com.example.admin.voc.dto.SmsInfo;
-import com.example.admin.voc.dto.VocDivision;
 import com.example.admin.voc.service.VocService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "*")
