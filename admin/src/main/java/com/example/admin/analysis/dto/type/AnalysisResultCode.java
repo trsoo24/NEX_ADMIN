@@ -89,4 +89,9 @@ public enum AnalysisResultCode {
 
     private final String code;
     private final String description;
+
+    @Override
+    public String toString() {
+        return code;
+    }
 }

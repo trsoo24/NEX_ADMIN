@@ -1,8 +1,6 @@
 package com.example.admin.analysis.dto;
 
 import com.example.admin.analysis.dto.type.AnalysisResultCode;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +14,6 @@ public class ApiLogs {
     private String banUnpaidYnCode; // 연체 여부
     private String httpStatus; // 응답 상태 코드
     private String custGrdCd;
-    @Enumerated(EnumType.STRING)
     private AnalysisResultCode resultCode; // 서비스 상태 코드
     private String apiResult; // dcb 결과 코드
     private String amount; // 구매 요청 금액
