@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.7'
 	id 'io.spring.dependency-management' version '1.1.5'
+	id 'war'
 }
 
 group = 'com.example'
@@ -24,19 +25,24 @@ repositories {
 	maven { url 'https://repo.spring.io/snapshot' }
 }
 
+// Server
 dependencies {
+	implementation('org.springframework.boot:spring-boot-starter-web') {
+		exclude module: 'spring-boot-starter-tomcat'
+	}
+
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 	compileOnly 'org.projectlombok:lombok'
 
-	// 검수 서버 테스트용
+
+	// 검수 서버 테스트
+	runtimeOnly files('libs/Altibase.jar')
 //	runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
 //	implementation 'com.oracle.database.jdbc:ojdbc8:19.8.0.0'
 
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+//	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
@@ -50,13 +56,6 @@ dependencies {
 	implementation 'org.apache.poi:poi:5.2.3'
 	implementation 'org.apache.poi:poi-ooxml:5.2.3'
 
-	// okta
-//	implementation 'com.okta.spring:okta-spring-boot-starter:3.0.6'
-//	implementation "com.okta.sdk:okta-sdk-api:16.0.0"
-//	runtimeOnly "com.okta.sdk:okta-sdk-impl:16.0.0"
-	// Page 처리
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
 	//GDCB SSH Tool
 	implementation group: 'com.sshtools', name: 'sshapi-j2ssh', version: '1.1.0'
 
@@ -69,11 +68,62 @@ dependencies {
 	// 이메일 전송
 	implementation 'com.sun.mail:jakarta.mail:2.0.1'
 
-	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
-	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
-	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
-	implementation 'com.auth0:java-jwt:4.2.1'
+	providedCompile 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+
 }
+
+
+// Local
+//dependencies {
+//	implementation 'org.springframework.boot:spring-boot-starter-validation'
+//	implementation 'org.springframework.boot:spring-boot-starter-web'
+//	implementation 'org.springframework.boot:spring-boot-starter-security'
+//	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+//	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+//	compileOnly 'org.projectlombok:lombok'
+//
+//	// 검수 서버 테스트용
+////	runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
+////	implementation 'com.oracle.database.jdbc:ojdbc8:19.8.0.0'
+//
+//	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+//	annotationProcessor 'org.projectlombok:lombok'
+//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
+//	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+//
+//	// Async
+//	implementation 'org.apache.httpcomponents.client5:httpclient5'
+//	implementation 'com.google.code.gson:gson:2.10.1'
+//
+//	// Excel
+//	implementation 'org.apache.poi:poi:5.2.3'
+//	implementation 'org.apache.poi:poi-ooxml:5.2.3'
+//
+//	// okta
+////	implementation 'com.okta.spring:okta-spring-boot-starter:3.0.6'
+////	implementation "com.okta.sdk:okta-sdk-api:16.0.0"
+////	runtimeOnly "com.okta.sdk:okta-sdk-impl:16.0.0"
+//	// Page 처리
+//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//
+//	//GDCB SSH Tool
+//	implementation group: 'com.sshtools', name: 'sshapi-j2ssh', version: '1.1.0'
+//
+//	//PGP file
+//	implementation group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.48'
+//	implementation group: 'org.bouncycastle', name: 'bcpg-jdk15on', version: '1.48'
+//	// CSV
+//	implementation group: 'com.opencsv', name: 'opencsv', version: '3.7'
+//
+//	// 이메일 전송
+//	implementation 'com.sun.mail:jakarta.mail:2.0.1'
+//
+//	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+//	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+//	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+//	implementation 'com.auth0:java-jwt:4.2.1'
+//}
 
 tasks.named('test') {
 	useJUnitPlatform()
