@@ -1,6 +1,5 @@
 package com.example.admin.sdcb.billing_history.service;
 
-import com.example.admin.common.service.FunctionUtil;
 import com.example.admin.sdcb.billing_history.dto.ErrorBillingHistory;
 import com.example.admin.sdcb.billing_history.dto.BillingHistory;
 import com.example.admin.sdcb.billing_history.mapper.BillingHistoryMapper;
@@ -12,7 +11,6 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -25,20 +23,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SdcbBillingHistoryService {
     private final BillingHistoryMapper billingHistoryMapper;
-    private final FunctionUtil functionUtil;
     private final String[] errorBillingHistoryColumnArray = {"CASE", "요청 ID", "TRANSACTION ID", "결제 유형", "결제 금액", "처리 시간"};
 
     public void insertBillingHistory(BillingHistory billingHistory) {
         billingHistoryMapper.insertBillingHistory(billingHistory);
     }
 
-
-    public Page<ErrorBillingHistory> errorBillingHistoryToPage(String dcb, String startDate, String endDate, String caseCode, String ctn, int page, int pageSize) {
-        List<BillingHistory> billingHistoryList = getBillingHistoryList(dcb, startDate, endDate, caseCode, ctn);
-        List<ErrorBillingHistory> errorBillingHistoryList = toErrorBillingHistoryList(billingHistoryList);
-
-        return functionUtil.toPage(errorBillingHistoryList, page, pageSize);
-    }
 
     private List<ErrorBillingHistory> toErrorBillingHistoryList(List<BillingHistory> billingHistoryList) {
         List<ErrorBillingHistory> errorBillingHistoryList = new ArrayList<>();
@@ -51,18 +41,17 @@ public class SdcbBillingHistoryService {
         return errorBillingHistoryList;
     }
 
-    private List<BillingHistory> getBillingHistoryList(String dcb, String startDate, String endDate, String caseCode, String ctn) {
+    public List<ErrorBillingHistory> getBillingHistoryList(String startDate, String endDate, String caseCode, String ctn) {
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("dcb", dcb);
         requestMap.put("startDate", startDate);
         requestMap.put("endDate", endDate);
         requestMap.put("caseCode", caseCode);
         requestMap.put("ctn", ctn);
 
-        return billingHistoryMapper.selectBillingHistoryList(requestMap);
+        return toErrorBillingHistoryList(billingHistoryMapper.selectBillingHistoryList(requestMap));
     }
 
-    public void exportErrorBillingHistoryExcel(String dcb, String startDate, String endDate, String caseCode, String ctn, HttpServletResponse response) throws IOException {
+    public void exportErrorBillingHistoryExcel(String startDate, String endDate, String caseCode, String ctn, HttpServletResponse response) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("SDCB 대사 오류 이력 조회");
 
@@ -82,10 +71,9 @@ public class SdcbBillingHistoryService {
             cell.setCellStyle(centerAlignStyle);
         }
 
-        List<BillingHistory> billingHistoryList = getBillingHistoryList(dcb, startDate, endDate, caseCode, ctn);
-        List<ErrorBillingHistory> errorBillingHistoryList = toErrorBillingHistoryList(billingHistoryList);
+        List<ErrorBillingHistory> billingHistoryList = getBillingHistoryList(startDate, endDate, caseCode, ctn);
 
-        for (ErrorBillingHistory errorBillingHistory : errorBillingHistoryList) {
+        for (ErrorBillingHistory errorBillingHistory : billingHistoryList) {
             XSSFRow rowIdx = sheet.createRow(rowNum++);
             rowIdx.setRowStyle(centerAlignStyle);
             rowIdx.createCell(0).setCellValue(errorBillingHistory.getCaseCode());

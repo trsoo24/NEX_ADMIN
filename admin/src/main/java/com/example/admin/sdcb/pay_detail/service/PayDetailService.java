@@ -3,13 +3,11 @@ package com.example.admin.sdcb.pay_detail.service;
 import com.example.admin.sdcb.pay_detail.dto.PayDetailDto;
 import com.example.admin.sdcb.pay_detail.dto.type.PayDetailField;
 import com.example.admin.sdcb.pay_detail.mapper.PayDetailMapper;
-import com.example.admin.common.service.FunctionUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -20,16 +18,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PayDetailService {
     private final PayDetailMapper payDetailMapper;
-    private final FunctionUtil functionUtil;
 
-    public Page<PayDetailDto> getPayDetailPage(String dcb, List<String> selectedPaymentTypes,
-                                               String startDate, String endDate,
-                                               String searchType, String keyword,
-                                               int page, int pageSize) {
-        return functionUtil.toPage(getPayDetailList(dcb, selectedPaymentTypes, startDate, endDate, searchType, keyword), page, pageSize);
-    }
-
-    public void exportExcel(String dcb, List<String> selectedPaymentTypes,
+    public void exportExcel(List<String> selectedPaymentTypes,
                             String startDate, String endDate,
                             String searchType, String keyword,
                             HttpServletResponse response) throws IllegalAccessException, IOException {
@@ -46,7 +36,7 @@ public class PayDetailService {
         }
 
         int rowIdx = 2;
-        List<PayDetailDto> payDetailDtoList = getPayDetailList(dcb, selectedPaymentTypes, startDate, endDate, searchType, keyword);
+        List<PayDetailDto> payDetailDtoList = getPayDetailList(selectedPaymentTypes, startDate, endDate, searchType, keyword);
 
         for (int j = 0; j < payDetailDtoList.size(); j++) {
             PayDetailDto dto = payDetailDtoList.get(j);
@@ -73,11 +63,10 @@ public class PayDetailService {
         workbook.close();
     }
 
-    private List<PayDetailDto> getPayDetailList(String dcb, List<String> selectedPaymentTypes,
+    public List<PayDetailDto> getPayDetailList(List<String> selectedPaymentTypes,
                                                String startDate, String endDate,
                                                String searchType, String keyword) {
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("dcb", dcb);
         requestMap.put("startDate", startDate);
         requestMap.put("endDate", endDate);
         requestMap.put("keyword", keyword);

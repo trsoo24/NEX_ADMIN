@@ -1,7 +1,6 @@
 package com.example.admin.refund.controller;
 
 import com.example.admin.common.response.ListResult;
-import com.example.admin.common.response.PageResult;
 import com.example.admin.common.response.StatusResult;
 import com.example.admin.refund.dto.RefundDto;
 import com.example.admin.auth.dto.AuthInfo;
@@ -12,7 +11,6 @@ import com.example.admin.refund.service.GdcbRefundService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,9 +38,9 @@ public class RefundController {
 
     @GetMapping("/purchase-history")
     public ListResult<RefundDto> getGdcbRefundHistory(@RequestParam("correlationId") @Valid String correlationId) throws Exception {
-        List<RefundDto> refundDtoPage = gdcbRefundService.getRefundDtoList(correlationId);
+        List<RefundDto> refundDtoList = gdcbRefundService.getRefundDtoList(correlationId);
 
-        return new ListResult<>(true, refundDtoPage);
+        return new ListResult<>(true, refundDtoList);
     }
 
     @PostMapping("/process") // GDCB 환불 프로세스 실행

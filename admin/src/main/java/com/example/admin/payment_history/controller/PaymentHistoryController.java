@@ -16,9 +16,9 @@ public class PaymentHistoryController {
     private final PaymentHistoryService paymentHistoryService;
 
     @GetMapping
-    public List<PaymentHistoryDto> getPaymentHistoryDtoPage(@RequestParam("startDate") @Valid String startDate,
+    public List<PaymentHistoryDto> getPaymentHistoryDtoList(@RequestParam("startDate") @Valid String startDate,
                                                                   @RequestParam("endDate") @Valid String endDate,
                                                                   @RequestParam("ctn") @Valid String ctn) {
-       return paymentHistoryService.getPaymentHistoryDtoPage(startDate, endDate, ctn);
+       return paymentHistoryService.getPaymentHistoryDtoList(startDate, endDate, ctn);
     }
 }

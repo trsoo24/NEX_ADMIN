@@ -17,7 +17,7 @@ public class MmsSendHistoryController {
 
 
     @GetMapping("/history/mms")
-    public List<MmsHistoryDto> getMmsHistoryPage(@RequestParam("ctn") @Valid String ctn,
+    public List<MmsHistoryDto> getMmsHistoryList(@RequestParam("ctn") @Valid String ctn,
                                                  @RequestParam("startDate") @Valid String startDate,
                                                  @RequestParam("endDate") @Valid String endDate) {
         return mmsSendHistoryService.getMmsSendHistoryList(ctn, startDate, endDate);

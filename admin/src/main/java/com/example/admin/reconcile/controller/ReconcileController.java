@@ -23,7 +23,7 @@ public class ReconcileController {
     private final GDCBInvoiceDetailService gdcbInvoiceDetailService;
 
     @GetMapping
-    public List<Reconcile> getGDCBReconcilePage(@RequestParam("month") @Valid String month,
+    public List<Reconcile> getGDCBReconcileList(@RequestParam("month") @Valid String month,
                                                   @RequestParam("fileType") @Valid String fileType) {
         return gdcbReconcileService.getGDCBReconcileList(month, fileType);
     }

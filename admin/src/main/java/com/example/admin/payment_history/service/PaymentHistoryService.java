@@ -20,7 +20,7 @@ public class PaymentHistoryService {
     private final PaymentHistoryMapper paymentHistoryMapper;
 
     // 건별 상세 이력 조회 API 메서드
-    public List<PaymentHistoryDto> getPaymentHistoryDtoPage(String startDate, String endDate, String ctn) {
+    public List<PaymentHistoryDto> getPaymentHistoryDtoList(String startDate, String endDate, String ctn) {
         List<PaymentHistory> paymentHistoryList = getPaymentHistoryList(startDate, endDate, ctn);
 
         return getPaymentHistoryDtoList(paymentHistoryList);

@@ -1,6 +1,5 @@
 package com.example.admin.product.controller;
 
-import com.example.admin.common.response.PageResult;
 import com.example.admin.product.dto.ProductStatsDaily;
 import com.example.admin.product.dto.ProductStatsMonthly;
 import com.example.admin.product.dto.*;
@@ -10,7 +9,6 @@ import com.example.admin.product.service.ProductInfoService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;

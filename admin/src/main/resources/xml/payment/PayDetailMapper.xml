@@ -34,7 +34,7 @@
         LEFT OUTER JOIN TB_NOTI_PURCHASE C ON (A.PARTITION_ID = C.PARTITION_ID AND A.REQUEST_ID = C.REQUEST_ID)
         WHERE 1 = 1
         <if test="keyword != null and keyword != 0">
-                C.CTN LIKE CONCAT('%', #{keyword}, '%')
+                C.CTN = #{keyword}
         </if>
         <if test="paymentTypes != null and paymentTypes.size() > 0">
             <foreach collection="paymentTypes" item="paymentType" open="AND (" separator=" OR " close=")">

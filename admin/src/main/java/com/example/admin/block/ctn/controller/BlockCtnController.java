@@ -27,9 +27,7 @@ public class BlockCtnController {
 
     @GetMapping
     public List<BlockCtnDto> getBlockDtoList() {
-        List<BlockCtnDto> dtoPage = blockCtnService.getAllBlockCtn();
-
-        return dtoPage;
+        return blockCtnService.getAllBlockCtn();
     }
 
     @DeleteMapping

@@ -27,12 +27,12 @@ public class EventController {
     }
 
     @GetMapping
-    public List<Event> getEventPage(@RequestParam("eventName") @Valid String eventName) {
+    public List<Event> getEventList(@RequestParam("eventName") @Valid String eventName) {
         return eventService.getEventList(eventName);
     }
 
     @DeleteMapping
-    public StatusResult deletePage(@RequestBody @Valid DeleteEventDto dto) {
+    public StatusResult deleteEvent(@RequestBody @Valid DeleteEventDto dto) {
         eventService.deleteEvent(dto);
 
         return new StatusResult(true);
