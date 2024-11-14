@@ -9,5 +9,4 @@ import java.util.Map;
 @Mapper
 public interface SellerStatsDailyMapper {
     List<SellerDayStat> getSellerDayStats(Map<String, Object> map);
-    void insertSellerDayStat(SellerDayStat sellerDayStat);
 }
