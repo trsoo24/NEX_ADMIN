@@ -1,17 +1,16 @@
 package com.example.admin.event.controller;
 
-import com.example.admin.common.response.PageResult;
 import com.example.admin.common.response.StatusResult;
 import com.example.admin.event.dto.DeleteEventDto;
 import com.example.admin.event.dto.InsertEventDto;
 import com.example.admin.event.dto.UpdateEventDto;
 import com.example.admin.event.dto.Event;
 import com.example.admin.event.service.EventService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -20,24 +19,19 @@ import org.springframework.web.bind.annotation.*;
 public class EventController {
     private final EventService eventService;
 
-    @PostMapping("/gdcb")
-    public StatusResult insertEvent(HttpServletRequest request, @RequestBody @Valid InsertEventDto dto) {
-        eventService.insertEvent(request, dto);
+    @PostMapping
+    public StatusResult insertEvent(@RequestBody @Valid InsertEventDto dto) {
+        eventService.insertEvent(dto);
 
         return new StatusResult(true);
     }
 
-    @GetMapping("/gdcb")
-    public PageResult<Event> getEventPage(@RequestParam("dcb") @Valid String dcb,
-                                          @RequestParam("eventName") @Valid String eventName,
-                                          @RequestParam("page") @Valid int page,
-                                          @RequestParam("pageSize") @Valid int pageSize) {
-        Page<Event> eventPage = eventService.getEventPage(dcb, eventName, page, pageSize);
-
-        return new PageResult<>(true, eventPage);
+    @GetMapping
+    public List<Event> getEventPage(@RequestParam("eventName") @Valid String eventName) {
+        return eventService.getEventList(eventName);
     }
 
-    @DeleteMapping("/gdcb")
+    @DeleteMapping
     public StatusResult deletePage(@RequestBody @Valid DeleteEventDto dto) {
         eventService.deleteEvent(dto);
 
@@ -45,8 +39,8 @@ public class EventController {
     }
 
     @PutMapping
-    public StatusResult updateEvent(HttpServletRequest request, @RequestBody @Valid UpdateEventDto dto) {
-        eventService.updateEvent(request, dto);
+    public StatusResult updateEvent(@RequestBody @Valid UpdateEventDto dto) {
+        eventService.updateEvent( dto);
 
         return new StatusResult(true);
     }

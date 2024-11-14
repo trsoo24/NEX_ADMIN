@@ -10,4 +10,7 @@ import lombok.NoArgsConstructor;
 public class InsertEventDto {
     private String dcb;
     private String eventName;
+    private String fileName;
+    private String url;
+    private String regId;
 }
