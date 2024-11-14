@@ -1,6 +1,5 @@
 package com.example.admin.seller.mapper;
 
-import com.example.admin.seller.dto.InsertSellerInfo;
 import com.example.admin.seller.dto.AdmSeller;
 import org.apache.ibatis.annotations.Mapper;
 
