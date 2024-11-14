@@ -4,9 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.testphone.mapper.TestPhoneMapper">
-    <insert id="insertTestPhone" parameterType="com.example.admin.testphone.dto.TestPhone">
-        INSERT INTO TB_ENROLLMENT_PHONE(CTN, REG_DT, MBR_ID, NAME, EMAIL)
-        VALUES (#{ctn}, #{regDt}, #{mbrId}, #{name}, #{email})
+    <insert id="insertTestPhone" parameterType="com.example.admin.testphone.dto.InsertTestPhoneDto">
+        INSERT INTO TB_ENROLLMENT_PHONE(CTN, REG_ID)
+        VALUES (#{ctn}, #{regId})
     </insert>
 
     <select id="existsCtn" parameterType="String" resultType="boolean">
@@ -15,15 +15,10 @@
         WHERE CTN = #{ctn}
     </select>
 
-    <select id="getAllTestPhone" parameterType="map" resultType="com.example.admin.testphone.dto.TestPhone">
+    <select id="getAllTestPhone" resultType="com.example.admin.testphone.dto.TestPhone">
         SELECT *
         FROM TB_ENROLLMENT_PHONE
         ORDER BY REG_DT
-    </select>
-
-    <select id="countCtn" resultType="integer">
-        SELECT COUNT(*)
-        FROM TB_ENROLLMENT_PHONE
     </select>
 
     <delete id="deleteCtn" parameterType="String">

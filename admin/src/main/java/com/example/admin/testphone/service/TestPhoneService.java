@@ -7,12 +7,10 @@ import com.example.admin.common.exception.TestPhoneException;
 import com.example.admin.testphone.mapper.TestPhoneMapper;
 import com.example.admin.common.service.FunctionUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.example.admin.common.exception.enums.MemberErrorCode.DUPLICATED_CTN;
 import static com.example.admin.common.exception.enums.TestPhoneErrorCode.NOT_IN_DB;
@@ -29,18 +27,14 @@ public class TestPhoneService {
             throw new TestPhoneException(DUPLICATED_CTN);
         }
 
-        testPhoneMapper.insertTestPhone(TestPhone.toTestPhone(dto));
+        testPhoneMapper.insertTestPhone(dto);
     }
 
-    public Page<TestPhone> getAllTestPhones(int page, int pageSize, String dcb) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("dcb", dcb);
-
-        List<TestPhone> testPhoneList = testPhoneMapper.getAllTestPhone(map);
-
-        return functionUtil.toPage(testPhoneList, page, pageSize);
+    public List<TestPhone> getAllTestPhones() {
+        return testPhoneMapper.getAllTestPhone();
     }
 
+    @Transactional
     public void deleteTestPhone(DeleteTestPhoneDto dto) {
         List<String> ctnList = dto.getCtns();
 

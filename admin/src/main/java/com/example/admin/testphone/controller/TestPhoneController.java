@@ -1,7 +1,6 @@
 package com.example.admin.testphone.controller;
 
 
-import com.example.admin.common.response.PageResult;
 import com.example.admin.common.response.StatusResult;
 import com.example.admin.testphone.dto.DeleteTestPhoneDto;
 import com.example.admin.testphone.dto.InsertTestPhoneDto;
@@ -10,8 +9,9 @@ import com.example.admin.testphone.service.TestPhoneService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -29,10 +29,8 @@ public class TestPhoneController {
     }
 
     @GetMapping()
-    public PageResult<TestPhone> getAllTestPhones(@RequestParam("dcb") @Valid String dcb, @RequestParam("page") @Valid Integer page, @RequestParam("pageSize") @Valid Integer pageSize) {
-        Page<TestPhone> testPhonePage = testPhoneService.getAllTestPhones(page, pageSize, dcb);
-
-        return new PageResult<>(true, testPhonePage);
+    public List<TestPhone> getAllTestPhones() {
+        return testPhoneService.getAllTestPhones();
     }
 
     @DeleteMapping()
