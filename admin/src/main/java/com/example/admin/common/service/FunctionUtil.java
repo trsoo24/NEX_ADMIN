@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -100,5 +101,28 @@ public class FunctionUtil {
         }
 
         return lastMonthList;
+    }
+
+    public static String yearOfPreviousMonth() {
+        LocalDate lastMonth = LocalDate.now().minusMonths(1);
+        DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("yyyy");
+
+        return lastMonth.format(yearFormatter);
+    }
+
+    public static String previousMonth() {
+        LocalDate lastMonth = LocalDate.now().minusMonths(1);
+
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
+
+        return lastMonth.format(monthFormatter);
+    }
+
+    public static String yesterday() {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("dd");
+
+        return yesterday.format(monthFormatter);
     }
 }

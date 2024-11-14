@@ -12,9 +12,6 @@ import java.util.Map;
 
 @Mapper
 public interface ReconcileMapper {
-    void insertGDCBReconcile(InsertReconcileDto insertReconcileDto);
-    void insertGDCBMonthlyInvoice(MonthlyInvoiceSum monthlyInvoiceSum);
-    void insertGoogleMonthlyInvoice(GoogleMonthlyInvoiceSum googleMonthlyInvoiceSum);
     List<Reconcile> getGDCBReconcileList(Map<String, Object> map);
     String getGDCBReconcileFile(Map<String, Object> map);
     List<GDCBMonthlyInvoiceSum> selectBuyInvoice(Map<String, Object> map);

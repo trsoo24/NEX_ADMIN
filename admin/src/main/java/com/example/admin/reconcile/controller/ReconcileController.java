@@ -1,17 +1,13 @@
 package com.example.admin.reconcile.controller;
 
 import com.example.admin.common.response.MapResult;
-import com.example.admin.common.response.PageResult;
-import com.example.admin.common.response.StatusResult;
 import com.example.admin.reconcile.dto.GDCBDetailCompare;
-import com.example.admin.reconcile.dto.InsertReconcileDto;
 import com.example.admin.reconcile.dto.Reconcile;
 import com.example.admin.reconcile.service.GDCBInvoiceDetailService;
 import com.example.admin.reconcile.service.GDCBReconcileService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -26,49 +22,30 @@ public class ReconcileController {
     private final GDCBReconcileService gdcbReconcileService;
     private final GDCBInvoiceDetailService gdcbInvoiceDetailService;
 
-    @PostMapping("/gdcb")
-    public StatusResult insertReconcile(@RequestBody @Valid InsertReconcileDto insertReconcileDto) {
-        gdcbReconcileService.insertReconcile(insertReconcileDto);
-
-        return new StatusResult(true);
-    }
-
     @GetMapping
-    public PageResult<Reconcile> getGDCBReconcilePage(@RequestParam("dcb") @Valid String dcb,
-                                                  @RequestParam("month") @Valid String month,
-                                                  @RequestParam("fileType") @Valid String fileType,
-                                                  @RequestParam("page") @Valid int page,
-                                                  @RequestParam("pageSize") @Valid int pageSize) {
-        Page<Reconcile> reconcilPage = gdcbReconcileService.getGDCBReconcilePage(dcb, month, fileType, page, pageSize);
-
-        return new PageResult<>(true, reconcilPage);
+    public List<Reconcile> getGDCBReconcilePage(@RequestParam("month") @Valid String month,
+                                                  @RequestParam("fileType") @Valid String fileType) {
+        return gdcbReconcileService.getGDCBReconcileList(month, fileType);
     }
 
     @GetMapping("/excel")
-    public void getGDCBReconcileExcel(@RequestParam("dcb") @Valid String dcb,
-                                  @RequestParam("month") @Valid String month,
+    public void getGDCBReconcileExcel(@RequestParam("month") @Valid String month,
                                   @RequestParam("fileType") @Valid String fileType,
                                   HttpServletResponse response) throws IOException {
-        gdcbReconcileService.exportGDCBExcel(dcb, month, fileType, response);
+        gdcbReconcileService.exportGDCBExcel(month, fileType, response);
     }
 
     @GetMapping("/download")
-    public void getGDCBReconcileFile(@RequestParam("dcb") @Valid String dcb,
-                                     @RequestParam("month") @Valid String month,
+    public void getGDCBReconcileFile(@RequestParam("month") @Valid String month,
                                      @RequestParam("fileType") @Valid String fileType,
                                      @RequestParam("fileName") @Valid String fileName, HttpServletResponse response) {
-        gdcbReconcileService.getGDCBReconcileFile(dcb, month, fileType, fileName, response);
+        gdcbReconcileService.getGDCBReconcileFile(month, fileType, fileName, response);
     }
 
     @GetMapping("/adjustment")
-    public MapResult<String, List<GDCBDetailCompare>> getGDCBInvoiceDetailList(@RequestParam("dcb") @Valid String dcb, @RequestParam("month") @Valid String month) {
-        Map<String, List<GDCBDetailCompare>> invoiceDetailMap = gdcbInvoiceDetailService.getGDCBInvoiceDetailMap(dcb, month);
+    public MapResult<String, List<GDCBDetailCompare>> getGDCBInvoiceDetailList(@RequestParam("month") @Valid String month) {
+        Map<String, List<GDCBDetailCompare>> invoiceDetailMap = gdcbInvoiceDetailService.getGDCBInvoiceDetailMap(month);
 
         return new MapResult<>(true, invoiceDetailMap);
-    }
-
-    @PostMapping("/gdcb/add")
-    public void insertGDCBInvoice(@RequestParam("year") String year) {
-        gdcbInvoiceDetailService.insertInvoiceDetailData(year);
     }
 }

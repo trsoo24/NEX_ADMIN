@@ -3,13 +3,11 @@ package com.example.admin.reconcile.service;
 import com.example.admin.reconcile.dto.InsertReconcileDto;
 import com.example.admin.reconcile.dto.Reconcile;
 import com.example.admin.reconcile.mapper.ReconcileMapper;
-import com.example.admin.common.service.FunctionUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -22,27 +20,19 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class GDCBReconcileService {
     private final ReconcileMapper reconcileMapper;
-    private final FunctionUtil functionUtil;
 
-    public void insertReconcile(InsertReconcileDto dto) {
-        reconcileMapper.insertGDCBReconcile(dto);
-    }
-
-    private List<Reconcile> getGDCBReconcileList(String dcb, String month, String fileType) {
+    public List<Reconcile> getGDCBReconcileList(String month, String fileType) {
         month = month.replace("-", ""); // DB 에 '-' 이 없이 저장됨
 
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("yearMonth", month);
         requestMap.put("fileType", fileType);
+
         return reconcileMapper.getGDCBReconcileList(requestMap);
     }
 
-    public Page<Reconcile> getGDCBReconcilePage(String dcb, String month, String fileType, int page, int pageSize) {
-        return functionUtil.toPage(getGDCBReconcileList(dcb, month, fileType), page, pageSize);
-    }
-
-    public void exportGDCBExcel(String dcb, String month, String fileType, HttpServletResponse response) throws IOException {
-        List<Reconcile> reconcileList = getGDCBReconcileList(dcb, month, fileType);
+    public void exportGDCBExcel(String month, String fileType, HttpServletResponse response) throws IOException {
+        List<Reconcile> reconcileList = getGDCBReconcileList(month, fileType);
 
         XSSFWorkbook workBook = new XSSFWorkbook();
         XSSFSheet sheet = workBook.createSheet("대사 파일 조회");
@@ -75,9 +65,8 @@ public class GDCBReconcileService {
         workBook.close();
     }
 
-    public void getGDCBReconcileFile(String dcb, String month, String fileType, String fileName, HttpServletResponse response) {
+    public void getGDCBReconcileFile(String month, String fileType, String fileName, HttpServletResponse response) {
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("dcb", dcb);
         requestMap.put("yearMonth", month);
         requestMap.put("fileType", fileType);
         requestMap.put("fileName", fileName);
