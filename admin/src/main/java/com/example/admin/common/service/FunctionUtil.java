@@ -118,6 +118,20 @@ public class FunctionUtil {
         return lastMonth.format(monthFormatter);
     }
 
+    public static String yearOfYesterday() {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("yyyy");
+
+        return yesterday.format(yearFormatter);
+    }
+
+    public static String monthOfYesterday() {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
+
+        return yesterday.format(monthFormatter);
+    }
+
     public static String yesterday() {
         LocalDate yesterday = LocalDate.now().minusDays(1);
 
