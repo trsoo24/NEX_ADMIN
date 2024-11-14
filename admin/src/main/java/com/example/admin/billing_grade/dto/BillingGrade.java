@@ -24,14 +24,14 @@ public class BillingGrade { // 월별 청구 현황 ( 등급별 ) 조회
     private Integer unpaidAceCnt; // 연체
     private Integer unpaidCnt;
     private Integer unpaidAmount;
-    private String dcb = "GDCB";
+    private final String dcb = "GDCB";
 
     private String resultCode;
-    private String api_type1 = "charge";
-    private String api_type2 = "reversal";
-    private String api_type3 = "refund";
-    private String paid = "N";
-    private String unpaid = "Y";
+    private final String api_type1 = "charge";
+    private final String api_type2 = "reversal";
+    private final String api_type3 = "refund";
+    private final String paid = "N";
+    private final String unpaid = "Y";
     private String firstDay;
     private String lastDay;
 
