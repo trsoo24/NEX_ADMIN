@@ -4,8 +4,8 @@
 
 <mapper namespace="com.example.admin.block.fee_type.mapper.BlockFeeTypeMapper">
     <insert id="insertBlockFeeType" parameterType="com.example.admin.block.fee_type.dto.InsertBlockFeeTypeDto">
-        INSERT INTO TB_BLOCK_FEE_TYPE(FEE_TYPE_CD, REG_DT, MBR_ID, FEE_TYPE_NM, DCB)
-        VALUES (#{feeTypeCode}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{feeTypeName}, #{dcb})
+        INSERT INTO TB_BLOCK_FEE_TYPE(FEE_TYPE_CD, REG_DT, MBR_ID, FEE_TYPE_NM)
+        VALUES (#{feeTypeCode}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{feeTypeName})
     </insert>
 
     <select id="existsFeeType" parameterType="String" resultType="boolean">
@@ -14,20 +14,17 @@
         WHERE FEE_TYPE_CD = #{feeTypeCd}
     </select>
 
-    <select id="getAllBlockFeeType" parameterType="map" resultType="com.example.admin.block.fee_type.dto.BlockFeeTypeDto">
-        SELECT FEE_TYPE_ID, FEE_TYPE_CD AS feeTypeCode, REG_DT, MBR_ID, FEE_TYPE_NM AS feeTypeName, DCB
+    <select id="getAllBlockFeeType" resultType="com.example.admin.block.fee_type.dto.BlockFeeTypeDto">
+        SELECT FEE_TYPE_ID, FEE_TYPE_CD AS feeTypeCode, REG_DT, MBR_ID, FEE_TYPE_NM AS feeTypeName
         FROM TB_BLOCK_FEE_TYPE
-        WHERE DCB = #{dcb}
         ORDER BY REG_DT
     </select>
 
-    <select id="countBlockFeeType">
-        SELECT COUNT(*)
-        FROM TB_BLOCK_FEE_TYPE;
-    </select>
-
-    <delete id="deleteBlockFeeType" parameterType="map">
+    <delete id="deleteBlockFeeType" parameterType="java.util.List">
         DELETE FROM TB_BLOCK_FEE_TYPE
-        WHERE FEE_TYPE_CD = #{feeTypeCd} AND DCB = #{dcb}
+        WHERE FEE_TYPE_CD IN
+        <foreach item="feeTypeCd" collection="list" open="(" separator="," close=")">
+            #{feeTypeCd}
+        </foreach>
     </delete>
 </mapper>

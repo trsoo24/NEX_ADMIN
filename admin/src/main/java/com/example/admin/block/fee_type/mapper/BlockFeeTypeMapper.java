@@ -13,9 +13,7 @@ public interface BlockFeeTypeMapper {
 
     boolean existsFeeType(String feeTypeCode);
 
-    List<BlockFeeTypeDto> getAllBlockFeeType(Map<String, Object> map);
+    List<BlockFeeTypeDto> getAllBlockFeeType();
 
-    int countBlockFeeType();
-
-    void  deleteBlockFeeType(Map<String, String> map);
+    void  deleteBlockFeeType(List<String> feeTypeCd);
 }
