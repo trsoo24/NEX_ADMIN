@@ -18,7 +18,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PaymentHistoryService {
     private final PaymentHistoryMapper paymentHistoryMapper;
-    private final FunctionUtil functionUtil;
 
     // 건별 상세 이력 조회 API 메서드
     public List<PaymentHistoryDto> getPaymentHistoryDtoPage(String startDate, String endDate, String ctn) {
@@ -29,8 +28,8 @@ public class PaymentHistoryService {
 
     public List<PaymentHistory> getPaymentHistoryList(String startDate, String endDate, String ctn) {
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("startDate", functionUtil.monthToStartDate(startDate));
-        requestMap.put("endDate", functionUtil.monthToEndDate(endDate));
+        requestMap.put("startDate", FunctionUtil.monthToStartDate(startDate));
+        requestMap.put("endDate", FunctionUtil.monthToEndDate(endDate));
         requestMap.put("ctn", ctn);
 
         return paymentHistoryMapper.getPaymentHistoryList(requestMap);

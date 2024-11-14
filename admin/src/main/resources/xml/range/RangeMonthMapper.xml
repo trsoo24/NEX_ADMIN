@@ -3,31 +3,27 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.range_month.mapper.RangeMonthMapper">
-    <insert id="insertRangeMonth">
-        INSERT INTO TB_STATS_RANGE_MONTH(STAT_MONTH, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT, DCB)
-        VALUES (#{stat_month}, #{a_stat}, #{b_stat}, #{c_stat}, #{d_stat}, #{e_stat}, #{f_stat}, #{g_stat}, #{dcb})
-    </insert>
-
-    <select id="getRangeMonthList" parameterType="map" resultMap="rangeMonthMap">
-        SELECT * FROM TB_STATS_RANGE_MONTH
-        WHERE 1 = 1
-            <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-                AND STAT_MONTH BETWEEN #{startDate} AND #{endDate}
-            </if>
-            <if test="dcb != null and dcb != ''">
-                AND DCB = #{dcb}
-            </if>
-    </select>
-
-    <select id="getRangeMonthScheduleList" parameterType="map" resultMap="rangeMonthMap">
-        SELECT * FROM TB_STATS_RANGE_MONTH
-        WHERE 1 = 1
-        <if test="month != null and month != ''">
-            AND STAT_MONTH = #{month}
-        </if>
-        <if test="dcb != null and dcb != ''">
-            AND DCB = #{dcb}
-        </if>
+    <select id="getRangeMonthScheduleList" resultMap="com.example.admin.range_month.dto.RangeMonth">
+        SELECT
+            TO_CHAR(TO_DATE(STAT_DAY, 'YYYY-MM-DD'), 'YYYY-MM') AS STAT_MONTH,
+            A_STAT,
+            SUM(B_STAT) AS B_STAT,
+            SUM(C_STAT) AS C_STAT,
+            SUM(D_STAT) AS D_STAT,
+            SUM(E_STAT) AS E_STAT,
+            SUM(F_STAT) AS F_STAT,
+            CASE
+                WHEN SUM(B_STAT) > 0 THEN SUM(F_STAT) / SUM(B_STAT)
+                ELSE 0
+                END AS G_STAT,
+            DCB
+        FROM
+            TB_STATS_RANGE_DAY
+        WHERE TRANSACTION_DT BETWEEN TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM') || '-01', 'YYYY-MM-DD')
+                  AND LAST_DAY(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM') || '-01', 'YYYY-MM-DD'))
+        GROUP BY
+            TO_CHAR(TO_DATE(STAT_DAY, 'YYYY-MM-DD'), 'YYYY-MM'),
+            A_STAT
     </select>
 
     <resultMap id="rangeMonthMap" type="com.example.admin.range_month.dto.RangeMonth">

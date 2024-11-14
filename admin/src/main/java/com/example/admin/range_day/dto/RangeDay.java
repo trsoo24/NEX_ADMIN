@@ -18,34 +18,9 @@ public class RangeDay {
     private Double e_stat;
     private Double f_stat;
     private Double g_stat;
-    private String dcb;
+    private final String dcb = "GDCB";
 
-    public void calculateFStat() {
-        this.f_stat = this.d_stat - this.e_stat;
-    }
-
-    public void addValue(double value) {
-        this.b_stat++;
-        this.c_stat++;
-        if (value >= 0) {
-            this.d_stat += value;
-        } else {
-            this.e_stat += value;
-        }
-        this.f_stat += value;
-    }
-
-    public void calculateGStat() {
-        this.g_stat = this.d_stat / this.b_stat;
-    }
-
-    public void roundDFG() {
-        this.d_stat = (double) Math.round(this.d_stat);
-        this.f_stat = (double) Math.round(this.f_stat);
-        this.g_stat = (double) Math.round(this.g_stat);
-    }
-
-    public static RangeDay setDefault(String date, String aStat, String dcb) {
+    public static RangeDay setDefault(String date, String aStat) {
         double def = 0;
         return RangeDay.builder()
                 .stat_day(date)
@@ -56,7 +31,6 @@ public class RangeDay {
                 .e_stat(def)
                 .f_stat(def)
                 .g_stat(def)
-                .dcb(dcb)
                 .build();
     }
 

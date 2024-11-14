@@ -3,32 +3,47 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.range_day.mapper.RangeDayMapper">
-    <insert id="insertRangeDay">
-        INSERT INTO TB_STATS_RANGE_DAY(STAT_DAY, A_STAT, B_STAT, C_STAT, D_STAT, E_STAT, F_STAT, G_STAT, DCB)
-
-        VALUES (#{stat_day}, #{a_stat}, #{b_stat}, #{c_stat}, #{d_stat}, #{e_stat}, #{f_stat}, #{g_stat}, #{dcb})
-    </insert>
-
     <select id="getRangeDayList" parameterType="map" resultMap="rangeDayMap">
         SELECT * FROM TB_STATS_RANGE_DAY
         WHERE 1 = 1
         <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
             AND STAT_DAY BETWEEN #{startDate} AND #{endDate}
         </if>
-        <if test="dcb != null and dcb != ''">
-            AND DCB = #{dcb}
-        </if>
     </select>
 
-    <select id="getRangeDayScheduleList" parameterType="map" resultMap="rangeDayMap">
-        SELECT * FROM TB_STATS_RANGE_DAY
-        WHERE 1 = 1
-        <if test="day != null and day != ''">
-            AND STAT_DAY = #{day}
-        </if>
-        <if test="dcb != null and dcb != ''">
-            AND DCB = #{dcb}
-        </if>
+    <select id="getRangeDay" resultType="com.example.admin.range_day.dto.RangeDay">
+        SELECT
+            TO_CHAR(TRANSACTION_DT, 'YYYY-MM-DD') AS stat_day,
+            CASE
+                WHEN TOTAL BETWEEN 0 AND 100000 THEN '1'
+                WHEN TOTAL BETWEEN 100000 AND 200000 THEN '2'
+                WHEN TOTAL BETWEEN 200000 AND 300000 THEN '3'
+                WHEN TOTAL BETWEEN 300000 AND 400000 THEN '4'
+                WHEN TOTAL BETWEEN 400000 AND 500000 THEN '5'
+                ELSE 'O'
+            END AS a_stat,
+            COUNT(DISTINCT ctn) AS b_stat,
+            COUNT(*) AS c_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN TOTAL ELSE 0 END) AS d_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'R' OR TRANSACTION_TYPE = 'C' THEN TOTAL ELSE 0 END) AS e_stat,
+            SUM(CASE
+            WHEN TRANSACTION_TYPE = 'B' THEN TOTAL
+            WHEN TRANSACTION_TYPE = 'R' OR TRANSACTION_TYPE = 'C' THEN -TOTAL ELSE 0 END) AS f_stat,
+            CASE WHEN COUNT(DISTINCT ctn) > 0 THEN
+            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN TOTAL ELSE 0 END) / COUNT(DISTINCT ctn)
+            ELSE 0 END AS g_stat
+            FROM TB_API_LOGS
+            WHERE TRANSACTION_DT BETWEEN TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM') || '-01', 'YYYY-MM-DD')
+                                    AND LAST_DAY(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM') || '-01', 'YYYY-MM-DD'))
+            GROUP BY TO_CHAR(TRANSACTION_DT, 'YYYY-MM-DD'),
+                     CASE
+                         WHEN TOTAL BETWEEN 0 AND 100000 THEN '1'
+                         WHEN TOTAL BETWEEN 100000 AND 200000 THEN '2'
+                         WHEN TOTAL BETWEEN 200000 AND 300000 THEN '3'
+                         WHEN TOTAL BETWEEN 300000 AND 400000 THEN '4'
+                         WHEN TOTAL BETWEEN 400000 AND 500000 THEN '5'
+                         ELSE 'O'
+                         END
     </select>
 
     <resultMap id="rangeDayMap" type="com.example.admin.range_day.dto.RangeDay">
