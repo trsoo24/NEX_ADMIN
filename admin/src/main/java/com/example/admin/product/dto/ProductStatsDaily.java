@@ -18,17 +18,4 @@ public class ProductStatsDaily {
     private Double sumProductPrice; // 판매액 합계
     private Double sumTax; // 세금 합계
     private Double sumTotal; // 결제 금액 합계
-
-    public static ProductStatsDaily toProductStatsDaily(String year, String month, String day, String sellerName, String productName, double sumPrice, double sumTax, double sumTotal) {
-        return ProductStatsDaily.builder()
-                .year(year)
-                .month(month)
-                .day(day)
-                .sellerName(sellerName)
-                .productName(productName)
-                .sumProductPrice(sumPrice)
-                .sumTax(sumTax)
-                .sumTotal(sumTotal)
-                .build();
-    }
 }

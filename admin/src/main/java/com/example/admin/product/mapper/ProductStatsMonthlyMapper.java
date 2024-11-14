@@ -8,6 +8,5 @@ import java.util.Map;
 
 @Mapper
 public interface ProductStatsMonthlyMapper {
-    void insertProductStatMonthly(ProductStatsMonthly productStatsMonthly);
     List<ProductStatsMonthly> getProductMonthStats(Map<String, Object> map);
 }

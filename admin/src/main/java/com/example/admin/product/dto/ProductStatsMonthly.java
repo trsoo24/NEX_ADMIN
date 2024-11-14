@@ -17,16 +17,4 @@ public class ProductStatsMonthly {
     private Double sumProductPrice; // 판매액 합계
     private Double sumTax; // 세금 합계
     private Double sumTotal; // 결제 금액 합계
-
-    public static ProductStatsMonthly toProductStatsMonthly(String year, String month, String sellerName, String productName, double sumProductPrice, double sumTax, double sumTotal) {
-        return ProductStatsMonthly.builder()
-                .year(year)
-                .month(month)
-                .sellerName(sellerName)
-                .productName(productName)
-                .sumProductPrice(sumProductPrice)
-                .sumTax(sumTax)
-                .sumTotal(sumTotal)
-                .build();
-    }
 }

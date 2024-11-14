@@ -1,73 +1,37 @@
 package com.example.admin.product.service;
 
-import com.example.admin.product.dto.InsertProductInfoDto;
 import com.example.admin.product.dto.ProductInfo;
 import com.example.admin.product.dto.field.ProductInfoField;
 import com.example.admin.product.mapper.ProductInfoMapper;
-import com.example.admin.common.service.FunctionUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class ProductInfoService {
     private final ProductInfoMapper productInfoMapper;
-    private final FunctionUtil functionUtil;
 
-    @Transactional
-    public void createProductInfo(InsertProductInfoDto dto) {
-        String original = dto.getProductName();
-        for (int i = 1; i < 100; i++) {
-            String productName = dto.getProductName() + i;
-            Double price = new Random().nextDouble();
-            dto.setProductName(productName);
-            dto.setPrice(price);
-            productInfoMapper.insertProductInfo(dto);
-            dto.setProductName(original);
-        }
-    }
+    public List<ProductInfo> getProductInfoList(String productName, String startDate, String endDate) {
+        Map<String, String> requestMap = new HashMap<>();
+        requestMap.put("productName", productName);
+        requestMap.put("startDate", dateForm(startDate));
+        requestMap.put("endDate", dateForm(endDate));
 
-    private boolean existProduct(String productName) {
-        return productInfoMapper.existsProduct(productName);
-    }
-
-    private List<ProductInfo> getProductList(Map<String, String> requestMap) {
         return productInfoMapper.getAllProductInfo(requestMap);
     }
 
-    public Page<ProductInfo> getAllProductInfo(String dcb, String productName, String startDate, String endDate, int page, int pageSize) {
-        Map<String, String> requestMap = new HashMap<>();
-        requestMap.put("dcb", dcb);
-        requestMap.put("productName", productName);
-        requestMap.put("startDate", startDate);
-        requestMap.put("endDate", endDate);
-
-        List<ProductInfo> productInfoList = getProductList(requestMap);
-
-        return functionUtil.toPage(productInfoList, page, pageSize);
-    }
-
-    public void exportExcel(String dcb, String productName, String startDate, String endDate, HttpServletResponse response) throws IllegalAccessException, IOException {
-        Map<String, String> requestMap = new HashMap<>();
-        requestMap.put("dcb", dcb);
-        requestMap.put("productName", productName);
-        requestMap.put("startDate", startDate);
-        requestMap.put("endDate", endDate);
-
-        List<ProductInfo> productInfoList = getProductList(requestMap);
+    public void exportExcel(String productName, String startDate, String endDate, HttpServletResponse response) throws IllegalAccessException, IOException {
+        List<ProductInfo> productInfoList = getProductInfoList(productName, startDate, endDate);
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("상품 조회");
@@ -107,5 +71,13 @@ public class ProductInfoService {
         response.getOutputStream().flush();
         response.getOutputStream().close();
         workbook.close();
+    }
+
+    private String dateForm(String date) {
+        if (date.contains("-")) {
+            return date.replaceAll("-", "");
+        } else {
+            return date;
+        }
     }
 }
