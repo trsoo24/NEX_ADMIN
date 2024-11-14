@@ -4,8 +4,8 @@
 
 <mapper namespace="com.example.admin.block.ctn.mapper.BlockCtnMapper">
     <insert id="insertBlockCtn" parameterType="com.example.admin.block.ctn.dto.InsertBlockCtnDto">
-        INSERT INTO TB_BLOCK_CTN(CTN, REG_DT, MBR_ID, DCB)
-        VALUES (#{ctn}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{dcb})
+        INSERT INTO TB_BLOCK_CTN(CTN, REG_DT, MBR_ID)
+        VALUES (#{ctn}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId})
     </insert>
 
     <select id="existsCtn" parameterType="String" resultType="boolean">
@@ -17,17 +17,14 @@
     <select id="getAllBlockCtn" parameterType="map" resultType="com.example.admin.block.ctn.dto.BlockCtnDto">
     SELECT *
         FROM TB_BLOCK_CTN
-        WHERE DCB = #{dcb}
         ORDER BY REG_DT
     </select>
 
-    <select id="countBlockCtn">
-        SELECT COUNT(*)
-        FROM TB_BLOCK_CTN;
-    </select>
-
-    <delete id="deleteBlockCtn" parameterType="map">
+    <delete id="deleteBlockCtn" parameterType="java.util.List">
         DELETE FROM TB_BLOCK_CTN
-        WHERE CTN = #{ctn} AND DCB = #{dcb}
+        WHERE CTN IN
+        <foreach item="ctns" collection="list" open="(" separator="," close=")">
+            #{ctns}
+        </foreach>
     </delete>
 </mapper>
