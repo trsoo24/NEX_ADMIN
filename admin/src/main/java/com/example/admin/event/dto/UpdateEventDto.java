@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateEventDto {
     private String eventName;
+    private String updId;
 }
