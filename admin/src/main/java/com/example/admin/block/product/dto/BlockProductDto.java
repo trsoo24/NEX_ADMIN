@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BlockProduct {
+public class BlockProductDto {
     private Long productNo; // 상품 번호
     private String productName; // 상품명
     private String regDt;
     private String regId;
-    private String dcb;
+    private final String dcb = "GDCB";
 }

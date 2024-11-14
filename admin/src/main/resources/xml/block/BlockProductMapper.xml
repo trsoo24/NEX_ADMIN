@@ -4,21 +4,24 @@
 
 <mapper namespace="com.example.admin.block.product.mapper.BlockProductMapper">
     <insert id="insertBlockProduct" parameterType="com.example.admin.block.product.dto.InsertBlockProductDto">
-        INSERT INTO TB_BLOCK_PRODUCT(PRODUCT_NAME, REG_DT, REG_ID, DCB)
-        VALUES (#{product}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{dcb})
+        INSERT INTO TB_BLOCK_PRODUCT(PRODUCT_NAME, REG_DT, REG_ID)
+        VALUES (#{product}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId})
     </insert>
 
-    <select id="getBlockProductList" parameterType="map" resultType="com.example.admin.block.product.dto.BlockProduct">
+    <select id="getBlockProductList" parameterType="map" resultType="com.example.admin.block.product.dto.BlockProductDto">
         SELECT * FROM TB_BLOCK_PRODUCT
-        WHERE DCB = #{dcb}
-              <if test="product != null and product != ''">
+        WHERE 1 = 1
+        <if test="product != null and product != ''">
         AND PRODUCT_NAME LIKE CONCAT('%', #{product}, '%')
         </if>
         ORDER BY PRODUCT_NAME
     </select>
 
-    <delete id="deleteBlockProduct" parameterType="map">
+    <delete id="deleteBlockProduct" parameterType="java.util.List">
         DELETE FROM TB_BLOCK_PRODUCT
-        WHERE DCB = #{dcb} AND PRODUCT_NO = #{productNo}
+        WHERE PRODUCT_NO IN
+        <foreach item="productNo" collection="list" open="(" separator="," close=")">
+            #{productNo}
+        </foreach>
     </delete>
 </mapper>
