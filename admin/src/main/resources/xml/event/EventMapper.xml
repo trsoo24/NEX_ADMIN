@@ -6,16 +6,16 @@
 <mapper namespace="com.example.admin.event.mapper.EventMapper">
     <insert id="insertEvent" parameterType="com.example.admin.event.dto.InsertEventDto">
         INSERT INTO TB_EVENT_INFO(EVT_SEQ, EVT_NAME, EVT_FILE_NM, EVT_URL, REG_DT, REG_ID)
-        VALUES (TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISSFF3'), #{eventName}, #{fileName}, #{url}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{regId})
+        VALUES (TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISSFF3'), #{eventName}, #{fileName}, #{url}, SYSDATE, #{regId})
     </insert>
 
     <select id="getEventList" parameterType="map" resultType="com.example.admin.event.dto.Event">
         SELECT * FROM TB_EVENT_INFO
         WHERE 1 = 1
         <if test="eventName != null and eventName != ''">
-            AND EVT_NAME LIKE CONCAT('%', #{eventName}, '%')
+            AND EVT_NAME LIKE '%' || #{eventName} || '%'
         </if>
-        ORDER BY STR_TO_DATE(REG_DT, '%Y-%m-%d') DESC
+        ORDER BY TO_DATE(REG_DT, '%Y-%m-%d') DESC
     </select>
 
     <delete id="deleteEvent" parameterType="java.util.List">
@@ -31,7 +31,7 @@
         SET <if test="eventName != null and eventName != ''">
             EVT_NAME = #{eventName}
             </if>
-        AND UPD_DT = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+        AND UPD_DT = SYSDATE
         AND UPD_ID = #{updId}
     </update>
 </mapper>
