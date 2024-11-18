@@ -18,18 +18,18 @@
             FROM TB_ADM_MERCHANT_INFO
         WHERE 1 = 1
         <if test="sellerName != null and sellerName != ''">
-            AND MERCHANT_NM LIKE CONCAT('%', #{sellerName}, '%')
+            AND MERCHANT_NM LIKE '%' || #{sellerName} || '%'
         </if>
         <if test="startDate != null and endDate != null">
-            AND STD_DT BETWEEN STR_TO_DATE(#{startDate}, '%Y%m%d') AND STR_TO_DATE(#{endDate}, '%Y%m%d')
+            AND STD_DT BETWEEN TO_DATE(#{startDate}, '%Y%m%d') AND TO_DATE(#{endDate}, '%Y%m%d')
         </if>
     </select>
 
     <update id="blockSeller" parameterType="Map">
         UPDATE TB_ADM_MERCHANT_INFO
         SET BLOCK_YN = 'Y',
-            UPD_DT = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),
-            BLOCK_DT = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'),
+            UPD_DT = SYSDATE,
+            BLOCK_DT = SYSDATE,
             UPD_ID = #{updId},
             BLOCK_ID = #{blockId}
         WHERE MERCHANT_NM IN
