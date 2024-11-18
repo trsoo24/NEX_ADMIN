@@ -47,32 +47,4 @@ public class BillingGradeService {
 
         return billingGradeList;
     }
-
-//    private List<BillingGrade> checkPreviousMonthBillingGrade(List<String> lastMonthList) {
-//        try {
-//            for(String lastMonth : lastMonthList) {
-//
-//                String[] monthInfoArr = lastMonth.split(",");
-//                BillingGrade lastMonthBillingGrade = new BillingGrade();
-//                lastMonthBillingGrade.setStatYyMm(monthInfoArr[0]);
-//                lastMonthBillingGrade.setFirstDay(monthInfoArr[1]+"000000");
-//                lastMonthBillingGrade.setLastDay(monthInfoArr[2]+"235959");
-//                int statCnt = billingGradeMapper.getStatsGradeBillingCnt(lastMonthBillingGrade);
-//                log.info("이전데이터("+ lastMonth +") SELECT COUNT: " + statCnt + "건");
-//                if(statCnt <= 0) {
-//                    List<BillingGrade> gradeBillingList = billingGradeMapper.generateBillingGrade(lastMonthBillingGrade);
-//                    if(gradeBillingList != null) {
-//                        for(BillingGrade previousBillingGrade : gradeBillingList) {
-//                            previousBillingGrade.setStatYyMm(monthInfoArr[0]);
-//                            log.info("이전데이터("+ lastMonth +") INSERT SUCCESS: " + previousBillingGrade);
-//
-//                        }
-//
-//                    }
-//                }
-//            }
-//        }catch(Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

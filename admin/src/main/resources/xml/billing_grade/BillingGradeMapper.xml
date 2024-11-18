@@ -3,11 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.billing_grade.mapper.BillingGradeMapper">
-    <insert id="insertBillingGrade" parameterType="com.example.admin.billing_grade.dto.BillingGrade">
-        INSERT INTO TB_BILLING_GRADE(CUST_GRD_CD, STAT_YYMM, REG_DT, ALL_ACE_CNT, ALL_CNT, ALL_AMOUNT, PAID_ACE_CNT, PAID_CNT, PAID_AMOUNT, UNPAID_ACE_CNT, UNPAID_CNT, UNPAID_AMOUNT, DCB)
-        VALUES (#{custGrdCd}, #{statYyMm}, #{regDt},#{allAceCnt}, #{allCnt}, #{allAmount}, #{paidAceCnt}, #{paidCnt}, #{paidAmount}, #{unpaidAceCnt}, #{unpaidCnt}, #{unpaidAmount}, #{dcb})
-    </insert>
-
     <select id="generateBillingGrade" parameterType="com.example.admin.billing_grade.dto.BillingGrade" resultType="com.example.admin.billing_grade.dto.BillingGrade">
         WITH BASE_DATA AS (
             SELECT
@@ -27,8 +22,7 @@
                 CREATE_DT BETWEEN TO_DATE(#{firstDay}, 'YYYYMMDDHH24MISS') AND TO_DATE(#{lastDay}, 'YYYYMMDDHH24MISS')
               AND RESULT_CODE = #{resultCode}
               AND API_TYPE IN (#{api_type1}, #{api_type2}, #{api_type3})
-            GROUP BY ROLLUP(CUST_GRD_CD), BAN_UNPAID_YN_CODE
-        )
+            GROUP BY GROUPING SETS ((CUST_GRD_CD, BAN_UNPAID_YN_CODE), (BAN_UNPAID_YN_CODE), ())
         SELECT
             A.CUST_GRD_CD,
             NVL(A.CHARGE, 0) AS A_CHARGE, NVL(A.REVERSE, 0) AS A_REVERSE, NVL(A.REFUND, 0) AS A_REFUND,
@@ -40,13 +34,6 @@
         FROM BASE_DATA A
                  LEFT JOIN BASE_DATA B ON A.CUST_GRD_CD = B.CUST_GRD_CD AND B.BAN_UNPAID_YN_CODE = #{paid}
                  LEFT JOIN BASE_DATA C ON A.CUST_GRD_CD = C.CUST_GRD_CD AND C.BAN_UNPAID_YN_CODE = #{unpaid}
-        WHERE A.BAN_UNPAID_YN_CODE IS NULL;
-    </select>
-
-    <!-- 등급별 통계 존재유무 확인 -->
-    <select id="getStatsGradeBillingCnt" resultType="Integer">
-        SELECT COUNT(*)
-        FROM TB_GRADE_BILLING
-        WHERE STAT_YYMM = #{stat_yymm}
+        WHERE A.BAN_UNPAID_YN_CODE IS NULL
     </select>
 </mapper>

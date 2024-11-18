@@ -7,7 +7,5 @@ import java.util.List;
 
 @Mapper
 public interface BillingGradeMapper {
-    void insertBillingGrade(BillingGrade billingGrade);
     List<BillingGrade> generateBillingGrade(BillingGrade billingGrade);
-    Integer getStatsGradeBillingCnt(BillingGrade billingGrade);
 }
