@@ -10,7 +10,6 @@ import java.util.Map;
 
 @Mapper
 public interface RefundMapper {
-    void insertGdcbAuthInfo(AuthInfo authInfo);
     void insertManualRefund(ManualRefund manualRefund);
     void insertManualRefundFileInfo(ManualRefundFileInfo manualRefundFileInfo);
     void insertEai(LgudcbEaiSdw lgudcbEaiSdw);

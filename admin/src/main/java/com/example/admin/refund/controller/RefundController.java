@@ -3,7 +3,6 @@ package com.example.admin.refund.controller;
 import com.example.admin.common.response.ListResult;
 import com.example.admin.common.response.StatusResult;
 import com.example.admin.refund.dto.RefundDto;
-import com.example.admin.auth.dto.AuthInfo;
 import com.example.admin.refund.dto.ManualRefund;
 import com.example.admin.refund.dto.ManualRefundFileInfo;
 import com.example.admin.refund.dto.RefundProcessDto;
@@ -20,11 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RefundController {
     private final GdcbRefundService gdcbRefundService;
-
-    @PostMapping("/auth")
-    public void insertGdcbAuthInfo(@RequestBody AuthInfo authInfo) {
-        gdcbRefundService.insertGdcbAuthInfo(authInfo);
-    }
 
     @PostMapping("/manualRefund")
     public void insertManualRefund(@RequestBody ManualRefund manualRefund) {
