@@ -22,7 +22,7 @@
             server1 = #{server1},
             server2 = #{server2},
             last_modifier = #{modifier},
-            last_modified_date = now()
+            last_modified_date = SYSDATE
         WHERE
             scheduler = #{scheduler}
     </update>
