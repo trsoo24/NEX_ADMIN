@@ -4,83 +4,20 @@
 
 
 <mapper namespace="com.example.admin.analysis.mapper.AnalysisStatisticsMapper">
-    <insert id="insertApiLogs" parameterType="com.example.admin.analysis.dto.ApiLogs">
-        INSERT INTO TB_API_LOGS (CREATE_DT, SEQ, BAN_UNPAID_YN_CODE, HTTP_STATUS, CUST_GRD_CD, RESULT_CODE, API_RESULT, AMOUNT,REQ_TIME, RSP_TIME, OPERATOR_USER_TOKEN, API_TYPE, SEQ_ID, AUTH_TRANSACTION_ID, MERCHANT_NAME, ITEM_NAME, CORRELATION_ID, ISSUER_ID)
-        VALUES (#{createDt}, #{seq}, #{banUnpaidYnCode}, #{httpStatus}, #{custGrdCd}, #{resultCode}, #{apiResult}, #{amount},#{reqTime}, #{rspTime}, #{operatorUserToken}, #{apiType}, #{seqId}, #{authTransactionId}, #{merchantName}, #{itemName}, #{correlationId}, #{issuerId})
-    </insert>
-
-    <insert id="insertLogAnalysis" parameterType="com.example.admin.analysis.dto.DayAnalysis">
-        INSERT INTO TB_LOG_ANALYSIS_DAY (CREATE_DT, RESULT_CODE, CODE_COUNT,DCB)
-        VALUES (#{createDt}, #{resultCode}, #{codeCount}, #{dcb})
-    </insert>
-
-    <insert id="insertMonthAnalysis" parameterType="com.example.admin.analysis.dto.MonthAnalysis">
-        INSERT INTO TB_LOG_ANALYSIS_MONTH (CREATE_MONTH, RESULT_CODE, CODE_COUNT,DCB)
-        VALUES (#{createMonth}, #{resultCode}, #{codeCount}, #{dcb})
-    </insert>
-
-    <select id="generateMonthData" parameterType="Map" resultType="com.example.admin.analysis.dto.MonthAnalysis">
-        WITH FILTER AS(
-        SELECT *
-        FROM TB_LOG_ANALYSIS_DAY
-        WHERE 1 = 1
-        <if test="startDate != null and startDate != '' and endDate != null and endDate !=''">
-            AND CREATE_DT BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d') AND STR_TO_DATE(#{endDate}, '%Y-%m-%d')
-        </if>
-        )
-
-        SELECT
-        DATE_FORMAT(CREATE_DT, '%Y-%m') AS CREATE_MONTH,
-        RESULT_CODE,
-        SUM(CODE_COUNT) AS codeCount,
-        DCB
-        FROM FILTER
-        GROUP BY CREATE_MONTH, RESULT_CODE, DCB
-    </select>
-
     <select id="generateAnalysisStatistics" parameterType="map" resultType="com.example.admin.analysis.dto.DayAnalysis">
     WITH FILTER AS (
     SELECT *
         FROM TB_API_LOGS
         WHERE 1 = 1
         <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-            AND CREATE_DT BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(#{endDate}, '%Y-%m-%d %H:%i:%s')
+            AND CREATE_DT BETWEEN TO_DATE(#{startDate}, '%Y-%m-%d %H:%i:%s') AND TO_DATE(#{endDate}, '%Y-%m-%d %H:%i:%s')
         </if>
     )
         SELECT
         CREATE_DT,
         RESULT_CODE,
-        COUNT(*) AS codeCount
-
+        COUNT(CODE_COUNT) AS codeCount
         FROM FILTER
         GROUP BY CREATE_DT, RESULT_CODE
-    </select>
-
-    <select id="getAnalysisStatisticsList" parameterType="map" resultType="com.example.admin.analysis.dto.DayAnalysis">
-        SELECT * FROM TB_LOG_ANALYSIS_DAY
-        WHERE 1 = 1
-        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-            AND CREATE_DT BETWEEN STR_TO_DATE(#{startDate}, '%Y-%m-%d') AND STR_TO_DATE(#{endDate}, '%Y-%m-%d')
-        </if>
-        <if test="codeName != null and codeName != ''">
-            AND RESULT_CODE LIKE CONCAT('%', #{codeName}, '%')
-        </if>
-        <if test="dcb != null and dcb != ''">
-            AND DCB = #{dcb}
-        </if>
-    </select>
-
-    <select id="getAnalysisMonthStatisticsList" parameterType="map" resultType="com.example.admin.analysis.dto.MonthAnalysis">
-        SELECT * FROM TB_LOG_ANALYSIS_MONTH
-        WHERE 1 = 1
-        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-            AND CREATE_MONTH BETWEEN #{startDate} AND #{endDate}
-        </if>
-        <if test="codeName != null and codeName != ''">
-            AND RESULT_CODE LIKE CONCAT('%', #{codeName}, '%')
-        </if>
-        <if test="dcb != null and dcb != ''">
-            AND DCB = #{dcb}
-        </if>
     </select>
 </mapper>

@@ -14,13 +14,4 @@ public class DayAnalysis {
     private String resultCode;
     private Integer codeCount;
     private String dcb;
-
-    public static DayAnalysis to(String createDt, String resultCode, Integer codeCount, String dcb) {
-        return DayAnalysis.builder()
-                .createDt(createDt)
-                .resultCode(resultCode)
-                .codeCount(codeCount)
-                .dcb(dcb)
-                .build();
-    }
 }
