@@ -5,7 +5,7 @@
 <mapper namespace="com.example.admin.stats_day.mapper.StatsDayMapper">
     <select id="getStatsDayList" parameterType="map" resultType="com.example.admin.stats_day.dto.StatsDay">
         SELECT
-            CONCAT(YEAR, '-', LPAD(MONTH, 2, '0'), '-', LPAD(DAY, 2, '0')) AS stat_day,
+            YEAR || '-' || LPAD(MONTH, 2, '0') || '-' || LPAD(DAY, 2, '0') AS stat_day,
             SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN CHARGE_AMOUNT ELSE 0 END) AS b_stat,
             SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN CANCEL_AMOUNT ELSE 0 END) AS d_stat,
             SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN REFUND_AMOUNT ELSE 0 END) AS f_stat,

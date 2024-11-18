@@ -68,7 +68,7 @@
         <if test="answer1 != null">, ANSWER_1</if>
         <if test="answer2 != null">, ANSWER_2</if>
         <if test="answer3 != null">, ANSWER_3</if>)
-        VALUES (DATE_FORMAT(NOW(), '%Y-%m-%d'), #{ctn}, #{dcb}, #{content}
+        VALUES (SYSDATE, #{ctn}, #{dcb}, #{content}
         <if test="division1 != null">, #{division1}</if>
         <if test="division2 != null">, #{division2}</if>
         <if test="division3 != null">, #{division3}</if>
@@ -92,7 +92,7 @@
         SELECT * FROM TB_VOC_HISTORY
         WHERE 1 = 1
         <if test="writer != null and writer != ''">
-            AND WRITER LIKE CONCAT('%', #{writer}, '%')
+            AND WRITER LIKE '%' || #{writer} || '%'
         </if>
     </select>
 </mapper>
