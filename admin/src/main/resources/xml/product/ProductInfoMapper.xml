@@ -8,9 +8,9 @@
         FROM TB_ADM_ITEM_SALES
         WHERE
         <if test="productName != null and productName != ''">
-            ITEMSALES_NM LIKE CONCAT('%', #{productName}, '%') AND
+            ITEMSALES_NM LIKE '%' || #{productName} || '%' AND
         </if>
-            STD_DT BETWEEN STR_TO_DATE(#{startDate}, '%Y%m%d') AND STR_TO_DATE(#{endDate}, '%Y%m%d')
+            STD_DT BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
         <if test="stdDt != null and stdDt != ''">
             ORDER BY STD_DT
         </if>
