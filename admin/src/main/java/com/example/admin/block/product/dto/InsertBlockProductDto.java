@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InsertBlockProductDto {
     private String dcb;
+    private Long productNo;
     private String product;
     private String mbrId;
 }

@@ -4,22 +4,22 @@
 
 <mapper namespace="com.example.admin.block.product.mapper.BlockProductMapper">
     <insert id="insertBlockProduct" parameterType="com.example.admin.block.product.dto.InsertBlockProductDto">
-        INSERT INTO TB_BLOCK_PRODUCT(PRODUCT_NAME, REG_DT, REG_ID)
-        VALUES (#{product}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId})
+        INSERT INTO TB_BLOCK_ITEM(ITEM_NO, ITEM_NM, REG_DT, REG_ID)
+        VALUES (#{productNo}, #{product}, SYSDATE, #{mbrId})
     </insert>
 
     <select id="getBlockProductList" parameterType="map" resultType="com.example.admin.block.product.dto.BlockProductDto">
-        SELECT * FROM TB_BLOCK_PRODUCT
+        SELECT * FROM TB_BLOCK_ITEM
         WHERE 1 = 1
         <if test="product != null and product != ''">
-        AND PRODUCT_NAME LIKE CONCAT('%', #{product}, '%')
+        AND ITEM_NM LIKE '%' || #{product} || '%'
         </if>
-        ORDER BY PRODUCT_NAME
+        ORDER BY ITEM_NM
     </select>
 
     <delete id="deleteBlockProduct" parameterType="java.util.List">
-        DELETE FROM TB_BLOCK_PRODUCT
-        WHERE PRODUCT_NO IN
+        DELETE FROM TB_BLOCK_ITEM
+        WHERE ITEM_NO IN
         <foreach item="productNo" collection="productNos" open="(" separator="," close=")">
             #{productNo}
         </foreach>

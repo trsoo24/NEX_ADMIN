@@ -4,8 +4,8 @@
 
 <mapper namespace="com.example.admin.block.fee_type.mapper.BlockFeeTypeMapper">
     <insert id="insertBlockFeeType" parameterType="com.example.admin.block.fee_type.dto.InsertBlockFeeTypeDto">
-        INSERT INTO TB_BLOCK_FEE_TYPE(FEE_TYPE_CD, REG_DT, MBR_ID, FEE_TYPE_NM)
-        VALUES (#{feeTypeCode}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId}, #{feeTypeName})
+        INSERT INTO TB_BLOCK_FEE_TYPE(FEE_TYPE_CD, REG_DT, REG_ID, FEE_TYPE_NM)
+        VALUES (#{feeTypeCode}, SYSDATE, #{mbrId}, #{feeTypeName})
     </insert>
 
     <select id="existsFeeType" parameterType="String" resultType="boolean">
@@ -13,11 +13,11 @@
             SELECT 1
             FROM TB_BLOCK_FEE_TYPE
             WHERE FEE_TYPE_CD = #{feeTypeCd}
-        ) THEN 1 ELSE 0
+        ) THEN 1 ELSE 0 END AS IS_DUPLICATE
     </select>
 
     <select id="getAllBlockFeeType" resultType="com.example.admin.block.fee_type.dto.BlockFeeTypeDto">
-        SELECT FEE_TYPE_ID, FEE_TYPE_CD AS feeTypeCode, REG_DT, MBR_ID, FEE_TYPE_NM AS feeTypeName
+        SELECT FEE_TYPE_CD AS feeTypeCode, REG_DT, REG_ID, FEE_TYPE_NM AS feeTypeName
         FROM TB_BLOCK_FEE_TYPE
         ORDER BY REG_DT
     </select>

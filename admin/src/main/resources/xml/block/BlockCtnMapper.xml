@@ -4,8 +4,8 @@
 
 <mapper namespace="com.example.admin.block.ctn.mapper.BlockCtnMapper">
     <insert id="insertBlockCtn" parameterType="com.example.admin.block.ctn.dto.InsertBlockCtnDto">
-        INSERT INTO TB_BLOCK_CTN(CTN, REG_DT, MBR_ID)
-        VALUES (#{ctn}, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), #{mbrId})
+        INSERT INTO TB_BLOCK_CTN(CTN, REG_DT, REG_ID)
+        VALUES (#{ctn}, SYSDATE, #{mbrId})
     </insert>
 
     <select id="existsCtn" parameterType="String" resultType="boolean">
@@ -13,7 +13,7 @@
             SELECT 1
             FROM TB_BLOCK_CTN
             WHERE CTN = #{ctn}
-        ) THEN 1 ELSE 0
+        ) THEN 1 ELSE 0 END AS IS_DUPLICATE
     </select>
 
     <select id="getAllBlockCtn" parameterType="map" resultType="com.example.admin.block.ctn.dto.BlockCtnDto">
