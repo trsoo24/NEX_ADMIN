@@ -2,7 +2,6 @@ package com.example.admin.range_month.controller;
 
 import com.example.admin.range_month.dto.RangeMonth;
 import com.example.admin.range_month.service.RangeMonthService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

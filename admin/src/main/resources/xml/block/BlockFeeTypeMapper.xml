@@ -9,9 +9,11 @@
     </insert>
 
     <select id="existsFeeType" parameterType="String" resultType="boolean">
-        SELECT COUNT(*) > 0
-        FROM TB_BLOCK_FEE_TYPE
-        WHERE FEE_TYPE_CD = #{feeTypeCd}
+        SELECT CASE WHEN EXISTS (
+            SELECT 1
+            FROM TB_BLOCK_FEE_TYPE
+            WHERE FEE_TYPE_CD = #{feeTypeCd}
+        ) THEN 1 ELSE 0
     </select>
 
     <select id="getAllBlockFeeType" resultType="com.example.admin.block.fee_type.dto.BlockFeeTypeDto">

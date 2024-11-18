@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.stats_month.mapper.StatsMonthMapper">
-    <select id="getStatsMonthList" parameterType="map" resultMap="com.example.admin.stats_month.dto.StatsMonth">
+    <select id="getStatsMonthList" parameterType="map" resultType="com.example.admin.stats_month.dto.StatsMonth">
         SELECT
             CONCAT(YEAR, '-', LPAD(MONTH, 2, '0')) AS stat_month,
             SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN CHARGE_AMOUNT ELSE 0 END) AS b_stat,

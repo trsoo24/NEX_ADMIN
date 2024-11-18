@@ -1,6 +1,5 @@
 package com.example.admin.analysis.service;
 
-import com.example.admin.common.service.FunctionUtil;
 import com.example.admin.analysis.dto.DayAnalysisDto;
 import com.example.admin.analysis.dto.DayAnalysis;
 import com.example.admin.analysis.dto.type.AnalysisResultCode;
@@ -25,7 +24,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DayAnalysisStatisticService {
     private final AnalysisStatisticsMapper analysisStatisticsMapper;
-    private final FunctionUtil functionUtil;
 
     // 통계 분석에 표시될 ResultCode 값에 대한 설명을 Map<에러 코드, 설명> 으로 저장
     private static final Map<String, String> codeToDescriptionMap = Arrays.stream(AnalysisResultCode.values())

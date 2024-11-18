@@ -1,6 +1,5 @@
 package com.example.admin.analysis.mapper;
 
-import com.example.admin.analysis.dto.ApiLogs;
 import com.example.admin.analysis.dto.DayAnalysis;
 import com.example.admin.analysis.dto.MonthAnalysis;
 import org.apache.ibatis.annotations.Mapper;
@@ -10,7 +9,6 @@ import java.util.Map;
 
 @Mapper
 public interface AnalysisStatisticsMapper {
-    void insertApiLogs(ApiLogs apiLogs);
     void insertLogAnalysis(DayAnalysis dayAnalysis);
     void insertMonthAnalysis(MonthAnalysis monthAnalysis);
     List<MonthAnalysis> generateMonthData(Map<String, Object> map);

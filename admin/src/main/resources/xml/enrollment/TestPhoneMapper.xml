@@ -10,9 +10,11 @@
     </insert>
 
     <select id="existsCtn" parameterType="String" resultType="boolean">
-        SELECT COUNT(*) > 0
-        FROM TB_ENROLLMENT_PHONE
-        WHERE CTN = #{ctn}
+        SELECT CASE WHEN EXISTS (
+            SELECT 1
+            FROM TB_ENROLLMENT_PHONE
+            WHERE CTN = #{ctn}
+        ) THEN 1 ELSE 0
     </select>
 
     <select id="getAllTestPhone" resultType="com.example.admin.testphone.dto.TestPhone">

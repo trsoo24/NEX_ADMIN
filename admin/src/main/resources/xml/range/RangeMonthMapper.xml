@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.range_month.mapper.RangeMonthMapper">
-    <select id="getRangeMonthScheduleList" resultMap="com.example.admin.range_month.dto.RangeMonth">
+    <select id="getRangeMonthScheduleList" resultType="com.example.admin.range_month.dto.RangeMonth">
         SELECT
             TO_CHAR(TO_DATE(STAT_DAY, 'YYYY-MM-DD'), 'YYYY-MM') AS STAT_MONTH,
             A_STAT,

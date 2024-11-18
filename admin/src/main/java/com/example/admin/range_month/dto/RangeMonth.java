@@ -19,27 +19,4 @@ public class RangeMonth {
     private Double f_stat; // 실 결제 금액 ( 원 )
     private Double g_stat; // 인당 결제 금액 ( 원 )
     private final String dcb = "GDCB";
-
-    public static RangeMonth setDefault(String statMonth, String aStat) {
-        double def = 0;
-        return RangeMonth.builder()
-                .stat_month(statMonth)
-                .a_stat(aStat)
-                .b_stat(def)
-                .c_stat(def)
-                .d_stat(def)
-                .e_stat(def)
-                .f_stat(def)
-                .g_stat(def)
-                .build();
-    }
-
-    public void addTotalValue(RangeMonth rangeMonth) {
-        this.b_stat += rangeMonth.getB_stat();
-        this.c_stat += rangeMonth.getC_stat();
-        this.d_stat += rangeMonth.getD_stat();
-        this.e_stat += rangeMonth.getE_stat();
-        this.f_stat += rangeMonth.getF_stat();
-        this.g_stat += rangeMonth.getG_stat();
-    }
 }
