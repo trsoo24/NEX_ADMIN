@@ -5,7 +5,6 @@ import com.example.admin.testphone.dto.InsertTestPhoneDto;
 import com.example.admin.testphone.dto.TestPhone;
 import com.example.admin.common.exception.TestPhoneException;
 import com.example.admin.testphone.mapper.TestPhoneMapper;
-import com.example.admin.common.service.FunctionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +19,6 @@ import static com.example.admin.common.exception.enums.TestPhoneErrorCode.NOT_IN
 public class TestPhoneService {
     private final TestPhoneMapper testPhoneMapper;
     private final TestPhoneReference testPhoneReference;
-    private final FunctionUtil functionUtil;
 
     public void insertTestPhone(InsertTestPhoneDto dto) {
         if (testPhoneReference.existsCtn(dto.getCtn())) {
