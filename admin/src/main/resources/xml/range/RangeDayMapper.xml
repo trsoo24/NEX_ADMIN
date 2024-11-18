@@ -3,14 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.range_day.mapper.RangeDayMapper">
-    <select id="getRangeDayList" parameterType="map" resultMap="rangeDayMap">
-        SELECT * FROM TB_STATS_RANGE_DAY
-        WHERE 1 = 1
-        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-            AND STAT_DAY BETWEEN #{startDate} AND #{endDate}
-        </if>
-    </select>
-
     <select id="getRangeDay" resultType="com.example.admin.range_day.dto.RangeDay">
         SELECT
             TO_CHAR(TRANSACTION_DT, 'YYYY-MM-DD') AS stat_day,
