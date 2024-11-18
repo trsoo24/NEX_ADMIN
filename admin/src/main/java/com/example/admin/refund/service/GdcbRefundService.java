@@ -444,10 +444,6 @@ public class GdcbRefundService {
 
     }
 
-    public void insertGdcbAuthInfo(AuthInfo authInfo) {
-        refundMapper.insertGdcbAuthInfo(authInfo);
-    }
-
     public void insertManualRefund(ManualRefund manualRefund) {
         refundMapper.insertManualRefund(manualRefund);
     }
