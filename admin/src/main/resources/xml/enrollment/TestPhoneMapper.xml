@@ -14,7 +14,7 @@
             SELECT 1
             FROM TB_ENROLLMENT_PHONE
             WHERE CTN = #{ctn}
-        ) THEN 1 ELSE 0
+        ) THEN 1 ELSE 0 END AS IS_DUPLICATE
     </select>
 
     <select id="getAllTestPhone" resultType="com.example.admin.testphone.dto.TestPhone">
