@@ -1,5 +1,6 @@
 package com.example.admin.seller.service;
 
+import com.example.admin.common.service.FunctionUtil;
 import com.example.admin.seller.dto.BlockSellerDto;
 import com.example.admin.seller.dto.field.AdmSellerInfoField;
 import com.example.admin.seller.dto.AdmSeller;
@@ -24,8 +25,8 @@ public class AdmSellerService {
 
     public List<AdmSeller> searchSeller(String sellerName, String startDate, String endDate) {
         Map<String, String> map = new HashMap<>();
-        map.put("startDate", startDate);
-        map.put("endDate", endDate);
+        map.put("startDate", FunctionUtil.toYYYYmmDD(startDate));
+        map.put("endDate", FunctionUtil.toYYYYmmDD(endDate));
         map.put("sellerName", sellerName);
 
         return admSellerInfoMapper.searchSellers(map);

@@ -21,7 +21,7 @@
             AND MERCHANT_NM LIKE '%' || #{sellerName} || '%'
         </if>
         <if test="startDate != null and endDate != null">
-            AND STD_DT BETWEEN TO_DATE(#{startDate}, '%Y%m%d') AND TO_DATE(#{endDate}, '%Y%m%d')
+            AND STD_DT BETWEEN #{startDate} AND #{endDate}
         </if>
     </select>
 

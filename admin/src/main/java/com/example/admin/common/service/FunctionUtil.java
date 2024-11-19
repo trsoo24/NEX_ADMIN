@@ -61,6 +61,13 @@ public class FunctionUtil {
         return yearMonth.atEndOfMonth().toString();
     }
 
+    public static String toYYYYmmDD(String date) {
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String formattedDate = localDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")); // "YYYYMMDD" 형식
+
+        return formattedDate;
+    }
+
     public static List<String> getlastMonthTryList(){
         List<String> lastMonthList = new ArrayList<>();
 
