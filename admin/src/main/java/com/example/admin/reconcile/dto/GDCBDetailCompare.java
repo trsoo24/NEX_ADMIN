@@ -27,7 +27,7 @@ public class GDCBDetailCompare {
     // G_GDCB_MONTHLY_INVOICE_SUM
     private String gYear;
     private String gMonth;
-    private Double productPriceSum;
+    private Double itemPriceSum;
     private Double taxSum;
     private Double revShareSum;
 
@@ -56,7 +56,7 @@ public class GDCBDetailCompare {
                 .gMonth(monthArray[1])
                 .revsCategory(sum.getRevsCategory())
                 .totalAmountSum(sum.getTotalAmountSum())
-                .productPriceSum(sum.getProductPriceSum())
+                .itemPriceSum(sum.getItemPriceSum())
                 .taxSum(sum.getTaxSum())
                 .revShareSum(sum.getRevShareSum())
                 .build();

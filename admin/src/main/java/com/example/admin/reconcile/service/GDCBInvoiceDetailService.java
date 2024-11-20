@@ -139,7 +139,7 @@ public class GDCBInvoiceDetailService {
         GoogleMonthlyInvoiceSum total = GoogleMonthlyInvoiceSum.toRevsCategoryTotal(sumList.get(0).getYear(), sumList.get(0).getMonth());
 
         for (GoogleMonthlyInvoiceSum sum : sumList) {
-            total.addProductPriceSum(sum.getProductPriceSum());
+            total.addItemPriceSum(sum.getItemPriceSum());
             total.addTaxSum(sum.getTaxSum());
             total.addTotalAmountSum(sum.getTotalAmountSum());
             total.addRevShareSum(sum.getRevShareSum());

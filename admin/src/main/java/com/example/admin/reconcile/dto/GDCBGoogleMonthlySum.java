@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class GDCBGoogleMonthlySum {
     private String revsCategory;
-    private Double productPriceSum;
+    private Double itemPriceSum;
     private Double taxSum;
     private Double totalAmountSum;
     private Double revShareSum;

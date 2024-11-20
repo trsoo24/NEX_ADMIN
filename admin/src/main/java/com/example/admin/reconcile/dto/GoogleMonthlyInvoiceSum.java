@@ -13,18 +13,18 @@ public class GoogleMonthlyInvoiceSum { // Google Monthly invoice fees and expens
     private String year;
     private String month;
     private String revsCategory;
-    private Double productPriceSum;
+    private Double itemPriceSum;
     private Double taxSum;
     private Double totalAmountSum;
     private Double revShareSum;
 
     public static GoogleMonthlyInvoiceSum toEntity(String year, String month, String revsCategory,
-                                           Double productPriceSum, Double taxSum, Double totalAmountSum, Double revShareSum) {
+                                           Double itemPriceSum, Double taxSum, Double totalAmountSum, Double revShareSum) {
         return GoogleMonthlyInvoiceSum.builder()
                 .year(year)
                 .month(month)
                 .revsCategory(revsCategory)
-                .productPriceSum(productPriceSum)
+                .itemPriceSum(itemPriceSum)
                 .taxSum(taxSum)
                 .totalAmountSum(totalAmountSum)
                 .revShareSum(revShareSum)
@@ -36,15 +36,15 @@ public class GoogleMonthlyInvoiceSum { // Google Monthly invoice fees and expens
                 .year(year)
                 .month(month)
                 .revsCategory("SUM")
-                .productPriceSum(0.0)
+                .itemPriceSum(0.0)
                 .taxSum(0.0)
                 .totalAmountSum(0.0)
                 .revShareSum(0.0)
                 .build();
     }
 
-    public void addProductPriceSum(Double productPriceSum) {
-        this.productPriceSum += productPriceSum;
+    public void addItemPriceSum(Double itemPriceSum) {
+        this.itemPriceSum += itemPriceSum;
     }
     public void addTaxSum(Double taxSum) {
         this.taxSum += taxSum;
