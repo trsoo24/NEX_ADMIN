@@ -1,10 +1,12 @@
 package com.example.admin.seller.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.util.Date;
+
 
 @Getter
 @NoArgsConstructor
@@ -14,9 +16,9 @@ public class AdmSeller {
     private String sellerContact;
     private String stdDt;
     private String blockYn;
-    private LocalDate regDt;
-    private LocalDate updDt;
+    private Date regDt;
+    private Date updDt;
     private String updId;
-    private LocalDate blockDt;
+    private Date blockDt;
     private String blockId;
 }
