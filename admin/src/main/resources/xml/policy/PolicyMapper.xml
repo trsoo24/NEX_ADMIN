@@ -8,26 +8,13 @@
     <update id="updatePolicyInfo" parameterType="com.example.admin.policy.dto.UpdatePolicyInfoDto">
         UPDATE TB_POLICY_INFO
         SET
-        POLICY_RS_DT = NULL,
-        RESERVATION_YN = 'N',
-        UPDATE_DT = SYSDATE,
+        POLICY_APPLIED_DATE = SYSDATE,
         FLAG = #{flag}
-        WHERE 1 = 1
-        <if test="policyCode != null and policyCode != ''">
-            AND POLICY_CODE = #{policyCode}
-        </if>
-        AND RESERVATION_YN = 'Y'
+        WHERE POLICY_CODE = #{policyCode}
     </update>
 
     <!-- 전체 결제 정책 목록 조회 -->
     <select id="selectAllPolicyInfo" resultType="com.example.admin.policy.dto.PolicyInfo">
-        SELECT
-            POLICY_CODE,
-            FLAG,
-            RESERVATION_YN,
-            POLICY_RS_DT,
-            CREATE_DT,
-            UPDATE_DT
-        FROM TB_POLICY_INFO
+        SELECT * FROM TB_POLICY_INFO
     </select>
 </mapper>
