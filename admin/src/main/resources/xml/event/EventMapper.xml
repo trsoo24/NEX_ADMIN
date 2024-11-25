@@ -10,7 +10,15 @@
     </insert>
 
     <select id="getEventList" parameterType="map" resultType="com.example.admin.event.dto.Event">
-        SELECT * FROM TB_EVENT_INFO
+        SELECT
+            EVT_NAME AS eventName,
+            EVT_FILE_NM AS fileName,
+            EVT_URL AS url,
+            TO_CHAR(REG_DT, 'YYYY-MM-DD') AS regDt,
+            REG_ID,
+            TO_CHAR(UPD_DT,  'YYYY-MM-DD') AS updDt,
+            UPD_ID
+            FROM TB_EVENT_INFO
         WHERE 1 = 1
         <if test="eventName != null and eventName != ''">
             AND EVT_NAME LIKE '%' || #{eventName} || '%'

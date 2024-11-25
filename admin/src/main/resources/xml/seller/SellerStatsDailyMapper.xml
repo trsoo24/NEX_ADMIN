@@ -4,15 +4,15 @@
 <mapper namespace="com.example.admin.seller.mapper.SellerStatsDailyMapper">
     <select id="getSellerDayStats" parameterType="map" resultType="com.example.admin.seller.dto.SellerDayStat">
         SELECT
-            "YEAR",
-            "MONTH",
-            "DAY",
+            YEAR,
+            MONTH,
+            DAY,
             MERCHANTNAME AS sellerName,
             SUM(SUM_ITEM_PRICE) AS sumPrice,
             SUM(SUM_TAX) AS sumTax,
             SUM(SUM_TOTAL) AS sumTotal
         FROM TB_ITEM_STATS_DAILY
-        WHERE "YEAR" = #{year} AND "MONTH" = #{month} AND "DAY" = #{day}
+        WHERE YEAR = #{year} AND MONTH = #{month} AND DAY = #{day}
         GROUP BY MERCHANTNAME
     </select>
 </mapper>

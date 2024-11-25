@@ -4,8 +4,8 @@
 <mapper namespace="com.example.admin.product.mapper.ProductStatsMonthlyMapper">
     <select id="getProductMonthStats" parameterType="map" resultType="com.example.admin.product.dto.ProductStatsMonthly">
         SELECT
-            "YEAR",
-            "MONTH",
+            YEAR,
+            MONTH,
             MERCHANTNAME AS sellerName,
             ITEMNAME AS productName,
             SUM_ITEM_PRICE,
@@ -14,10 +14,10 @@
         FROM TB_ITEM_STATS_MONTHLY
         WHERE 1 = 1
         <if test="year != null">
-            AND "YEAR" = #{year}
+            AND YEAR = #{year}
         </if>
         <if test="month != null">
-            AND "MONTH" = #{month}
+            AND MONTH = #{month}
         </if>
     </select>
 </mapper>

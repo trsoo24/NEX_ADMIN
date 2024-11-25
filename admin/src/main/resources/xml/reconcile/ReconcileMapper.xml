@@ -60,13 +60,13 @@
             AND PAYMENT_TYPE = #{paymentType}
         </if>
         <if test="year != null and year != ''">
-            AND "YEAR" = #{year}
+            AND YEAR = #{year}
         </if>
         <if test="month != null and month != ''">
-            AND "MONTH" = #{month}
+            AND MONTH = #{month}
         </if>
         AND TRANSACTION_TYPE = 'B'
-        GROUP BY REVS_CATEGORY
+        GROUP BY TRANSACTION_TYPE, REVS_CATEGORY
     </select>
 
     <select id="selectRefundInvoice" parameterType="map" resultType="com.example.admin.reconcile.dto.GDCBMonthlyInvoiceSum">
@@ -84,19 +84,19 @@
             AND PAYMENT_TYPE = #{paymentType}
         </if>
         <if test="year != null and year != ''">
-            AND "YEAR" = #{year}
+            AND YEAR = #{year}
         </if>
         <if test="month != null and month != ''">
-            AND "MONTH" = #{month}
+            AND MONTH = #{month}
         </if>
         AND TRANSACTION_TYPE = 'R'
-        GROUP BY REVS_CATEGORY
+        GROUP BY TRANSACTION_TYPE, REVS_CATEGORY
     </select>
 
     <select id="selectGoogleSummary" parameterType="map" resultType="com.example.admin.reconcile.dto.GoogleMonthlyInvoiceSum">
         SELECT
-            "YEAR",
-            "MONTH",
+            YEAR,
+            MONTH,
             REVS_CATEGORY,
             SUM(ITEM_PRICE_SUM) AS itemPriceSum,
             SUM(TAX_SUM) AS taxSum,
@@ -105,11 +105,11 @@
         FROM G_MONTHLY_INVOICE_SUM
         WHERE 1 = 1
         <if test="year != null and year != ''">
-            AND "YEAR" = #{year}
+            AND YEAR = #{year}
         </if>
         <if test="month != null and month != ''">
-            AND "MONTH" = #{month}
+            AND MONTH = #{month}
         </if>
-        GROUP BY REVS_CATEGORY
+        GROUP BY YEAR, MONTH, REVS_CATEGORY
     </select>
 </mapper>

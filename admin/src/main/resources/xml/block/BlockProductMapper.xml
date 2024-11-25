@@ -9,7 +9,12 @@
     </insert>
 
     <select id="getBlockProductList" parameterType="map" resultType="com.example.admin.block.product.dto.BlockProductDto">
-        SELECT * FROM TB_BLOCK_ITEM
+        SELECT
+            ITEM_NO AS productNo,
+            ITEM_NM AS productName,
+            TO_CHAR(REG_DT, 'YYYY-MM-DD') AS regDt,
+            REG_ID
+            FROM TB_BLOCK_ITEM
         WHERE 1 = 1
         <if test="product != null and product != ''">
         AND ITEM_NM LIKE '%' || #{product} || '%'
