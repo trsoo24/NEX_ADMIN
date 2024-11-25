@@ -6,10 +6,10 @@
 <mapper namespace="com.example.admin.mms_history.mapper.MmsSendMapper">
     <select id="selectMmsHistoryList" parameterType="map" resultType="com.example.admin.mms_history.dto.MmsHistoryDto">
         SELECT
-            CREATE_DT createDt,
-            TO_CTN ctn,
-            CONTENT content,
-            SEND_RESULT sendResult
+            TO_CHAR(CREATE_DT, 'YYYY-MM-DD') AS createDt,
+            TO_CTN AS ctn,
+            CONTENT AS content,
+            SEND_RESULT AS sendResult
         FROM TB_MMS_SEND_HIS
         WHERE TO_CTN = #{ctn}
             AND CREATE_DT BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')

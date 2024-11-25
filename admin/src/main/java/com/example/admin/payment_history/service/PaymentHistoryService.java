@@ -28,14 +28,13 @@ public class PaymentHistoryService {
 
     public List<PaymentHistory> getPaymentHistoryList(String startDate, String endDate, String ctn) {
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("startDate", FunctionUtil.monthStartTransToYYYYmmDD(startDate));
-        requestMap.put("endDate", FunctionUtil.montEndTransToYYYYmmDD(endDate));
+        requestMap.put("startDate", FunctionUtil.monthStartTransToYYYYmmDDHH24MISS(startDate));
+        requestMap.put("endDate", FunctionUtil.montEndTransToYYYYmmDDHH24MISS(endDate));
         requestMap.put("ctn", ctn);
 
         return paymentHistoryMapper.getPaymentHistoryList(requestMap);
     }
 
-    // 통합 ADMIN 에서 EXCEL 만들기 전에 API 호출
     public List<PaymentHistoryDto> getPaymentHistoryDtoList(List<PaymentHistory> paymentHistoryList) {
         List<PaymentHistoryDto> paymentHistoryDtoList = new ArrayList<>();
 
