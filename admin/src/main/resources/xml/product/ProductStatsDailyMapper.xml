@@ -4,9 +4,9 @@
 <mapper namespace="com.example.admin.product.mapper.ProductStatsDailyMapper">
     <select id="getProductDayStats" parameterType="map" resultType="com.example.admin.product.dto.ProductStatsDaily">
         SELECT
-            `YEAR`,
-            `MONTH`,
-            `DAY`,
+            "YEAR",
+            "MONTH",
+            "DAY",
             MERCHANTNAME AS sellerName,
             ITEMNAME AS productName,
             SUM_ITEM_PRICE,
@@ -15,13 +15,13 @@
             FROM TB_ITEM_STATS_DAILY
         WHERE 1 = 1
         <if test="year != null">
-            AND `YEAR` = #{year}
+            AND "YEAR" = #{year}
         </if>
         <if test="month != null">
-            AND `MONTH` = #{month}
+            AND "MONTH" = #{month}
         </if>
         <if test="day != null">
-            AND `DAY` = #{day}
+            AND "DAY" = #{day}
         </if>
     </select>
 </mapper>
