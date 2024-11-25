@@ -15,7 +15,7 @@
         <if test="eventName != null and eventName != ''">
             AND EVT_NAME LIKE '%' || #{eventName} || '%'
         </if>
-        ORDER BY TO_DATE(REG_DT, '%Y-%m-%d') DESC
+        ORDER BY REG_DT
     </select>
 
     <delete id="deleteEvent" parameterType="java.util.List">

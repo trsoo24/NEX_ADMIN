@@ -11,12 +11,7 @@
             CONTENT content,
             SEND_RESULT sendResult
         FROM TB_MMS_SEND_HIS
-        WHERE 1 = 1
-        <if test="ctn != null and ctn != ''">
-            AND TO_CTN = #{ctn}
-        </if>
-        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-            AND CREATE_DT BETWEEN #{startDate} AND #{endDate}
-        </if>
+        WHERE TO_CTN = #{ctn}
+            AND CREATE_DT BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
     </select>
 </mapper>

@@ -3,9 +3,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.stats_day.mapper.StatsDayMapper">
-    <select id="getStatsDayList" parameterType="map" resultType="com.example.admin.stats_day.dto.StatsDay">
+    <select id="getStatsDayList" parameterType="map" resultMap="dayPaymentResultMap">
         SELECT
-            YEAR || '-' || LPAD(MONTH, 2, '0') || '-' || LPAD(DAY, 2, '0') AS stat_day,
+            `YEAR` || '-' || LPAD(`MONTH`, 2, '0') || '-' || LPAD(`DAY`, 2, '0') AS stat_day,
             SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN CHARGE_AMOUNT ELSE 0 END) AS b_stat,
             SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN CANCEL_AMOUNT ELSE 0 END) AS d_stat,
             SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN REFUND_AMOUNT ELSE 0 END) AS f_stat,
@@ -16,8 +16,8 @@
             SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN CANCEL_AMOUNT ELSE NULL END) AS r_stat,
             SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN REFUND_AMOUNT ELSE NULL END) AS t_stat
         FROM TB_AUTH_STATS_DAILY
-        WHERE YEAR = #{year} AND MONTH = #{month} AND DAY = #{day}
-        GROUP BY YEAR, MONTH, DAY
+        WHERE `YEAR` = #{year} AND `MONTH` = #{month} AND `DAY` = #{day}
+        GROUP BY `YEAR`, `MONTH`, `DAY`
     </select>
 
     <resultMap id="dayPaymentResultMap" type="com.example.admin.stats_day.dto.StatsDay">

@@ -6,11 +6,11 @@
 <mapper namespace="com.example.admin.scheduler.mapper.ScheduleManageMapper">
     <select id="getSchedulerStatus" resultType="com.example.admin.scheduler.dto.GetScheduleManageResponse">
         SELECT
-            scheduler,
-            server1,
-            server2,
-            last_modifier AS lastModifier,
-            last_modified_date AS lastModifiedDate
+            SCHEDULER,
+            SERVER1,
+            SERVER2,
+            LAST_MODIFIER AS lastModifier,
+            LAST_MODIFIED_DATE AS lastModifiedDate
         FROM
             TB_SCHEDULE_MANAGE
     </select>
@@ -19,11 +19,11 @@
         UPDATE
             TB_SCHEDULE_MANAGE
         SET
-            server1 = #{server1},
-            server2 = #{server2},
-            last_modifier = #{modifier},
-            last_modified_date = SYSDATE
+            SERVER1 = #{server1},
+            SERVER2 = #{server2},
+            LAST_MODIFIER = #{modifier},
+            LAST_MODIFIED_DATE = SYSDATE
         WHERE
-            scheduler = #{scheduler}
+            SCHEDULER = #{scheduler}
     </update>
 </mapper>
