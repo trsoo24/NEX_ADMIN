@@ -18,7 +18,7 @@
             AND CTN = #{ctn}
         </if>
         <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-            AND TRANSACTION_DT BETWEEN TO_DATE(#{startDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(#{endDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+            AND TRANSACTION_DT BETWEEN TO_DATE(#{startDate} || ' 000000', 'YYYYMMDDHH24MISS') AND TO_DATE(#{endDate} || ' 000000', 'YYYYMMDDHH24MISS')
         </if>
         ORDER BY TRANSACTION_DT
     </select>

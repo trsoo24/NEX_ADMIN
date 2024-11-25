@@ -68,6 +68,14 @@ public class FunctionUtil {
         return formattedDate;
     }
 
+    public static String monthStartTransToYYYYmmDD(String date) {
+        return toYYYYmmDD(monthToStartDate(date));
+    }
+
+    public static String montEndTransToYYYYmmDD(String date) {
+        return toYYYYmmDD(monthToEndDate(date));
+    }
+
     public static List<String> getlastMonthTryList(){
         List<String> lastMonthList = new ArrayList<>();
 
