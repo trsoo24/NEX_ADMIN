@@ -11,6 +11,6 @@ public class PaymentAttemptHistory {
     private String ctn;
     private String createDt;
     private String productName;
-    private String amount;
+    private Double amount;
     private String resultCode;
 }

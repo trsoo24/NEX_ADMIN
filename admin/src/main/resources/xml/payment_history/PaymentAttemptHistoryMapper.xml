@@ -7,19 +7,13 @@
     <select id="getPaymentAttemptHistoryList" parameterType="map" resultType="com.example.admin.payment_attempt_history.dto.PaymentAttemptHistory">
         SELECT
         CTN,
-        CREATE_DT,
-        ITEMNAME AS productName
+        TO_CHAR(CREATE_DT, 'YYYY-MM-DD HH24:MI:SS') AS createDt,
+        ITEMNAME AS productName,
         AMOUNT,
         RESULT_CODE
         FROM TB_API_LOGS
-        WHERE 1 = 1
-        <if test="ctn != null and ctn != ''">
-            AND CTN = #{ctn}
-        </if>
-        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-            AND CREATE_DT BETWEEN TO_DATE(#{startDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
-            AND TO_DATE(#{endDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
-        </if>
+        WHERE CTN = #{ctn} AND CREATE_DT BETWEEN TO_DATE(#{startDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+        AND TO_DATE(#{endDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
         ORDER BY CREATE_DT
     </select>
 </mapper>

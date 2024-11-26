@@ -13,7 +13,7 @@ public class PaymentHistoryDto {
     private String ctn;
     private String transactionDt;
     private String cancelNotificationDt;
-    private Integer total; // itemPrice + tax
+    private Double total; // itemPrice + tax
     private String itemName;
     private String merchantName;
 

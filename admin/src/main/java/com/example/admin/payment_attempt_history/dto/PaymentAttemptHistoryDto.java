@@ -14,7 +14,7 @@ public class PaymentAttemptHistoryDto {
     private String createDt;
     private String dcb;
     private String productName;
-    private String amount;
+    private Double amount;
     private String resultCode;
 
     public static PaymentAttemptHistoryDto toDto(PaymentAttemptHistory paymentAttemptHistory) {

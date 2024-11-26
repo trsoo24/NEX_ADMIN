@@ -28,11 +28,15 @@ public class PaymentHistoryService {
 
     public List<PaymentHistory> getPaymentHistoryList(String startDate, String endDate, String ctn) {
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("startDate", FunctionUtil.monthStartTransToYYYYmmDDHH24MISS(startDate));
-        requestMap.put("endDate", FunctionUtil.montEndTransToYYYYmmDDHH24MISS(endDate));
+        startDate = FunctionUtil.monthStartTransToYYYYmmDDHH24MISS(startDate);
+        endDate = FunctionUtil.montEndTransToYYYYmmDDHH24MISS(endDate);
+        requestMap.put("startDate", startDate);
+        requestMap.put("endDate", endDate);
         requestMap.put("ctn", ctn);
 
-        return paymentHistoryMapper.getPaymentHistoryList(requestMap);
+        List<PaymentHistory> response = paymentHistoryMapper.getPaymentHistoryList(requestMap);
+
+        return response;
     }
 
     public List<PaymentHistoryDto> getPaymentHistoryDtoList(List<PaymentHistory> paymentHistoryList) {
