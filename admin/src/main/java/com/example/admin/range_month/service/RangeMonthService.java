@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -15,7 +16,23 @@ public class RangeMonthService {
     private final RangeMonthMapper rangeMonthMapper;
 
     public List<RangeMonth> getRangeMonth() {
-        List<RangeMonth> rangeMonthList = rangeMonthMapper.getRangeMonthScheduleList();
+        Map<String, Object> requestMap = new HashMap<>();
+        Calendar cal = Calendar.getInstance();
+
+        cal.add(Calendar.MONTH, -1);
+
+        // 이전 달의 1일
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        String startDate = new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
+
+        // 이전 달의 말일
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        String endDate = new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
+
+        requestMap.put("startDate", startDate);
+        requestMap.put("endDate", endDate);
+
+        List<RangeMonth> rangeMonthList = rangeMonthMapper.getRangeMonthScheduleList(requestMap);
 
         sortRangeMonthList(rangeMonthList);
 

@@ -3,27 +3,24 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.range_month.mapper.RangeMonthMapper">
-    <select id="getRangeMonthScheduleList" resultType="com.example.admin.range_month.dto.RangeMonth">
+    <select id="getRangeMonthScheduleList" parameterType="map" resultMap="rangeMonthMap">
         SELECT
-            TO_CHAR(TO_DATE(STAT_DAY, 'YYYY-MM-DD'), 'YYYY-MM') AS STAT_MONTH,
+            TO_CHAR(STAT_DAY, 'YYYY-MM') AS STAT_MONTH,
             A_STAT,
             SUM(B_STAT) AS B_STAT,
-            SUM(C_STAT) AS C_STAT,
             SUM(D_STAT) AS D_STAT,
+            SUM(C_STAT) AS C_STAT,
             SUM(E_STAT) AS E_STAT,
             SUM(F_STAT) AS F_STAT,
             CASE
                 WHEN SUM(B_STAT) > 0 THEN SUM(F_STAT) / SUM(B_STAT)
                 ELSE 0
-                END AS G_STAT,
-            DCB
+                END AS G_STAT
         FROM
             TB_STATS_RANGE_DAY
-        WHERE TRANSACTION_DT BETWEEN TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM') || '-01', 'YYYY-MM-DD')
-                  AND LAST_DAY(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM') || '-01', 'YYYY-MM-DD'))
+        WHERE STAT_DAY BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
         GROUP BY
-            TO_CHAR(TO_DATE(STAT_DAY, 'YYYY-MM-DD'), 'YYYY-MM'),
-            A_STAT
+            TO_CHAR(STAT_DAY, 'YYYY-MM'), A_STAT
     </select>
 
     <resultMap id="rangeMonthMap" type="com.example.admin.range_month.dto.RangeMonth">

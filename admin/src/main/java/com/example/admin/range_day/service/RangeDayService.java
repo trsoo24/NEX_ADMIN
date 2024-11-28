@@ -1,10 +1,13 @@
 package com.example.admin.range_day.service;
 
+import com.example.admin.common.service.FunctionUtil;
 import com.example.admin.range_day.dto.RangeDay;
 import com.example.admin.range_day.mapper.RangeDayMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -13,7 +16,15 @@ public class RangeDayService {
     private final RangeDayMapper rangeDayMapper;
 
     public List<RangeDay> getRangeDay() {
-        List<RangeDay> rangeDayList = rangeDayMapper.getRangeDay();
+        Map<String, Object> requestMap = new HashMap<>();
+
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sdf.format(yesterday);
+
+        requestMap.put("date", date);
+
+        List<RangeDay> rangeDayList = rangeDayMapper.getRangeDay(requestMap);
 
         // A_STAT = "A" 값 추가
         generateDCBTotalList(rangeDayList);

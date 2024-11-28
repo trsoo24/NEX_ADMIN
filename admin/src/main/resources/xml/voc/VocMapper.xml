@@ -7,7 +7,7 @@
     <!-- provisioning info -->
     <insert id="insertProvisioningInfo" parameterType="com.example.admin.voc.dto.ProvisioningInfo">
         INSERT INTO TB_PROVISIONING_INFO(SUB_NO, CTN, VERSION, CORRELATION_ID, OPERATOR_USER_TOKEN, USER_LOCALE,
-                                         BILLING_AGREEMENT, RESULT, IS_PROVISIONED, TOS_URL, TOS_VERSION, ACCOUNT_TYPE,
+                                         BILLING_AGREEMENT, RESULT, ISPROVISIONED, TOS_URL, TOS_VERSION, ACCOUNT_TYPE,
                                          GET_PROVISIONING_TRANSACTION_ID, TRANSACTION_LIMIT, PAYMENT_TYPE, UPDATE_DT,
                                          CREATE_DT)
         VALUES (#{subNo}, #{ctn}, #{version}, #{correlationId}, #{operatorUserToken}, #{userLocale},

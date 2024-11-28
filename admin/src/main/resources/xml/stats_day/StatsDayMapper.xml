@@ -5,19 +5,16 @@
 <mapper namespace="com.example.admin.stats_day.mapper.StatsDayMapper">
     <select id="getStatsDayList" parameterType="map" resultMap="dayPaymentResultMap">
         SELECT
-            YEAR || '-' || LPAD(MONTH, 2, '0') || '-' || LPAD(DAY, 2, '0') AS stat_day,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN CHARGE_AMOUNT ELSE 0 END) AS b_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN CANCEL_AMOUNT ELSE 0 END) AS d_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN REFUND_AMOUNT ELSE 0 END) AS f_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN 1 ELSE NULL END) AS i_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN 1 ELSE NULL END) AS k_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN 1 ELSE NULL END) AS m_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN CHARGE_AMOUNT ELSE NULL END) AS p_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN CANCEL_AMOUNT ELSE NULL END) AS r_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN REFUND_AMOUNT ELSE NULL END) AS t_stat
-        FROM TB_AUTH_STATS_DAILY
-        WHERE YEAR = #{year} AND MONTH = #{month} AND DAY = #{day}
-        GROUP BY YEAR, MONTH, DAY
+            TO_CHAR(CREATE_DT, 'YYYY-MM-DD') AS stat_day,
+            SUM(CASE WHEN API_TYPE = #{api_type1} THEN AMOUNT ELSE 0 END) AS b_stat,
+            SUM(CASE WHEN API_TYPE = #{api_type2} THEN AMOUNT ELSE 0 END) AS d_stat,
+            SUM(CASE WHEN API_TYPE = #{api_type3} THEN AMOUNT ELSE 0 END) AS f_stat,
+            SUM(CASE WHEN API_TYPE = #{api_type1} THEN 1 ELSE 0 END) AS i_stat,
+            SUM(CASE WHEN API_TYPE = #{api_type2} THEN 1 ELSE 0 END) AS k_stat,
+            SUM(CASE WHEN API_TYPE = #{api_type3} THEN 1 ELSE 0 END) AS m_stat
+        FROM TB_API_LOGS
+        WHERE TO_CHAR(CREATE_DT, 'YYYY-MM-DD') = #{date}
+        GROUP BY TO_CHAR(CREATE_DT, 'YYYY-MM-DD')
     </select>
 
     <resultMap id="dayPaymentResultMap" type="com.example.admin.stats_day.dto.StatsDay">

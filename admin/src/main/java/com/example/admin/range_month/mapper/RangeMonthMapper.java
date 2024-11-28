@@ -8,5 +8,5 @@ import java.util.Map;
 
 @Mapper
 public interface RangeMonthMapper {
-    List<RangeMonth> getRangeMonthScheduleList();
+    List<RangeMonth> getRangeMonthScheduleList(Map<String, Object> map);
 }

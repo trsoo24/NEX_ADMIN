@@ -3,37 +3,36 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.range_day.mapper.RangeDayMapper">
-    <select id="getRangeDay" resultType="com.example.admin.range_day.dto.RangeDay">
+    <select id="getRangeDay" parameterType="map" resultMap="rangeDayMap">
         SELECT
-            TO_CHAR(TRANSACTION_DT, 'YYYY-MM-DD') AS stat_day,
+            TO_CHAR(CREATE_DT, 'YYYY-MM-DD') AS stat_day,
             CASE
-                WHEN TOTAL BETWEEN 0 AND 100000 THEN '1'
-                WHEN TOTAL BETWEEN 100000 AND 200000 THEN '2'
-                WHEN TOTAL BETWEEN 200000 AND 300000 THEN '3'
-                WHEN TOTAL BETWEEN 300000 AND 400000 THEN '4'
-                WHEN TOTAL BETWEEN 400000 AND 500000 THEN '5'
+                WHEN AMOUNT BETWEEN 0 AND 100000 THEN '1'
+                WHEN AMOUNT BETWEEN 100000 AND 200000 THEN '2'
+                WHEN AMOUNT BETWEEN 200000 AND 300000 THEN '3'
+                WHEN AMOUNT BETWEEN 300000 AND 400000 THEN '4'
+                WHEN AMOUNT BETWEEN 400000 AND 500000 THEN '5'
                 ELSE 'O'
             END AS a_stat,
-            COUNT(DISTINCT ctn) AS b_stat,
+            COUNT(DISTINCT CTN) AS b_stat,
             COUNT(*) AS c_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN TOTAL ELSE 0 END) AS d_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'R' OR TRANSACTION_TYPE = 'C' THEN TOTAL ELSE 0 END) AS e_stat,
+            SUM(CASE WHEN API_TYPE = #{api_type1} THEN AMOUNT ELSE 0 END) AS d_stat,
+            SUM(CASE WHEN API_TYPE = #{api_type3} OR API_TYPE = #{api_type2} THEN AMOUNT ELSE 0 END) AS e_stat,
             SUM(CASE
-            WHEN TRANSACTION_TYPE = 'B' THEN TOTAL
-            WHEN TRANSACTION_TYPE = 'R' OR TRANSACTION_TYPE = 'C' THEN -TOTAL ELSE 0 END) AS f_stat,
-            CASE WHEN COUNT(DISTINCT ctn) > 0 THEN
-            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN TOTAL ELSE 0 END) / COUNT(DISTINCT ctn)
+            WHEN API_TYPE = #{api_type1} THEN AMOUNT
+            WHEN API_TYPE = #{api_type3} OR API_TYPE = #{api_type2} THEN -AMOUNT ELSE 0 END) AS f_stat,
+            CASE WHEN COUNT(DISTINCT CTN) > 0 THEN
+            SUM(CASE WHEN API_TYPE = #{api_type1} THEN AMOUNT ELSE 0 END) / COUNT(DISTINCT CTN)
             ELSE 0 END AS g_stat
             FROM TB_API_LOGS
-            WHERE TRANSACTION_DT BETWEEN TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM') || '-01', 'YYYY-MM-DD')
-                                    AND LAST_DAY(TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM') || '-01', 'YYYY-MM-DD'))
-            GROUP BY TO_CHAR(TRANSACTION_DT, 'YYYY-MM-DD'),
+            WHERE TO_CHAR(CREATE_DT, 'YYYY-MM-DD') = #{date}
+            GROUP BY TO_CHAR(CREATE_DT, 'YYYY-MM-DD'),
                      CASE
-                         WHEN TOTAL BETWEEN 0 AND 100000 THEN '1'
-                         WHEN TOTAL BETWEEN 100000 AND 200000 THEN '2'
-                         WHEN TOTAL BETWEEN 200000 AND 300000 THEN '3'
-                         WHEN TOTAL BETWEEN 300000 AND 400000 THEN '4'
-                         WHEN TOTAL BETWEEN 400000 AND 500000 THEN '5'
+                         WHEN AMOUNT BETWEEN 0 AND 100000 THEN '1'
+                         WHEN AMOUNT BETWEEN 100000 AND 200000 THEN '2'
+                         WHEN AMOUNT BETWEEN 200000 AND 300000 THEN '3'
+                         WHEN AMOUNT BETWEEN 300000 AND 400000 THEN '4'
+                         WHEN AMOUNT BETWEEN 400000 AND 500000 THEN '5'
                          ELSE 'O'
                          END
     </select>

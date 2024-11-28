@@ -5,19 +5,16 @@
 <mapper namespace="com.example.admin.stats_month.mapper.StatsMonthMapper">
     <select id="getStatsMonthList" parameterType="map" resultMap="monthPaymentResultMap">
         SELECT
-            YEAR || '-' || LPAD(MONTH, 2, '0') AS stat_month,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN CHARGE_AMOUNT ELSE 0 END) AS b_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN CANCEL_AMOUNT ELSE 0 END) AS d_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN REFUND_AMOUNT ELSE 0 END) AS f_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN 1 ELSE NULL END) AS i_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN 1 ELSE NULL END) AS k_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN 1 ELSE NULL END) AS m_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN CHARGE_AMOUNT ELSE NULL END) AS p_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN CANCEL_AMOUNT ELSE NULL END) AS r_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN REFUND_AMOUNT ELSE NULL END) AS t_stat
-        FROM TB_AUTH_STATS_DAILY
-        WHERE YEAR = #{year} AND MONTH = #{month}
-        GROUP BY YEAR, MONTH
+            TO_CHAR(STAT_DAY, 'YYYY-MM') AS stat_month,
+            SUM(B_STAT) AS b_stat,
+            SUM(D_STAT) AS d_stat,
+            SUM(F_STAT) AS f_stat,
+            SUM(I_STAT) AS i_stat,
+            SUM(K_STAT) AS k_stat,
+            SUM(M_STAT) AS m_stat
+        FROM TB_STATS_DAY
+        WHERE TO_CHAR(STAT_DAY, 'YYYY-MM') = #{date}
+        GROUP BY TO_CHAR(STAT_DAY, 'YYYY-MM')
     </select>
 
     <resultMap id="monthPaymentResultMap" type="com.example.admin.stats_month.dto.StatsMonth">

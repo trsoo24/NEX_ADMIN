@@ -26,11 +26,11 @@ public class StatsMonthService {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DAY_OF_MONTH, -1); // 하루 전으로 설정
 
-            String year = new SimpleDateFormat("yyyy").format(cal.getTime());
-            String month = new SimpleDateFormat("MM").format(cal.getTime());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-            requestMap.put("year", year);
-            requestMap.put("month", month);
+            String formattedDate = sdf.format(cal.getTime());
+
+            requestMap.put("date", formattedDate);
 
             statsMonthList = statsMonthMapper.getStatsMonthList(requestMap);
 

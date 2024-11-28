@@ -11,10 +11,10 @@
                         CASE WHEN GROUPING(CUST_GRD_CD) = 0 THEN 'E' ELSE 'A' END
                     ELSE CUST_GRD_CD
                     END AS CUST_GRD_CD,
-                SUM(CASE WHEN API_TYPE = 'charge' THEN AMOUNT ELSE 0 END) AS CHARGE,
-                SUM(CASE WHEN API_TYPE = 'reversal' THEN AMOUNT ELSE 0 END) AS REVERSE,
-                SUM(CASE WHEN API_TYPE = 'refund' THEN AMOUNT ELSE 0 END) AS REFUND,
-                COUNT(DISTINCT MSISDN) AS ACE_CNT,
+                SUM(CASE WHEN API_TYPE = #{api_type1} THEN AMOUNT ELSE 0 END) AS CHARGE,
+                SUM(CASE WHEN API_TYPE = #{api_type2} THEN AMOUNT ELSE 0 END) AS REVERSE,
+                SUM(CASE WHEN API_TYPE = #{api_type3} THEN AMOUNT ELSE 0 END) AS REFUND,
+                COUNT(DISTINCT CTN) AS ACE_CNT,
                 COUNT(*) AS CNT,
                 BAN_UNPAID_YN_CODE
             FROM TB_API_LOGS
