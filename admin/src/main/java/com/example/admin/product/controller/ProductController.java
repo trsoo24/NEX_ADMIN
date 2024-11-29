@@ -1,10 +1,8 @@
 package com.example.admin.product.controller;
 
 import com.example.admin.product.dto.ProductStatsDaily;
-import com.example.admin.product.dto.ProductStatsMonthly;
 import com.example.admin.product.dto.*;
 import com.example.admin.product.service.ProductStatsDailyService;
-import com.example.admin.product.service.ProductStatsMonthlyService;
 import com.example.admin.product.service.ProductInfoService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -21,7 +19,6 @@ import java.util.List;
 public class ProductController {
     private final ProductInfoService productInfoService;
     private final ProductStatsDailyService productStatsDailyService;
-    private final ProductStatsMonthlyService productStatsMonthlyService;
 
     @GetMapping()
     public List<ProductInfo> getProductInfoList(@RequestParam("productName") @Valid String productName,
@@ -41,10 +38,5 @@ public class ProductController {
     @GetMapping("/day/raw")
     public List<ProductStatsDaily> getProductStatsDailyList() {
         return productStatsDailyService.getProductStatsDailyList();
-    }
-
-    @GetMapping("/month/raw")
-    public List<ProductStatsMonthly> getProductStatsMonthlyList() {
-        return productStatsMonthlyService.getProductStatsMonthlyList();
     }
 }

@@ -10,9 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class SellerDayStat {
-    private String year;
-    private String month;
-    private String day;
+    private String statDay;
     private String sellerName;
     private Double sumPrice; // 판매액 합계
     private Double sumTax; // 세금 합계

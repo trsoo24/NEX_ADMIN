@@ -4,9 +4,7 @@
 <mapper namespace="com.example.admin.seller.mapper.SellerStatsDailyMapper">
     <select id="getSellerDayStats" parameterType="map" resultType="com.example.admin.seller.dto.SellerDayStat">
         SELECT
-            YEAR,
-            MONTH,
-            DAY,
+            YEAR || '-' || MONTH || '-' || DAY AS statDay,
             MERCHANTNAME AS sellerName,
             SUM(SUM_ITEM_PRICE) AS sumPrice,
             SUM(SUM_TAX) AS sumTax,

@@ -4,25 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.voc.mapper.VocMapper">
-    <!-- provisioning info -->
-    <insert id="insertProvisioningInfo" parameterType="com.example.admin.voc.dto.ProvisioningInfo">
-        INSERT INTO TB_PROVISIONING_INFO(SUB_NO, CTN, VERSION, CORRELATION_ID, OPERATOR_USER_TOKEN, USER_LOCALE,
-                                         BILLING_AGREEMENT, RESULT, ISPROVISIONED, TOS_URL, TOS_VERSION, ACCOUNT_TYPE,
-                                         GET_PROVISIONING_TRANSACTION_ID, TRANSACTION_LIMIT, PAYMENT_TYPE, UPDATE_DT,
-                                         CREATE_DT)
-        VALUES (#{subNo}, #{ctn}, #{version}, #{correlationId}, #{operatorUserToken}, #{userLocale},
-                #{billingAgreement}, #{result}, #{isProvisioned}, #{tosUrl}, #{tosVersion}, #{accountType},
-                #{getProvisioningTransactionId}, #{transactionLimit}, #{paymentType}, #{updateDt}, #{createDt})
-    </insert>
-
-    <!-- sms info -->
-    <insert id="insertSmsInfo" parameterType="com.example.admin.voc.dto.SmsInfo">
-        INSERT INTO TB_SMSMO_INFO(CTN, GOOGLE_USER_TOKEN, RESULT, PAYMENT_TYPE, OPERATOR_USER_TOKEN, UPDATE_DT,
-                                  CREATE_DT, TOS_VERSION, TOS_DATE)
-        VALUES (#{ctn}, #{googleUserToken}, #{result}, #{paymentType}, #{operatorUserToken}, #{updateDt}, #{createDt},
-                #{tosVersion}, #{tosDate})
-    </insert>
-
     <select id="selectSmsmoListByCtn" parameterType="map" resultType="com.example.admin.voc.dto.SmsInfoDto">
         SELECT
         GOOGLE_USER_TOKEN googleUserToken,

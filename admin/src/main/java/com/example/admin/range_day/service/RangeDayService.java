@@ -23,6 +23,9 @@ public class RangeDayService {
         String date = sdf.format(yesterday);
 
         requestMap.put("date", date);
+        requestMap.put("api_type1", "charge");
+        requestMap.put("api_type2", "reversal");
+        requestMap.put("api_type3", "refund");
 
         List<RangeDay> rangeDayList = rangeDayMapper.getRangeDay(requestMap);
 
