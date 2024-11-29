@@ -22,7 +22,7 @@
                 CREATE_DT BETWEEN TO_DATE(#{firstDay}, 'YYYYMMDDHH24MISS') AND TO_DATE(#{lastDay}, 'YYYYMMDDHH24MISS')
               AND RESULT_CODE = #{resultCode}
               AND API_TYPE IN (#{api_type1}, #{api_type2}, #{api_type3})
-            GROUP BY GROUPING SETS ((CUST_GRD_CD, BAN_UNPAID_YN_CODE), (BAN_UNPAID_YN_CODE), ())
+            GROUP BY GROUPING SETS ((CUST_GRD_CD, BAN_UNPAID_YN_CODE), (BAN_UNPAID_YN_CODE), ()))
         SELECT
             A.CUST_GRD_CD,
             NVL(A.CHARGE, 0) AS A_CHARGE, NVL(A.REVERSE, 0) AS A_REVERSE, NVL(A.REFUND, 0) AS A_REFUND,
