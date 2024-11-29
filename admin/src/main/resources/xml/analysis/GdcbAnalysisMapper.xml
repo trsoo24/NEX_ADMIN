@@ -8,12 +8,8 @@
     WITH FILTER AS (
     SELECT *
         FROM TB_API_LOGS
-        WHERE 1 = 1
-        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-            AND CREATE_DT BETWEEN TO_DATE(#{startDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
-            AND TO_DATE(#{endDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
-        </if>
-        )
+        WHERE CREATE_DT BETWEEN TO_DATE(#{startDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+            AND TO_DATE(#{endDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS'))
         SELECT
         CREATE_DT,
         RESULT_CODE,

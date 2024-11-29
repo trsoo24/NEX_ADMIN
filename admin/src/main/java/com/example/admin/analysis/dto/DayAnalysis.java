@@ -13,5 +13,5 @@ public class DayAnalysis {
     private String createDt;
     private String resultCode;
     private Integer codeCount;
-    private String dcb;
+    private final String dcb = "GDCB";
 }

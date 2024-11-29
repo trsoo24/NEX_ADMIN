@@ -14,10 +14,6 @@ public class VocService {
     private final VocMapper vocMapper;
     private final FunctionUtil functionUtil;
 
-    public void insertProvisioningInfo(ProvisioningInfo provisioningInfo) {
-        vocMapper.insertProvisioningInfo(provisioningInfo);
-    }
-
     public Map<String, Object> getGdcbConversionHistory(String dcb, String ctn) {
         List<ProvisionInfoDto> provisioningInfoList = getProvisioningInfoList(dcb, ctn);
         List<SmsInfoDto> smsInfoList = getSmsInfoList(dcb, ctn);

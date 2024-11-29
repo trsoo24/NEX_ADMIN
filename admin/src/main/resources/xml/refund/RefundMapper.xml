@@ -18,19 +18,20 @@
         VALUES (#{requestName}, #{responseName}, #{retry}, #{updateDt}, SYSDATE)
     </insert>
 
-    <insert id="insertEai" parameterType="com.example.admin.refund.dto.vo.LgudcbEaiSdw">
-        INSERT INTO TB_LGUDCB_EAI_SDW(CMD,NEW_CORRELATIONID,NEW_ACCOUNT_TYPE,NEW_SMLS_STLM_DV_CD,NEW_SMLS_STLM_CMPNY_CD,NEW_BAN,NEW_ACE_NO
-                                     ,NEW_PRSS_YYMM,NEW_REQUEST_TYPE,NEW_ITEMPRICE,NEW_TAX,NEW_TOTAL,NEW_AUTH_DATE,NEW_TRANSACTION_DATE,NEW_MERCHANTNAME
-                                     ,NEW_ITEMNAME,NEW_MERCHANTCONTACT,NEW_PROD_NO)
-        VALUES ('insert', #{newCorrelationId}, #{newAccountType}, #{newSmlsStlmDvCd}, #{newSmlsStlmCmpnyCd}, NVL(#{newBan}, 0), NVL(#{newAceNo}, 0), #{newPrssYymm}, #{newRequestType}, NVL(#{newItemPrice}, 0), NVL(#{newTax}, 0),
-                NVL(#{newTotal}, 0), NVL(TO_DATE(#{newAuthDate}, 'YYYYMMDDHH24MISS'), SYSDATE), NVL(TO_DATE(#{newTransactionDate}, 'YYYYMMDDHH24MISS'), SYSDATE), NVL(#{newMerchantName}, 'NULL'), NVL(#{newItemName}, 'NULL'), NVL(#{newMerchantContact}, 'NULL'), #{newProdNo})
-    </insert>
+<!--    Kafka 로 교체 예정  -->
+<!--    <insert id="insertEai" parameterType="com.example.admin.refund.dto.vo.LgudcbEaiSdw">-->
+<!--        INSERT INTO TB_LGUDCB_EAI_SDW(CMD,NEW_CORRELATIONID,NEW_ACCOUNT_TYPE,NEW_SMLS_STLM_DV_CD,NEW_SMLS_STLM_CMPNY_CD,NEW_BAN,NEW_ACE_NO-->
+<!--                                     ,NEW_PRSS_YYMM,NEW_REQUEST_TYPE,NEW_ITEMPRICE,NEW_TAX,NEW_TOTAL,NEW_AUTH_DATE,NEW_TRANSACTION_DATE,NEW_MERCHANTNAME-->
+<!--                                     ,NEW_ITEMNAME,NEW_MERCHANTCONTACT,NEW_PROD_NO)-->
+<!--        VALUES ('insert', #{newCorrelationId}, #{newAccountType}, #{newSmlsStlmDvCd}, #{newSmlsStlmCmpnyCd}, NVL(#{newBan}, 0), NVL(#{newAceNo}, 0), #{newPrssYymm}, #{newRequestType}, NVL(#{newItemPrice}, 0), NVL(#{newTax}, 0),-->
+<!--                NVL(#{newTotal}, 0), NVL(TO_DATE(#{newAuthDate}, 'YYYYMMDDHH24MISS'), SYSDATE), NVL(TO_DATE(#{newTransactionDate}, 'YYYYMMDDHH24MISS'), SYSDATE), NVL(#{newMerchantName}, 'NULL'), NVL(#{newItemName}, 'NULL'), NVL(#{newMerchantContact}, 'NULL'), #{newProdNo})-->
+<!--    </insert>-->
 
     <select id="getAuthInfo" parameterType="map" resultType="com.example.admin.auth.dto.AuthInfo">
         SELECT * FROM TB_AUTH_INFO
         WHERE CORRELATION_ID = #{correlationId}
         AND BILLING_AGREEMENT = #{billingAgreement}
-        ORDER BY AUTH_TRANSACTION_ID;
+        ORDER BY AUTH_TRANSACTION_ID
     </select>
 
     <select id="selectManualRefundByCorrelationId" parameterType="String" resultType="com.example.admin.refund.dto.ManualRefund">

@@ -10,9 +10,7 @@
         <if test="productName != null and productName != ''">
             ITEMSALES_NM LIKE '%' || #{productName} || '%' AND
         </if>
-            STD_DT BETWEEN #{startDate} AND #{endDate}
-        <if test="stdDt != null and stdDt != ''">
-            ORDER BY STD_DT
-        </if>
+        STD_DT BETWEEN #{startDate} AND #{endDate}
+        ORDER BY STD_DT
     </select>
 </mapper>

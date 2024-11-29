@@ -20,9 +20,7 @@
         <if test="sellerName != null and sellerName != ''">
             AND MERCHANT_NM LIKE '%' || #{sellerName} || '%'
         </if>
-        <if test="startDate != null and endDate != null">
-            AND STD_DT BETWEEN #{startDate} AND #{endDate}
-        </if>
+        AND STD_DT BETWEEN #{startDate} AND #{endDate}
     </select>
 
     <update id="blockSeller" parameterType="Map">

@@ -341,7 +341,8 @@ public class BillingProcessService {
 
                             refundMapper.updateRefundAuth(requestMap);
 
-                            refundMapper.insertEai(eaiSdw);
+                            // Kafka 로 교체
+//                            refundMapper.insertEai(eaiSdw);
                         }
 
                     } else {

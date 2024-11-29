@@ -11,15 +11,8 @@
             SUM_TAX,
             SUM_TOTAL
             FROM TB_ITEM_STATS_DAILY
-        WHERE 1 = 1
-        <if test="year != null">
-            AND YEAR = #{year}
-        </if>
-        <if test="month != null">
+        WHERE YEAR = #{year}
             AND MONTH = #{month}
-        </if>
-        <if test="day != null">
             AND DAY = #{day}
-        </if>
     </select>
 </mapper>
