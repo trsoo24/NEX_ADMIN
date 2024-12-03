@@ -50,7 +50,10 @@
         SUM(TOTAL_AMOUNT_SUM) AS totalAmountSum,
         SUM(REVS_IN_INVOICED_CURRENCY_SUM) AS revsInInvoicedCurrencySum
         FROM TB_MONTHLY_INVOICE_SUM
-        WHERE PAYMENT_TYPE = #{paymentType}
+        WHERE 1 = 1
+        <if test="paymentType != null and paymentType != ''">
+        AND PAYMENT_TYPE = #{paymentType}
+        </if>>
         AND YEAR = #{year}
         AND MONTH = #{month}
         AND TRANSACTION_TYPE = 'B'
@@ -67,7 +70,10 @@
         SUM(TOTAL_AMOUNT_SUM) AS totalAmountSum,
         SUM(REVS_IN_INVOICED_CURRENCY_SUM) AS revsInInvoicedCurrencySum
         FROM TB_MONTHLY_INVOICE_SUM
-        WHERE PAYMENT_TYPE = #{paymentType}
+        WHERE 1 = 1
+        <if test="paymentType != null and paymentType != ''">
+            AND PAYMENT_TYPE = #{paymentType}
+        </if>
         AND YEAR = #{year}
         AND MONTH = #{month}
         AND TRANSACTION_TYPE = 'R'

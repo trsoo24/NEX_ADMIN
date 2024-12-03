@@ -34,6 +34,8 @@ public class GDCBReconcileService {
     public void exportGDCBExcel(String month, String fileType, HttpServletResponse response) throws IOException {
         List<Reconcile> reconcileList = getGDCBReconcileList(month, fileType);
 
+        setDate(reconcileList);
+
         XSSFWorkbook workBook = new XSSFWorkbook();
         XSSFSheet sheet = workBook.createSheet("대사 파일 조회");
 
@@ -94,6 +96,12 @@ public class GDCBReconcileService {
             throw new RuntimeException(ex);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void setDate(List<Reconcile> reconcileList) {
+        for (Reconcile reconcile : reconcileList) {
+            reconcile.setDateFormat();
         }
     }
 }
