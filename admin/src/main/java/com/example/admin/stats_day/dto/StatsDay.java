@@ -40,18 +40,12 @@ public class StatsDay {
         this.j_stat = calculatePercent(this.i_stat, this.h_stat);
         this.l_stat = calculatePercent(this.k_stat, this.h_stat);
         this.n_stat = calculatePercent(this.m_stat, this.h_stat);
-        this.p_stat = calculateAverage(this.b_stat, this.i_stat);
-        this.r_stat = calculateAverage(this.d_stat, this.k_stat);
-        this.t_stat = calculateAverage(this.f_stat, this.m_stat);
     }
 
     private String calculatePercent(double numerator, double denominator) {
         return Math.round(numerator / denominator * 100 * 10) / 10.0 + "%";
     }
 
-    private double calculateAverage(double numerator, double denominator) {
-        return Math.round(numerator / denominator * 100 * 10) / 10.0;
-    }
 
     private double calculateTotal(double b_stat, double d_stat, double f_stat) {
         return this.a_stat = b_stat - d_stat - f_stat;

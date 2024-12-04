@@ -1,5 +1,6 @@
 package com.example.admin.stats_day.service;
 
+import com.example.admin.common.service.FunctionUtil;
 import com.example.admin.stats_day.dto.StatsDay;
 import com.example.admin.stats_day.mapper.*;
 import lombok.RequiredArgsConstructor;
@@ -21,17 +22,17 @@ public class StatsDayService {
 
         try {
             Map<String, Object> requestMap = new HashMap<>();
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DAY_OF_MONTH, -1); // 하루 전으로 설정
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String year = FunctionUtil.yearOfYesterday();
+            String month = FunctionUtil.monthOfYesterday();
+            String day = FunctionUtil.yesterday();
 
-            String formattedDate = sdf.format(cal.getTime());
-
-            requestMap.put("date", formattedDate);
-            requestMap.put("api_type1", "charge");
-            requestMap.put("api_type2", "reversal");
-            requestMap.put("api_type3", "refund");
+            requestMap.put("year", year);
+            requestMap.put("month", month);
+            requestMap.put("day", day);
+            requestMap.put("api_type1", "B");
+            requestMap.put("api_type2", "C");
+            requestMap.put("api_type3", "R");
 
             statsDayList = statsDayMapper.getStatsDayList(requestMap);
 

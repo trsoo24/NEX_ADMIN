@@ -98,21 +98,6 @@ public class FunctionUtil {
         return lastMonthList;
     }
 
-    public static String yearOfPreviousMonth() {
-        LocalDate lastMonth = LocalDate.now().minusMonths(1);
-        DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("yyyy");
-
-        return lastMonth.format(yearFormatter);
-    }
-
-    public static String previousMonth() {
-        LocalDate lastMonth = LocalDate.now().minusMonths(1);
-
-        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
-
-        return lastMonth.format(monthFormatter);
-    }
-
     public static String yearOfYesterday() {
         LocalDate yesterday = LocalDate.now().minusDays(1);
         DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("yyyy");

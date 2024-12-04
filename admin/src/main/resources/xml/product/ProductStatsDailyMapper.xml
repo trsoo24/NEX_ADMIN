@@ -7,12 +7,13 @@
             YEAR || '-' || MONTH || '-' || DAY AS statDay,
             MERCHANTNAME AS sellerName,
             ITEMNAME AS productName,
-            SUM_ITEM_PRICE,
-            SUM_TAX,
-            SUM_TOTAL
+            SUM(SUM_ITEM_PRICE) AS sumProductPrice,
+            SUM(SUM_TAX) AS sumTax,
+            SUM(SUM_TOTAL) AS sumTotal
             FROM TB_ITEM_STATS_DAILY
         WHERE YEAR = #{year}
             AND MONTH = #{month}
             AND DAY = #{day}
+        GROUP BY YEAR, MONTH, DAY, MERCHANTNAME, ITEMNAME
     </select>
 </mapper>

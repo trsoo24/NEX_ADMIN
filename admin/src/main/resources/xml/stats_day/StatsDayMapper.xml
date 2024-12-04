@@ -5,16 +5,19 @@
 <mapper namespace="com.example.admin.stats_day.mapper.StatsDayMapper">
     <select id="getStatsDayList" parameterType="map" resultMap="dayPaymentResultMap">
         SELECT
-            TO_CHAR(CREATE_DT, 'YYYY-MM-DD') AS stat_day,
-            SUM(CASE WHEN API_TYPE = #{api_type1} THEN AMOUNT ELSE 0 END) AS b_stat,
-            SUM(CASE WHEN API_TYPE = #{api_type2} THEN AMOUNT ELSE 0 END) AS d_stat,
-            SUM(CASE WHEN API_TYPE = #{api_type3} THEN AMOUNT ELSE 0 END) AS f_stat,
-            SUM(CASE WHEN API_TYPE = #{api_type1} THEN 1 ELSE 0 END) AS i_stat,
-            SUM(CASE WHEN API_TYPE = #{api_type2} THEN 1 ELSE 0 END) AS k_stat,
-            SUM(CASE WHEN API_TYPE = #{api_type3} THEN 1 ELSE 0 END) AS m_stat
-        FROM TB_API_LOGS
-        WHERE TO_CHAR(CREATE_DT, 'YYYY-MM-DD') = #{date}
-        GROUP BY TO_CHAR(CREATE_DT, 'YYYY-MM-DD')
+            YEAR || '-' || MONTH || '-' || DAY AS stat_day,
+            SUM(CASE WHEN TRANSACTION_TYPE = #{api_type1} THEN CHARGE_AMT ELSE 0 END) AS b_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = #{api_type2} THEN CANCEL_AMT ELSE 0 END) AS d_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = #{api_type3} THEN REFUND_AMT ELSE 0 END) AS f_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = #{api_type1} THEN TRANSACTION_CNT ELSE 0 END) AS i_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = #{api_type2} THEN TRANSACTION_CNT ELSE 0 END) AS k_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = #{api_type3} THEN TRANSACTION_CNT ELSE 0 END) AS m_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = #{api_type3} THEN CHARGE_AVG ELSE 0 END) AS p_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = #{api_type3} THEN CANCE_AVG ELSE 0 END) AS r_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = #{api_type3} THEN REFUND_AVG ELSE 0 END) AS t_stat
+        FROM TB_AUTH_STATS_DAILY
+        WHERE YEAR = #{year} AND MONTH = #{month} AND DAY = #{day}
+        GROUP BY YEAR, MONTH, DAY
     </select>
 
     <resultMap id="dayPaymentResultMap" type="com.example.admin.stats_day.dto.StatsDay">
