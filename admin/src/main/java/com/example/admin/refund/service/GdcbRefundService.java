@@ -11,6 +11,7 @@ import com.example.admin.refund.mapper.RefundMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,10 @@ public class GdcbRefundService {
     private String googleUploadPath;
 
     public List<RefundDto> getRefundDtoList(String correlationId) throws Exception {
+        String trxNo = MDC.get("trxNo");
+
+        log.info("[{}] 요청 = Refund 목록 조회 correlationId = {}", trxNo, correlationId);
+
         List<RefundJob> refundJobList = findCorrelationID(correlationId);
         List<RefundDto> responseList = new ArrayList<>();
 
@@ -45,16 +50,17 @@ public class GdcbRefundService {
             responseList.add(refundDto);
         }
 
+        log.info("[{}] 응답 = Refund 목록 {} 건 조회 완료", trxNo, responseList.size());
+
         return responseList;
     }
 
     public boolean refundProcess(HttpServletRequest request, RefundProcessDto refundProcessDto) {
-        logUtil.umkInfoLogging(request,"processRefund start~!", "");
-
+        String trxNo = MDC.get("trxNo");
         try {
             String ctn =  refundProcessDto.getCtn();
             String correlationId = refundProcessDto.getCorrelationId();
-            log.info("환불작업 시작 : {}, {}", ctn, correlationId);
+            log.info("[{}] 요청 = 수동 환불 작업 시작 : CTN = {}, correlationId = {}", trxNo, ctn, correlationId);
 
             if (correlationId != null && !refundProcessDto.getCorrelationId().isEmpty()) {
 
@@ -89,11 +95,12 @@ public class GdcbRefundService {
                 }
             }
         } catch (Exception ex) {
-            log.error(ex.getMessage(), ex);
+            log.info("[{}] 응답 = 수동 환불 작업 실패", trxNo);
 
             return false;
         }
-        logUtil.umkInfoLogging(request, "processRefund end~!", "");
+
+        log.info("[{}] 응답 = 수동 환불 작업 완료", trxNo);
 
         return true;
     }
@@ -184,17 +191,14 @@ public class GdcbRefundService {
         return result;
     }
 
-
-    private ManualRefund findManualRefundByCorrelationId(String correlationId) {
-        return refundMapper.selectManualRefundByCorrelationId(correlationId);
-    }
-
     // TB_MANUAL_REFUND 테이블 TransactionType : B 에서 R 로 변경
     public void updateRefundAuth(String dcb, String correlationId) {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("dcb", dcb);
         requestMap.put("correlationId", correlationId);
         requestMap.put("transactionType", "R");
+
+        log.info("수동 환불 TB_MANUAL_REFUND 테이블 TransactionType 변경");
 
         refundMapper.updateRefundAuth(requestMap);
     }
@@ -445,10 +449,30 @@ public class GdcbRefundService {
     }
 
     public void insertManualRefund(ManualRefund manualRefund) {
-        refundMapper.insertManualRefund(manualRefund);
+        String trxNo = MDC.get("trxNo");
+
+        log.info("[{}] 요청 = 수동 환불 이력 생성 correlationId = {}", trxNo, manualRefund.getCorrelationId());
+
+        boolean insertResponse = refundMapper.insertManualRefund(manualRefund);
+
+        if (insertResponse) {
+            log.info("[{}] 응답 = 수동 환불 이력 생성 완료", trxNo);
+        } else {
+            log.info("[{}] 응답 = 수동 환불 이력 생성 실패", trxNo);
+        }
     }
 
     public void insertManualRefundFileInfo(ManualRefundFileInfo manualRefundFileInfo) {
-        refundMapper.insertManualRefundFileInfo(manualRefundFileInfo);
+        String trxNo = MDC.get("trxNo");
+
+        log.info("[{}] 요청 = 수동 환불 파일 생성 requestName = {}, responseName = {}", trxNo, manualRefundFileInfo.getRequestName(), manualRefundFileInfo.getResponseName());
+
+        boolean insertResponse = refundMapper.insertManualRefundFileInfo(manualRefundFileInfo);
+
+        if (insertResponse) {
+            log.info("[{}] 응답 = 수동 환불 파일 생성 완료", trxNo);
+        } else {
+            log.info("[{}] 응답 = 수동 환불 파일 생성 실패", trxNo);
+        }
     }
 }

@@ -6,6 +6,7 @@ import com.example.admin.payment_history.dto.PaymentHistoryDto;
 import com.example.admin.payment_history.mapper.PaymentHistoryMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,7 +22,13 @@ public class PaymentHistoryService {
 
     // 건별 상세 이력 조회 API 메서드
     public List<PaymentHistoryDto> getPaymentHistoryDtoList(String startDate, String endDate, String ctn) {
+        String trxNo = MDC.get("trxNo");
+
+        log.info("[{}] 요청 = {} 부터 {} 까지 CTN = {} 결제 상세 이력 조회", trxNo, startDate, endDate, ctn);
+
         List<PaymentHistory> paymentHistoryList = getPaymentHistoryList(startDate, endDate, ctn);
+
+        log.info("[{}] 응답 = 결제 상세 이력 {} 건 조회 완료", trxNo, paymentHistoryList.size());
 
         return getPaymentHistoryDtoList(paymentHistoryList);
     }

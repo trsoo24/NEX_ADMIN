@@ -25,7 +25,7 @@ public class ReconcileController {
     @GetMapping
     public List<Reconcile> getGDCBReconcileList(@RequestParam("month") @Valid String month,
                                                   @RequestParam("fileType") @Valid String fileType) {
-        return gdcbReconcileService.getGDCBReconcileList(month, fileType);
+        return gdcbReconcileService.getGDCBReconcileList(month, fileType, false);
     }
 
     @GetMapping("/excel")

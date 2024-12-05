@@ -5,6 +5,7 @@ import com.example.admin.type_limit.dto.UpdateTypeLimitDto;
 import com.example.admin.type_limit.mapper.TypeLimitMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,17 +20,29 @@ public class TypeLimitService {
     private final TypeLimitMapper typeLimitMapper;
 
     public List<GetTypeLimitDto> getTypeLimitDtoList() {
+        String trxNo = MDC.get("trxNo");
+
+        log.info("[{}] 요청 = 한도 전체 조회 API", trxNo);
+
         List<GetTypeLimitDto> typeLimitDtoList = typeLimitMapper.selectTypeLimitList();
+
+        log.info("[{}] 응답 = 한도 전체 조회 완료", trxNo);
 
         return sortList(typeLimitDtoList);
     }
 
     @Transactional
     public void updateTypeLimit(List<UpdateTypeLimitDto> updateTypeLimitDto) {
+        String trxNo = MDC.get("trxNo");
+
+        log.info("[{}] 요청 = 한도 금액 변경 요청", trxNo);
+
         for (UpdateTypeLimitDto dto : updateTypeLimitDto) {
             typeLimitMapper.updateTypeLimit1(dto);
             typeLimitMapper.updateTypeLimit2(dto);
         }
+
+        log.info("[{}] 응답 = 한도 금액 변경 완료", trxNo);
     }
 
     private List<GetTypeLimitDto> sortList(List<GetTypeLimitDto> list) {

@@ -15,6 +15,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +38,6 @@ public class BillingProcessService {
 
     @Transactional(rollbackFor = Exception.class)
     public void billingProcess(RefundJob refundJob) throws Exception {
-
         log.info("Reqeust CSV: '{}'", refundJob.getRequestFile());
         log.info("Respone CSV: '{}'", refundJob.getResponseFile());
         log.info("CorrelationID: '{}'", refundJob.getAuth().getCorrelationId());

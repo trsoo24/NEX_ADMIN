@@ -12,12 +12,13 @@ import org.springframework.stereotype.Component;
 public class PGPFileHandler {
     @Value("${PGP.LG.PrivateKey}")
     private String lgPrivateKey;
-    @Value("$PGP.Google.PublicKey}")
+    @Value("${PGP.Google.PublicKey}")
     private String googlePublicKey;
     @Value("${PGP.Password}")
     private String keyPw;
 
     public boolean decryptePGP(String pathPgpFile) {
+
         try {
 
             log.debug("PGP 복호화 : {}", pathPgpFile);

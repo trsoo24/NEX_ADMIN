@@ -1,13 +1,14 @@
 package com.example.admin.reconcile.service;
 
-import com.example.admin.reconcile.dto.InsertReconcileDto;
 import com.example.admin.reconcile.dto.Reconcile;
 import com.example.admin.reconcile.mapper.ReconcileMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -16,23 +17,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GDCBReconcileService {
     private final ReconcileMapper reconcileMapper;
 
-    public List<Reconcile> getGDCBReconcileList(String month, String fileType) {
+    public List<Reconcile> getGDCBReconcileList(String month, String fileType, boolean isExcel) {
+        String trxNo = MDC.get("trxNo");
+
         month = month.replace("-", ""); // DB 에 '-' 이 없이 저장됨
+
+        log.info("[{}] 요청 = {} 월자 대사 조회", trxNo, month);
 
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("yearMonth", month);
         requestMap.put("fileType", fileType);
 
-        return reconcileMapper.getGDCBReconcileList(requestMap);
+        List<Reconcile> reconcileList = reconcileMapper.getGDCBReconcileList(requestMap);
+
+        if(!isExcel) {
+            log.info("[{}] 응답 = {} 월자 대사 {} 건 조회 완료", trxNo, month, reconcileList);
+        }
+
+        return reconcileList;
     }
 
     public void exportGDCBExcel(String month, String fileType, HttpServletResponse response) throws IOException {
-        List<Reconcile> reconcileList = getGDCBReconcileList(month, fileType);
+        String trxNo = MDC.get("trxNo");
+
+        List<Reconcile> reconcileList = getGDCBReconcileList(month, fileType, true);
 
         setDate(reconcileList);
 
@@ -65,13 +79,20 @@ public class GDCBReconcileService {
         response.getOutputStream().flush();
         response.getOutputStream().close();
         workBook.close();
+
+        log.info("[{}] 응답 = {} 월자 대사 엑셀 생성 완료", trxNo, month);
     }
 
     public void getGDCBReconcileFile(String month, String fileType, String fileName, HttpServletResponse response) {
+        String trxNo = MDC.get("trxNo");
+
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("yearMonth", month);
         requestMap.put("fileType", fileType);
         requestMap.put("fileName", fileName);
+
+        log.info("[{}] 요청 = {} 저장된 {} 파일 다운로드", trxNo, month, fileName);
+
         String fullPath = reconcileMapper.getGDCBReconcileFile(requestMap);
 
         File file = new File(fullPath);
@@ -92,9 +113,15 @@ public class GDCBReconcileService {
             in.close();
             response.getOutputStream().flush();
             response.getOutputStream().close();
+
+            log.info("[{}] 응답 = 파일 {} 다운로드 성공", trxNo, fileName);
         } catch (FileNotFoundException ex) {
+            log.error("[{}] 응답 = 파일 {} 다운로드 실패, 파일을 찾을 수 없습니다.", trxNo, fileName);
+
             throw new RuntimeException(ex);
         } catch (IOException e) {
+            log.error("[{}] 응답 = 파일 {} 다운로드 실패", trxNo, fileName);
+
             throw new RuntimeException(e);
         }
     }

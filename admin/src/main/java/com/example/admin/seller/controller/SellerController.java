@@ -27,7 +27,7 @@ public class SellerController {
     public List<AdmSeller> searchAllSeller(@RequestParam("sellerName") String sellerName,
                                                    @RequestParam("startDate") @Valid String startDate,
                                                    @RequestParam("endDate") @Valid String endDate) {
-        return admSellerService.searchSeller(sellerName, startDate, endDate);
+        return admSellerService.searchSeller(sellerName, startDate, endDate, false);
     }
 
     @GetMapping("/excel")

@@ -5,10 +5,13 @@ import com.example.admin.reconcile.dto.GDCBMonthlyInvoiceSum;
 import com.example.admin.reconcile.dto.GoogleMonthlyInvoiceSum;
 import com.example.admin.reconcile.mapper.ReconcileMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GDCBInvoiceDetailService {
@@ -18,6 +21,8 @@ public class GDCBInvoiceDetailService {
     private final String[] paymentTypeArray = {"Invoice Details(DCB + 소액결제 + 기타)", "Invoice Details(DCB)", "Invoice Details(소액결제)", "Invoice Details(기타)"};
 
     public Map<String, List<GDCBDetailCompare>> getGDCBInvoiceDetailMap(String month) {
+        String trxNo = MDC.get("trxNo");
+
         Map<String, Object> requestMap = new HashMap<>();
         String[] monthArray = month.split("-");
         List<GDCBDetailCompare> responseList = new ArrayList<>();
@@ -26,6 +31,8 @@ public class GDCBInvoiceDetailService {
         // 이번 달 값
         requestMap.put("year", monthArray[0]);
         requestMap.put("month", monthArray[1]);
+
+        log.info("[{}] 요청 = {} 월자 GDCB 정산 데이터 조회", trxNo, monthArray[0] + "-" + monthArray[1]);
 
         gdcbMonthlyInvoiceSumToGDCBCompareDtoList(month, paymentTypeArray[0], getDetails("전체", requestMap), responseList);
         gdcbMonthlyInvoiceSumToGDCBCompareDtoList(month, paymentTypeArray[1], getDetails("00", requestMap), responseList);
@@ -37,6 +44,8 @@ public class GDCBInvoiceDetailService {
         // Google Summary File
         List<GoogleMonthlyInvoiceSum> googleMonthlySumList = getGoogleMonthlySum(requestMap);
         googleMonthlySumToGDCBCompareDtoList(month, googleMonthlySumList, responseMap);
+
+        log.info("[{}] 응답 = {} 월자 GDCB 정산 데이터 조회 완료", trxNo, monthArray[0] + "-" + monthArray[1]);
 
         return responseMap;
     }

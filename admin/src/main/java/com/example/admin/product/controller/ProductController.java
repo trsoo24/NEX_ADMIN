@@ -24,7 +24,7 @@ public class ProductController {
     public List<ProductInfo> getProductInfoList(@RequestParam("productName") @Valid String productName,
                                                 @RequestParam("startDate") @Valid String startDate,
                                                 @RequestParam("endDate") @Valid String endDate) {
-        return productInfoService.getProductInfoList(productName, startDate, endDate);
+        return productInfoService.getProductInfoList(productName, startDate, endDate, false);
     }
 
     @GetMapping("/excel")

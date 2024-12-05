@@ -10,7 +10,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PolicyInfo {
-    private String policyCode; // 결제 정책 이름
+    private String policyName; // 결제 정책 이름
     private String flag; // 결제 허용 여부 ( Y / N )
-    private Date policyAppliedDate; // 최종 변경일자
 }

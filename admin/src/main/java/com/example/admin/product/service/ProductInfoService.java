@@ -5,9 +5,11 @@ import com.example.admin.product.dto.field.ProductInfoField;
 import com.example.admin.product.mapper.ProductInfoMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,22 +18,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductInfoService {
     private final ProductInfoMapper productInfoMapper;
 
-    public List<ProductInfo> getProductInfoList(String productName, String startDate, String endDate) {
+    public List<ProductInfo> getProductInfoList(String productName, String startDate, String endDate, boolean isExcel) {
+        String trxNo = MDC.get("trxNo");
+
         Map<String, String> requestMap = new HashMap<>();
         requestMap.put("productName", productName);
         requestMap.put("startDate", dateForm(startDate));
         requestMap.put("endDate", dateForm(endDate));
 
-        return productInfoMapper.getAllProductInfo(requestMap);
+        log.info("[{}] 요청 = {} 부터 {} 까지 상품 목록 조회", trxNo, startDate, endDate);
+        List<ProductInfo> productInfoList = productInfoMapper.getAllProductInfo(requestMap);
+
+        if (!isExcel) {
+            log.info("[{}] 응답 = 상품 목록 {} 건 조회 완료", trxNo, productInfoList.size());
+        }
+
+        return productInfoList;
     }
 
     public void exportExcel(String productName, String startDate, String endDate, HttpServletResponse response) throws IllegalAccessException, IOException {
-        List<ProductInfo> productInfoList = getProductInfoList(productName, startDate, endDate);
+        String trxNo = MDC.get("trxNo");
+
+        List<ProductInfo> productInfoList = getProductInfoList(productName, startDate, endDate, true);
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("상품 조회");
@@ -71,6 +85,8 @@ public class ProductInfoService {
         response.getOutputStream().flush();
         response.getOutputStream().close();
         workbook.close();
+
+        log.info("[{}] 응답 = 상품 목록 Excel 생성 완료", trxNo);
     }
 
     private String dateForm(String date) {

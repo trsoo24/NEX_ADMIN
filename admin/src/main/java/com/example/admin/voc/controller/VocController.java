@@ -16,9 +16,8 @@ public class VocController {
     private final VocService vocService;
 
     @GetMapping("/conversion")
-    public MapResult<String, Object> getConversionHistory(@RequestParam("dcb") @Valid String dcb,
-                                                          @RequestParam("ctn") @Valid String ctn) {
-        Map<String, Object> responseMap = vocService.getGdcbConversionHistory(dcb, ctn);
+    public MapResult<String, Object> getConversionHistory(@RequestParam("ctn") @Valid String ctn) {
+        Map<String, Object> responseMap = vocService.getGdcbConversionHistory(ctn);
 
         return new MapResult<>(true, responseMap);
     }
