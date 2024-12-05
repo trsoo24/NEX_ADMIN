@@ -8,9 +8,8 @@
     <update id="updatePolicyInfo" parameterType="com.example.admin.policy.dto.UpdatePolicyInfoDto">
         UPDATE TB_POLICY_INFO
         SET
-        POLICY_APPLIED_DATE = SYSDATE,
         FLAG = #{flag}
-        WHERE POLICY_CODE = #{policyCode}
+        WHERE POLICY_NAME = #{policyCode}
     </update>
 
     <!-- 전체 결제 정책 목록 조회 -->

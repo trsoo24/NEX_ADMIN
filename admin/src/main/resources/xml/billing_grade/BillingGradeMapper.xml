@@ -8,7 +8,7 @@
             SELECT
                 CASE
                     WHEN CUST_GRD_CD IS NULL THEN
-                        CASE WHEN GROUPING(CUST_GRD_CD) = 0 THEN 'E' ELSE 'A' END
+                        CASE WHEN GROUPING(CUST_GRD_CD) = '0' THEN 'E' ELSE 'A' END
                     ELSE CUST_GRD_CD
                     END AS CUST_GRD_CD,
                 SUM(CASE WHEN API_TYPE = #{api_type1} THEN AMOUNT ELSE 0 END) AS CHARGE,

@@ -11,9 +11,9 @@
         WHERE CREATE_DT BETWEEN TO_DATE(#{startDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
             AND TO_DATE(#{endDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS'))
         SELECT
-        CREATE_DT,
+        TO_CHAR(CREATE_DT, 'YYYY-MM-DD') AS createDt,
         RESULT_CODE,
-        COUNT(CODE_COUNT) AS codeCount
+        COUNT(RESULT_CODE) AS codeCount
         FROM FILTER
         GROUP BY CREATE_DT, RESULT_CODE
     </select>
