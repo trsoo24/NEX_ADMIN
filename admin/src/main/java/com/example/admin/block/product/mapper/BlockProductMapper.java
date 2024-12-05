@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Mapper
 public interface BlockProductMapper {
-    void insertBlockProduct(InsertBlockProductDto insertBlockProductDto);
+    boolean insertBlockProduct(InsertBlockProductDto insertBlockProductDto);
     List<BlockProductDto> getBlockProductList(Map<String, Object> map);
-    void deleteBlockProduct(List<Long> productNos);
+    boolean deleteBlockProduct(List<Long> productNos);
 }
