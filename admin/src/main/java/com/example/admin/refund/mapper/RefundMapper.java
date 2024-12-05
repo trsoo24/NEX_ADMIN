@@ -10,9 +10,8 @@ import java.util.Map;
 
 @Mapper
 public interface RefundMapper {
-    void insertManualRefund(ManualRefund manualRefund);
-    void insertManualRefundFileInfo(ManualRefundFileInfo manualRefundFileInfo);
-    void insertEai(LgudcbEaiSdw lgudcbEaiSdw);
+    boolean insertManualRefund(ManualRefund manualRefund);
+    boolean insertManualRefundFileInfo(ManualRefundFileInfo manualRefundFileInfo);
     ManualRefund selectManualRefundByCorrelationId(String correlationId);
     void updateRefundAuth(Map<String, Object> map);
     AuthInfo getAuthInfo(Map<String, Object> map);

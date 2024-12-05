@@ -15,5 +15,5 @@ public interface BlockCtnMapper {
 
     List<BlockCtnDto> getAllBlockCtn();
 
-    void deleteBlockCtn(List<String> ctns);
+    boolean deleteBlockCtn(List<String> ctns);
 }

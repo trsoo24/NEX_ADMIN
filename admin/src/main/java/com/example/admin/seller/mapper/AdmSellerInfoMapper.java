@@ -9,5 +9,5 @@ import java.util.Map;
 @Mapper
 public interface AdmSellerInfoMapper {
     List<AdmSeller> searchSellers(Map<String, String> map);
-    void blockSeller(Map<String, Object> map);
+    boolean blockSeller(Map<String, Object> map);
 }

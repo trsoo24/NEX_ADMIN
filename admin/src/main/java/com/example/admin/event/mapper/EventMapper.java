@@ -10,8 +10,8 @@ import java.util.Map;
 
 @Mapper
 public interface EventMapper {
-    void insertEvent(InsertEventDto dto);
+    boolean insertEvent(InsertEventDto dto);
     List<Event> getEventList(Map<String, String> map);
-    void updateEvent(UpdateEventDto dto);
-    void deleteEvent(List<String> eventNames);
+    boolean updateEvent(UpdateEventDto dto);
+    boolean deleteEvent(List<String> eventNames);
 }

@@ -10,11 +10,11 @@ import java.util.Map;
 
 @Mapper
 public interface TestPhoneMapper {
-    void insertTestPhone(InsertTestPhoneDto dto);
+    boolean insertTestPhone(InsertTestPhoneDto dto);
 
     boolean existsCtn(String ctn);
 
     List<TestPhone> getAllTestPhone();
 
-    void deleteCtn(String ctn);
+    boolean deleteCtn(String ctn);
 }

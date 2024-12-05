@@ -9,5 +9,5 @@ import java.util.List;
 @Mapper
 public interface ScheduleManageMapper {
     List<GetScheduleManageResponse> getSchedulerStatus();
-    void updateSchedulerStatus(ModifyScheduleManageRequest request);
+    boolean updateSchedulerStatus(ModifyScheduleManageRequest request);
 }
