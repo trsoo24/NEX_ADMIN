@@ -19,7 +19,7 @@
     <select id="getAllBlockCtn" parameterType="map" resultType="com.example.admin.block.ctn.dto.BlockCtnDto">
     SELECT *
         FROM TB_BLOCK_CTN
-        ORDER BY REG_DT
+        ORDER BY REG_DT DESC
     </select>
 
     <delete id="deleteBlockCtn" parameterType="java.util.List">
