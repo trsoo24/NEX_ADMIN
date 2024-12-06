@@ -36,8 +36,10 @@ public class GDCBReconcileService {
 
         List<Reconcile> reconcileList = reconcileMapper.getGDCBReconcileList(requestMap);
 
+        setDate(reconcileList);
+
         if(!isExcel) {
-            log.info("[{}] 응답 = {} 월자 대사 {} 건 조회 완료", trxNo, month, reconcileList);
+            log.info("[{}] 응답 = {} 월자 대사 {} 건 조회 완료", trxNo, month, reconcileList.size());
         }
 
         return reconcileList;
