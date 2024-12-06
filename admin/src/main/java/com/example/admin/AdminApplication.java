@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 //@SpringBootApplication
 //public class AdminApplication {
@@ -15,7 +16,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 //
 //}
 
-
+@EnableScheduling
 @SpringBootApplication
 public class AdminApplication extends SpringBootServletInitializer {
 
