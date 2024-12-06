@@ -27,9 +27,9 @@ public class RangeDayService {
         String date = sdf.format(yesterday);
 
         requestMap.put("date", date);
-        requestMap.put("api_type1", "charge");
-        requestMap.put("api_type2", "reversal");
-        requestMap.put("api_type3", "refund");
+        requestMap.put("api_type1", "B");
+        requestMap.put("api_type2", "C");
+        requestMap.put("api_type3", "R");
 
         log.info("[{}] 요청 = {} 일자 일 기간별 결제 현황 종합", trxNo, date);
 
