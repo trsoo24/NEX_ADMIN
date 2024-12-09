@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 @Slf4j
@@ -23,8 +24,9 @@ public class RangeDayService {
         Map<String, Object> requestMap = new HashMap<>();
 
         LocalDate yesterday = LocalDate.now().minusDays(1);
+        Date dateToFormat = Date.from(yesterday.atStartOfDay(ZoneId.systemDefault()).toInstant());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String date = sdf.format(yesterday);
+        String date = sdf.format(dateToFormat);
 
         requestMap.put("date", date);
         requestMap.put("api_type1", "B");

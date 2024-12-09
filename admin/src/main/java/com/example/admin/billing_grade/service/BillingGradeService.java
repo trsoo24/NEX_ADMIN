@@ -34,6 +34,8 @@ public class BillingGradeService {
 
         try {
             // 고객한도별 월 단위 청구현황 가져오기
+            log.info("resultCode : {}, firstDay : {}, lastDay : {}, api_type1 :{}, api_type2 :{}, api_type3 :{}, paid : {}, unpaid : {}",
+                    billingGrade.getResultCode(), billingGrade.getFirstDay(), billingGrade.getLastDay(), billingGrade.getApi_type1(), billingGrade.getApi_type2(), billingGrade.getApi_type3(), billingGrade.getPaid(), billingGrade.getUnpaid());
             billingGradeList = billingGradeMapper.generateBillingGrade(billingGrade);
 
             log.info("[{}] 응답 데이터 = GDCB 월 등급별 결제 현황 {} 건 호출", trxNo, billingGradeList.size());
