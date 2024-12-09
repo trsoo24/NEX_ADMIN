@@ -56,7 +56,7 @@ public class BlockProductService {
         boolean deleteResponse = blockProductMapper.deleteBlockProduct(dto.getProducts());
 
         if (deleteResponse) {
-            log.info("[{}] 응답 = 차단 상품 {} 건 해제 완료", trxNo, dto.getProducts());
+            log.info("[{}] 응답 = 차단 상품 {} 건 해제 완료", trxNo, dto.getProducts().size());
         } else {
             log.info("[{}] 응답 = 차단 상품 해제 실패", trxNo);
         }

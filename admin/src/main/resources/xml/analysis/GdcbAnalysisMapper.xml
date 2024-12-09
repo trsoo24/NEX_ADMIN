@@ -8,8 +8,8 @@
     WITH FILTER AS (
     SELECT *
         FROM TB_API_LOGS
-        WHERE CREATE_DT BETWEEN TO_DATE(#{startDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
-            AND TO_DATE(#{endDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS'))
+        WHERE CREATE_DT BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD HH24:MI:SS')
+            AND TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'))
         SELECT
         TO_CHAR(CREATE_DT, 'YYYY-MM-DD') AS createDt,
         RESULT_CODE,

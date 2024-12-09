@@ -20,12 +20,17 @@ public class PolicyService {
     @Transactional
     public void updatePolicyInfo(List<UpdatePolicyInfoDto> dto) {
         String trxNo = MDC.get("trxNo");
+        boolean updateResponse = false;
 
         for (UpdatePolicyInfoDto dto1 : dto) {
             log.info("[{}] 요청 = 결제 정책 {} 정책 변경 요청", trxNo, dto1.getPolicyCode());
-        }
 
-        boolean updateResponse = policyMapper.updatePolicyInfo(dto);
+            updateResponse = policyMapper.updatePolicyInfo(dto1);
+
+            if (!updateResponse) {
+                log.info("[{}] 응답 = {} 정책 변경 실패", trxNo, dto1.getPolicyCode());
+            }
+        }
 
         if (updateResponse) {
             log.info("[{}] 응답 = 결제 정책 {} 건 정책 변경 완료", trxNo, dto.size());

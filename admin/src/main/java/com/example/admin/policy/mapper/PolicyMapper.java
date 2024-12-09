@@ -8,6 +8,6 @@ import java.util.List;
 
 @Mapper
 public interface PolicyMapper {
-    boolean updatePolicyInfo(List<UpdatePolicyInfoDto> dtoList);
+    boolean updatePolicyInfo(UpdatePolicyInfoDto dto);
     List<PolicyInfo> selectAllPolicyInfo();
 }

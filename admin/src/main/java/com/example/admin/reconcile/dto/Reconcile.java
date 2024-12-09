@@ -27,7 +27,7 @@ public class Reconcile {
 
     private String formatDateToDate(String date) {
         date = date.split("\\.")[0];
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         return String.valueOf(LocalDateTime.parse(date, formatter));
     }
