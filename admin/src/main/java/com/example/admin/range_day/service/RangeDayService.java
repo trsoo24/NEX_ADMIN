@@ -29,9 +29,9 @@ public class RangeDayService {
 
 
         requestMap.put("date", date);
-        requestMap.put("api_type1", "B");
-        requestMap.put("api_type2", "C");
-        requestMap.put("api_type3", "R");
+        requestMap.put("charge", "B");
+        requestMap.put("reversal", "C");
+        requestMap.put("refund", "R");
 
         log.info("[{}] 요청 = {} 일자 일 기간별 결제 현황 종합", trxNo, date);
 
@@ -39,8 +39,10 @@ public class RangeDayService {
 
         log.info("[{}] 응답 = 일 기간별 결제 현황 {} 건 종합 완료", trxNo, rangeDayList.size());
 
-        // A_STAT = "A" 값 추가
-        generateDCBTotalList(rangeDayList);
+        if (!rangeDayList.isEmpty()) {
+            // A_STAT = "A" 값 추가
+            generateDCBTotalList(rangeDayList);
+        }
 
         return rangeDayList;
     }

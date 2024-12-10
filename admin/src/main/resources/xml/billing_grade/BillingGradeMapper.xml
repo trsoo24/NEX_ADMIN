@@ -6,14 +6,14 @@
     <select id="generateBillingGrade" parameterType="com.example.admin.billing_grade.dto.BillingGrade" resultType="com.example.admin.billing_grade.dto.BillingGrade">
         WITH BASE_DATA AS (
             SELECT
-                CASE
-                    WHEN CUST_GRD_CD IS NULL THEN
-                        CASE WHEN GROUPING(CUST_GRD_CD) = '0' THEN 'E' ELSE 'A' END
-                    ELSE CUST_GRD_CD
-                    END AS CUST_GRD_CD,
-                SUM(CASE WHEN API_TYPE = #{api_type1} THEN AMOUNT ELSE 0 END) AS CHARGE,
-                SUM(CASE WHEN API_TYPE = #{api_type2} THEN AMOUNT ELSE 0 END) AS REVERSE,
-                SUM(CASE WHEN API_TYPE = #{api_type3} THEN AMOUNT ELSE 0 END) AS REFUND,
+                TO_CHAR(CREATE_DT, 'yyyyMM') AS statYyMm,
+                (CASE
+                     WHEN CUST_GRD_CD IS NULL OR CUST_GRD_CD = '0' THEN 'E'
+                     ELSE CUST_GRD_CD
+                    END) AS CUST_GRD_CD,
+                SUM(CASE WHEN API_TYPE = #{charge} THEN AMOUNT ELSE 0 END) AS CHARGE,
+                SUM(CASE WHEN API_TYPE = #{reversal} THEN AMOUNT ELSE 0 END) AS REVERSAL,
+                SUM(CASE WHEN API_TYPE = #{refund} THEN AMOUNT ELSE 0 END) AS REFUND,
                 COUNT(DISTINCT CTN) AS ACE_CNT,
                 COUNT(*) AS CNT,
                 BAN_UNPAID_YN_CODE
@@ -21,19 +21,28 @@
             WHERE
                 CREATE_DT BETWEEN TO_DATE(#{firstDay}, 'YYYYMMDDHH24MISS') AND TO_DATE(#{lastDay}, 'YYYYMMDDHH24MISS')
               AND RESULT_CODE = #{resultCode}
-              AND API_TYPE IN (#{api_type1}, #{api_type2}, #{api_type3})
-            GROUP BY GROUPING SETS ((CUST_GRD_CD, BAN_UNPAID_YN_CODE), (BAN_UNPAID_YN_CODE), ()))
+              AND API_TYPE IN (#{charge}, #{reversal}, #{refund})
+            GROUP BY TO_CHAR(CREATE_DT, 'yyyyMM'),
+                     (CASE WHEN CUST_GRD_CD IS NULL OR CUST_GRD_CD = '0' THEN 'E' ELSE CUST_GRD_CD END),
+                     BAN_UNPAID_YN_CODE)
         SELECT
-            A.CUST_GRD_CD,
-            NVL(A.CHARGE, 0) AS A_CHARGE, NVL(A.REVERSE, 0) AS A_REVERSE, NVL(A.REFUND, 0) AS A_REFUND,
-            NVL(A.ACE_CNT, 0) AS ALL_ACE_CNT, NVL(A.CNT, 0) AS ALL_CNT,
-            NVL(B.CHARGE, 0) AS P_CHARGE, NVL(B.REVERSE, 0) AS P_REVERSE, NVL(B.REFUND, 0) AS P_REFUND,
-            NVL(B.ACE_CNT, 0) AS PAID_ACE_CNT, NVL(B.CNT, 0) AS PAID_CNT,
-            NVL(C.CHARGE, 0) AS U_CHARGE, NVL(C.REVERSE, 0) AS U_REVERSE, NVL(C.REFUND, 0) AS U_REFUND,
-            NVL(C.ACE_CNT, 0) AS UNPAID_ACE_CNT, NVL(C.CNT, 0) AS UNPAID_CNT
+            A.CUST_GRD_CD AS custGrdCd,
+            A.statYyMm AS statYyMm,
+            SYSDATE AS regDt,
+            NVL(SUM(A.CHARGE), 0) - NVL(SUM(A.REVERSAL), 0) - NVL(SUM(A.REFUND), 0) AS allAmount,
+            NVL(SUM(A.ACE_CNT), 0) AS allAceCnt,
+            NVL(SUM(A.CNT), 0) AS allCnt,
+            NVL(SUM(P.CHARGE), 0) - NVL(SUM(P.REVERSAL), 0) - NVL(SUM(P.REFUND), 0) AS paidAmount,
+            NVL(SUM(P.ACE_CNT), 0) AS paidAceCnt,
+            NVL(SUM(P.CNT), 0) AS paidCnt,
+            NVL(SUM(U.CHARGE), 0) - NVL(SUM(U.REVERSAL), 0) - NVL(SUM(U.REFUND), 0) AS unpaidAmount,
+            NVL(SUM(U.ACE_CNT), 0) AS unpaidAceCnt,
+            NVL(SUM(U.CNT), 0) AS unpaidCnt
         FROM BASE_DATA A
-                 LEFT JOIN BASE_DATA B ON A.CUST_GRD_CD = B.CUST_GRD_CD AND B.BAN_UNPAID_YN_CODE = #{paid}
-                 LEFT JOIN BASE_DATA C ON A.CUST_GRD_CD = C.CUST_GRD_CD AND C.BAN_UNPAID_YN_CODE = #{unpaid}
-        WHERE A.BAN_UNPAID_YN_CODE IS NULL
+                 LEFT JOIN BASE_DATA P
+                           ON A.CUST_GRD_CD = P.CUST_GRD_CD AND P.BAN_UNPAID_YN_CODE = #{paid}
+                 LEFT JOIN BASE_DATA U
+                           ON A.CUST_GRD_CD = U.CUST_GRD_CD AND U.BAN_UNPAID_YN_CODE = #{unpaid}
+        GROUP BY A.CUST_GRD_CD, A.statYyMm
     </select>
 </mapper>

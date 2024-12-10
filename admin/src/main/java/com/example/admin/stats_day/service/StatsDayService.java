@@ -33,9 +33,9 @@ public class StatsDayService {
             requestMap.put("year", year);
             requestMap.put("month", month);
             requestMap.put("day", day);
-            requestMap.put("api_type1", "B");
-            requestMap.put("api_type2", "C");
-            requestMap.put("api_type3", "R");
+            requestMap.put("charge", "B");
+            requestMap.put("reversal", "C");
+            requestMap.put("refund", "R");
 
             log.info("[{}] 요청 = {} 일별 결제 현황 종합", trxNo, year + "-" + month + "-" + day);
             statsDayList = statsDayMapper.getStatsDayList(requestMap);

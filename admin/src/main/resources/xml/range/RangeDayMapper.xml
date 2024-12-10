@@ -6,23 +6,23 @@
     <select id="getRangeDay" parameterType="map" resultMap="rangeDayMap">
         SELECT
             TO_CHAR(CREATE_DT, 'YYYY-MM-DD') AS stat_day,
-            CASE
+            (CASE
                 WHEN AMOUNT BETWEEN 0 AND 100000 THEN '1'
                 WHEN AMOUNT BETWEEN 100000 AND 200000 THEN '2'
                 WHEN AMOUNT BETWEEN 200000 AND 300000 THEN '3'
                 WHEN AMOUNT BETWEEN 300000 AND 400000 THEN '4'
                 WHEN AMOUNT BETWEEN 400000 AND 500000 THEN '5'
                 ELSE 'O'
-            END AS a_stat,
+            END) AS a_stat,
             COUNT(DISTINCT CTN) AS b_stat,
             COUNT(*) AS c_stat,
-            SUM(CASE WHEN API_TYPE = #{api_type1} THEN AMOUNT ELSE 0 END) AS d_stat,
-            SUM(CASE WHEN API_TYPE = #{api_type3} OR API_TYPE = #{api_type2} THEN AMOUNT ELSE 0 END) AS e_stat,
+            SUM(CASE WHEN API_TYPE = #{charge} THEN AMOUNT ELSE 0 END) AS d_stat,
+            SUM(CASE WHEN API_TYPE = #{refund} OR API_TYPE = #{reversal} THEN AMOUNT ELSE 0 END) AS e_stat,
             SUM(CASE
-            WHEN API_TYPE = #{api_type1} THEN AMOUNT
-            WHEN API_TYPE = #{api_type3} OR API_TYPE = #{api_type2} THEN -AMOUNT ELSE 0 END) AS f_stat,
+            WHEN API_TYPE = #{charge} THEN AMOUNT
+            WHEN API_TYPE = #{refund} OR API_TYPE = #{reversal} THEN -AMOUNT ELSE 0 END) AS f_stat,
             CASE WHEN COUNT(DISTINCT CTN) > 0 THEN
-            SUM(CASE WHEN API_TYPE = #{api_type1} THEN AMOUNT ELSE 0 END) / COUNT(DISTINCT CTN)
+            SUM(CASE WHEN API_TYPE = #{charge} THEN AMOUNT ELSE 0 END) / COUNT(DISTINCT CTN)
             ELSE 0 END AS g_stat
             FROM TB_API_LOGS
             WHERE TO_CHAR(CREATE_DT, 'YYYY-MM-DD') = #{date}
