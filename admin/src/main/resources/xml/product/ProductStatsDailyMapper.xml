@@ -14,6 +14,6 @@
         WHERE YEAR = #{year}
             AND MONTH = #{month}
             AND DAY = #{day}
-        GROUP BY YEAR, MONTH, DAY, MERCHANTNAME, ITEMNAME
+        GROUP BY YEAR || '-' || MONTH || '-' || DAY, MERCHANTNAME, ITEMNAME
     </select>
 </mapper>

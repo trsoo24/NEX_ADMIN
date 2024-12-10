@@ -1,6 +1,5 @@
 package com.example.admin.common.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -14,9 +13,6 @@ import java.util.List;
 @Service
 public class FunctionUtil {
     private static final DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
-
-    @Value("${stats.last.month.try.cnt}")
-    private static String monthTryCnt;
 
     public String transCtn(String ctn) {
         if (ctn.contains("-")) {
@@ -80,16 +76,15 @@ public class FunctionUtil {
         List<String> lastMonthList = new ArrayList<>();
 
         try {
-            int cnt = Integer.parseInt(monthTryCnt);
+            int cnt = 1;
 
             Calendar cal = Calendar.getInstance();
-            if(cnt > 0) {
+
+            cal.add(Calendar.MONTH, -1);
+            for(int i=0; i<cnt; i++) {
                 cal.add(Calendar.MONTH, -1);
-                for(int i=0; i<cnt; i++) {
-                    cal.add(Calendar.MONTH, -1);
-                    String lastMonth = new SimpleDateFormat("yyyyMM").format(cal.getTime());
-                    lastMonthList.add(lastMonth + "," + lastMonth + "01," + lastMonth + cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-                }
+                String lastMonth = new SimpleDateFormat("yyyyMM").format(cal.getTime());
+                lastMonthList.add(lastMonth + "," + lastMonth + "01," + lastMonth + cal.getActualMaximum(Calendar.DAY_OF_MONTH));
             }
         }catch(Exception e) {
             e.printStackTrace();

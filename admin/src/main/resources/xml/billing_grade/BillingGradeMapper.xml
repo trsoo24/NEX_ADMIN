@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.billing_grade.mapper.BillingGradeMapper">
-    <select id="generateBillingGrade" parameterType="com.example.admin.billing_grade.dto.BillingGrade" resultType="com.example.admin.billing_grade.dto.BillingGrade">
+    <select id="generateBillingGrade" parameterType="java.util.Map" resultType="com.example.admin.billing_grade.dto.BillingGrade">
         WITH BASE_DATA AS (
             SELECT
                 TO_CHAR(CREATE_DT, 'yyyyMM') AS statYyMm,
@@ -28,7 +28,7 @@
         SELECT
             A.CUST_GRD_CD AS custGrdCd,
             A.statYyMm AS statYyMm,
-            SYSDATE AS regDt,
+            TO_CHAR(SYSDATE, 'YYYY-MM-DD') AS regDt,
             NVL(SUM(A.CHARGE), 0) - NVL(SUM(A.REVERSAL), 0) - NVL(SUM(A.REFUND), 0) AS allAmount,
             NVL(SUM(A.ACE_CNT), 0) AS allAceCnt,
             NVL(SUM(A.CNT), 0) AS allCnt,

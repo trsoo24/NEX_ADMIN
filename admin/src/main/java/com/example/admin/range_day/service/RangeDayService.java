@@ -33,6 +33,8 @@ public class RangeDayService {
         requestMap.put("reversal", "C");
         requestMap.put("refund", "R");
 
+        // LOG
+        log.info("date : {}, charge : {}, reversal : {}, refund : {}", date, requestMap.get("charge"), requestMap.get("reversal"), requestMap.get("refund"));
         log.info("[{}] 요청 = {} 일자 일 기간별 결제 현황 종합", trxNo, date);
 
         List<RangeDay> rangeDayList = rangeDayMapper.getRangeDay(requestMap);

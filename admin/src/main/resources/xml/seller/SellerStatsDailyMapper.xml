@@ -11,6 +11,6 @@
             SUM(SUM_TOTAL) AS sumTotal
         FROM TB_ITEM_STATS_DAILY
         WHERE YEAR = #{year} AND MONTH = #{month} AND DAY = #{day}
-        GROUP BY YEAR, MONTH, DAY, MERCHANTNAME
+        GROUP BY YEAR || '-' || MONTH || '-' || DAY, MERCHANTNAME
     </select>
 </mapper>

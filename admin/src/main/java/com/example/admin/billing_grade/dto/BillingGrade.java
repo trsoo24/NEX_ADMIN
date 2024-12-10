@@ -25,23 +25,4 @@ public class BillingGrade { // 월별 청구 현황 ( 등급별 ) 조회
     private Integer unpaidCnt;
     private Integer unpaidAmount;
     private final String dcb = "GDCB";
-
-    private String resultCode;
-    private final String charge = "charge";
-    private final String reversal = "reversal";
-    private final String refund = "refund";
-    private final String paid = "N";
-    private final String unpaid = "Y";
-    private String firstDay;
-    private String lastDay;
-
-
-    public BillingGrade() {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, -1);
-        setStatYyMm(new SimpleDateFormat("yyyyMM").format(cal.getTime()));
-        setResultCode(BillingGradeResultCode.SUCCESS.getValue());
-        setFirstDay(getStatYyMm()+"01000000");
-        setLastDay(getStatYyMm()+cal.getActualMaximum(Calendar.DAY_OF_MONTH)+"235959");
-    }
 }
