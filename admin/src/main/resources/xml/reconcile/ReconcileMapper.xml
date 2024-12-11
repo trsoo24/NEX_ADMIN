@@ -12,8 +12,8 @@
         A.FILE_NAME AS fileName,
         A.FILE_PATH AS filePath,
         C.CODE_VALUE AS result,
-        CREATE_DT AS createDt,
-        UPDATE_DT AS updateDt
+        TO_CHAR(CREATE_DT, 'YYYY-MM-DD') AS createDt,
+        TO_CHAR(UPDATE_DT, 'YYYY-MM-DD') AS updateDt
         FROM TB_CREATE_FILE_INFO A
         LEFT JOIN TB_CODE B ON B.CODE_GUBUN = 'FILE_NAME' AND A.FILE_TYPE = B.CODE
         LEFT JOIN TB_CODE C ON C.CODE_GUBUN = 'CR_RESULT' AND A.RESULT = C.CODE

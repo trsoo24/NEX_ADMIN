@@ -36,10 +36,6 @@ public class GDCBReconcileService {
 
         List<Reconcile> reconcileList = reconcileMapper.getGDCBReconcileList(requestMap);
 
-        if(!reconcileList.isEmpty()) {
-            setDate(reconcileList);
-        }
-
         if(!isExcel) {
             log.info("[{}] 응답 = {} 월자 대사 {} 건 조회 완료", trxNo, month, reconcileList.size());
         }
@@ -51,8 +47,6 @@ public class GDCBReconcileService {
         String trxNo = MDC.get("trxNo");
 
         List<Reconcile> reconcileList = getGDCBReconcileList(month, fileType, true);
-
-        setDate(reconcileList);
 
         XSSFWorkbook workBook = new XSSFWorkbook();
         XSSFSheet sheet = workBook.createSheet("대사 파일 조회");
@@ -127,12 +121,6 @@ public class GDCBReconcileService {
             log.error("[{}] 응답 = 파일 {} 다운로드 실패", trxNo, fileName);
 
             throw new RuntimeException(e);
-        }
-    }
-
-    private void setDate(List<Reconcile> reconcileList) {
-        for (Reconcile reconcile : reconcileList) {
-            reconcile.setDateFormat();
         }
     }
 }

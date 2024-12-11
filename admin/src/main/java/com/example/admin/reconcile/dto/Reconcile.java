@@ -19,21 +19,4 @@ public class Reconcile {
     private String result;
     private String createDt;
     private String updateDt;
-
-    public void setDateFormat() {
-        if (this.createDt != null) {
-            this.createDt = formatDateToDate(this.createDt);
-        }
-
-        if (this.updateDt != null) {
-            this.updateDt = formatDateToDate(this.updateDt);
-        }
-    }
-
-    private String formatDateToDate(String date) {
-        date = date.split("\\.")[0];
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        return String.valueOf(LocalDateTime.parse(date, formatter));
-    }
 }
