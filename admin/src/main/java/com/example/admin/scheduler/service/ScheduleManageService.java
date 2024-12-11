@@ -38,15 +38,9 @@ public class ScheduleManageService {
         boolean updateResponse = scheduleManageMapper.updateSchedulerStatus(request);
 
         if (updateResponse) {
-            String server1 = "SERVER1";
-            String server2 = "SERVER2";
-            if ("Y".equals(request.getServer1())) {
-                log.info("[{}] ADMIN {} 스케줄러 기동 서버 {} -> {} 수정 완료", trxNo, request.getScheduler(), server2, server1);
-            } else {
-                log.info("[{}] ADMIN {} 스케줄러 기동 서버 {} -> {} 수정 완료", trxNo, request.getScheduler(), server1, server2);
-            }
+            log.info("[{}] ADMIN {} 스케줄러 기동 서버 {}(으)로 수정 완료", trxNo, request.getScheduleCd(), request.getScheduleServer());
         } else {
-            log.info("[{}] ADMIN {} 스케줄러 기동 서버 수정 실패", trxNo, request.getScheduler());
+            log.info("[{}] ADMIN {} 스케줄러 기동 서버 수정 실패", trxNo, request.getScheduleCd());
         }
     }
 

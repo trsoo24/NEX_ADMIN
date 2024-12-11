@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ModifyScheduleManageRequest {
-    private String scheduler;
-    private String server1;
-    private String server2;
+    private String scheduleServer;
     private String modifier;
+    private String scheduleCd;
 }

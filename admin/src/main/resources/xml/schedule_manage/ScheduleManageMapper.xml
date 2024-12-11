@@ -9,8 +9,8 @@
             SCHEDULE_CD,
             SCHEDULE_SERVER,
             REG_ID,
-            TO_CHAR(REG_DT, 'YYYY-MM-DD HH24:MI:SS') AS regDt,
-            TO_CHAR(CRE_DT, 'YYYY-MM-DD HH24:MI:SS') AS creDt,
+            REG_DT,
+            CRE_DT,
         FROM
             TB_SCHEDULE_MANAGE
         ORDER BY
