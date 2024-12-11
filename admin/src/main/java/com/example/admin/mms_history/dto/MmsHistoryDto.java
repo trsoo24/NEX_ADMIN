@@ -33,4 +33,8 @@ public class MmsHistoryDto {
 
         this.ctn = head + star + tail;
     }
+
+    public void setSendResult(String sendResult) {
+        this.sendResult = sendResult;
+    }
 }

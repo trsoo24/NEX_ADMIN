@@ -8,7 +8,7 @@
         SELECT
         CTN,
         TO_CHAR(TRANSACTION_DT, 'YYYY-MM-DD HH24:MI:SS') AS transactionDt,
-        CANCEL_NOTIFICATION_DT,
+        TO_CHAR(CANCEL_NOTIFICATION_DT, 'YYYY-MM-DD HH24:MI:SS') AS cancelNotificationDt,
         TOTAL,
         ITEMNAME,
         MERCHANTNAME
