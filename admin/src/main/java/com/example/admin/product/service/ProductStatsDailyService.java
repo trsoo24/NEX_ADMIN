@@ -28,7 +28,6 @@ public class ProductStatsDailyService {
         requestMap.put("month", month);
         requestMap.put("day", day);
 
-        log.info("year : {}, month : {}, day : {}", year, month, day);
         log.info("[{}] 요청 = {} 일자 상품 일별 판매 현황 종합", trxNo, year + "-" + month + "-" + day);
 
         List<ProductStatsDaily> productStatsDailyList =  productStatsDailyMapper.getProductDayStats(requestMap);

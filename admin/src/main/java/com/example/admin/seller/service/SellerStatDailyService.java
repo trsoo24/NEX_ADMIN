@@ -25,7 +25,6 @@ public class SellerStatDailyService {
         requestMap.put("month", month);
         requestMap.put("day", day);
 
-        log.info("year : {}, month : {}, day : {}", year, month, day);
         return sellerStatsDailyMapper.getSellerDayStats(requestMap);
     }
 }
