@@ -4,7 +4,9 @@
 
 <mapper namespace="com.example.admin.product.mapper.ProductInfoMapper">
     <select id="getAllProductInfo" parameterType="map" resultType="com.example.admin.product.dto.ProductInfo">
-        SELECT ITEMSALES_NM, MERCHANT_NM, STD_DT
+        SELECT ITEMSALES_NM AS productName,
+               MERCHANT_NM AS sellerCompany,
+               STD_DT
         FROM TB_ADM_ITEM_SALES
         WHERE
         <if test="productName != null and productName != ''">
