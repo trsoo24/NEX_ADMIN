@@ -65,14 +65,22 @@ public class GDCBInvoiceDetailService {
             monthlyInvoiceRefundSumList = reconcileMapper.selectRefundInvoice(requestMap);
         }
 
-        addMap(responseMap, monthlyInvoiceBuySumList, monthlyInvoiceRefundSumList);
+        if (!monthlyInvoiceBuySumList.isEmpty() && !monthlyInvoiceRefundSumList.isEmpty()) {
+            addMap(responseMap, monthlyInvoiceBuySumList, monthlyInvoiceRefundSumList);
+        }
 
         return responseMap;
     }
 
     private void addMap(Map<String, List<GDCBMonthlyInvoiceSum>> map, List<GDCBMonthlyInvoiceSum> buyList, List<GDCBMonthlyInvoiceSum> refundList) {
-        setListSize(buyList);
-        setListSize(refundList);
+        if (!buyList.isEmpty()) {
+            setListSize(buyList);
+        }
+
+        if (!refundList.isEmpty()) {
+            setListSize(refundList);
+        }
+
         List<GDCBMonthlyInvoiceSum> totalList = new ArrayList<>();
 
         for (int i = 0; i < buyList.size(); i++) {

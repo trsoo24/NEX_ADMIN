@@ -21,8 +21,13 @@ public class Reconcile {
     private String updateDt;
 
     public void setDateFormat() {
-        this.createDt = formatDateToDate(this.createDt);
-        this.updateDt = formatDateToDate(this.updateDt);
+        if (this.createDt != null) {
+            this.createDt = formatDateToDate(this.createDt);
+        }
+
+        if (this.updateDt != null) {
+            this.updateDt = formatDateToDate(this.updateDt);
+        }
     }
 
     private String formatDateToDate(String date) {
