@@ -6,24 +6,25 @@
 <mapper namespace="com.example.admin.scheduler.mapper.ScheduleManageMapper">
     <select id="getSchedulerStatus" resultType="com.example.admin.scheduler.dto.GetScheduleManageResponse">
         SELECT
-            SCHEDULER,
-            SERVER1,
-            SERVER2,
-            LAST_MODIFIER AS lastModifier,
-            LAST_MODIFIED_DATE AS lastModifiedDate
+            SCHEDULE_CD,
+            SCHEDULE_SERVER,
+            REG_ID,
+            TO_CHAR(REG_DT, 'YYYY-MM-DD HH24:MI:SS') AS regDt,
+            TO_CHAR(CRE_DT, 'YYYY-MM-DD HH24:MI:SS') AS creDt,
         FROM
             TB_SCHEDULE_MANAGE
+        ORDER BY
+            SCHEDULE_CD
     </select>
 
     <update id="updateSchedulerStatus" parameterType="com.example.admin.scheduler.dto.ModifyScheduleManageRequest">
         UPDATE
             TB_SCHEDULE_MANAGE
         SET
-            SERVER1 = #{server1},
-            SERVER2 = #{server2},
-            LAST_MODIFIER = #{modifier},
-            LAST_MODIFIED_DATE = SYSDATE
+            SCHEDULE_SERVER = #{scheduleServer},
+            REG_ID = #{modifier},
+            REG_DT = current_timestamp()
         WHERE
-            SCHEDULER = #{scheduler}
+            SCHEDULE_CD = #{scheduleCd}
     </update>
 </mapper>

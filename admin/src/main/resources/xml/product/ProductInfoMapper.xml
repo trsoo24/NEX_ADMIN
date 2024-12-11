@@ -13,6 +13,6 @@
             ITEMSALES_NM LIKE '%' || #{productName} || '%' AND
         </if>
         STD_DT BETWEEN #{startDate} AND #{endDate}
-        ORDER BY STD_DT
+        ORDER BY STD_DT DESC
     </select>
 </mapper>

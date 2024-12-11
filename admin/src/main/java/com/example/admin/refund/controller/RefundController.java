@@ -30,7 +30,7 @@ public class RefundController {
         gdcbRefundService.insertManualRefundFileInfo(manualRefundFileInfo);
     }
 
-    @GetMapping("/purchase-history")
+    @GetMapping("/history")
     public ListResult<RefundDto> getGdcbRefundHistory(@RequestParam("correlationId") @Valid String correlationId) throws Exception {
         List<RefundDto> refundDtoList = gdcbRefundService.getRefundDtoList(correlationId);
 
@@ -45,7 +45,7 @@ public class RefundController {
     }
 
 
-    @PutMapping("/purchase-history/{correlationId}")
+    @PutMapping("/history/{correlationId}")
     public StatusResult updateManualRefund(@PathVariable(name = "correlationId") @Valid String correlationId) {
         gdcbRefundService.updateRefundAuth("gdcb", correlationId);
 
