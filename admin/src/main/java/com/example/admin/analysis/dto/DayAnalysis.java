@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class DayAnalysis {
-    private String createDt;
+    private String statDay;
     private String resultCode;
     private Integer codeCount;
     private final String dcb = "GDCB";

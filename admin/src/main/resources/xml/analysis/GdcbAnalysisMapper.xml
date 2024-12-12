@@ -11,10 +11,10 @@
         WHERE CREATE_DT BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD HH24:MI:SS')
             AND TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'))
         SELECT
-        TO_CHAR(CREATE_DT, 'YYYY-MM-DD') AS createDt,
-        RESULT_CODE,
+        TO_CHAR(CREATE_DT, 'YYYY-MM-DD') AS statDay,
+        RESULT_CODE AS resultCode,
         COUNT(RESULT_CODE) AS codeCount
         FROM FILTER
-        GROUP BY CREATE_DT, RESULT_CODE
+        GROUP BY TO_CHAR(CREATE_DT, 'YYYY-MM-DD'), RESULT_CODE
     </select>
 </mapper>
