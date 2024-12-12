@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/schedule-manage")
@@ -24,8 +26,8 @@ public class ScheduleManageController {
 
     // 스케줄러의 기동 현황을 조회한다.
     @GetMapping()
-    public ListResult<ScheduleManageDto> getSchedulerStatus() {
-        return new ListResult<>(true, scheduleManageService.getSchedulerStatus());
+    public List<ScheduleManageDto> getSchedulerStatus() {
+        return scheduleManageService.getSchedulerStatus();
     }
 
 
