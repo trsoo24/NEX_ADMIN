@@ -2,7 +2,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.admin.seller.mapper.SellerStatsDailyMapper">
-    <select id="getSellerDayStats" parameterType="map" resultType="com.example.admin.seller.dto.SellerDayStat">
+    <select id="getSellerDayStats" parameterType="com.example.admin.seller.dto.GetSellerStatDto" resultType="com.example.admin.seller.dto.SellerDayStat">
         SELECT
             YEAR || '-' || MONTH || '-' || DAY AS statDay,
             MERCHANTNAME AS sellerName,

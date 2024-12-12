@@ -1,6 +1,7 @@
 package com.example.admin.billing_grade.service;
 
 import com.example.admin.billing_grade.dto.BillingGrade;
+import com.example.admin.billing_grade.dto.GetBillingGradeDto;
 import com.example.admin.billing_grade.dto.type.BillingGradeResultCode;
 import com.example.admin.billing_grade.mapper.BillingGradeMapper;
 import com.example.admin.common.service.FunctionUtil;
@@ -36,14 +37,7 @@ public class BillingGradeService {
         String paid = "N";
         String unpaid = "Y";
 
-        requestMap.put("resultCode", resultCode);
-        requestMap.put("firstDay", firstDay);
-        requestMap.put("lastDay", lastDay);
-        requestMap.put("charge", charge);
-        requestMap.put("reversal", reversal);
-        requestMap.put("refund", refund);
-        requestMap.put("paid", paid);
-        requestMap.put("unpaid", unpaid);
+        GetBillingGradeDto dto = new GetBillingGradeDto(resultCode, firstDay, lastDay, charge, reversal, refund, paid, unpaid);
 
         List<BillingGrade> billingGradeList = new ArrayList<>();
 
@@ -57,7 +51,7 @@ public class BillingGradeService {
 
         try {
             // 고객한도별 월 단위 청구현황 가져오기
-            billingGradeList = billingGradeMapper.generateBillingGrade(requestMap);
+            billingGradeList = billingGradeMapper.generateBillingGrade(dto);
 
             log.info("[{}] 응답 데이터 = GDCB 월 등급별 결제 현황 {} 건 호출", trxNo, billingGradeList.size());
         } catch (Exception e) {

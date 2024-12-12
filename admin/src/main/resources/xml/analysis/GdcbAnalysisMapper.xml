@@ -4,7 +4,7 @@
 
 
 <mapper namespace="com.example.admin.analysis.mapper.AnalysisStatisticsMapper">
-    <select id="generateAnalysisStatistics" parameterType="map" resultType="com.example.admin.analysis.dto.DayAnalysis">
+    <select id="generateAnalysisStatistics" parameterType="com.example.admin.analysis.dto.GetDayAnalysisDto" resultType="com.example.admin.analysis.dto.DayAnalysis">
     WITH FILTER AS (
     SELECT *
         FROM TB_API_LOGS

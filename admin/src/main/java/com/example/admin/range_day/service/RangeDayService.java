@@ -1,5 +1,6 @@
 package com.example.admin.range_day.service;
 
+import com.example.admin.range_day.dto.GetRangeDayDto;
 import com.example.admin.range_day.dto.RangeDay;
 import com.example.admin.range_day.mapper.RangeDayMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +23,15 @@ public class RangeDayService {
     public List<RangeDay> getRangeDay() {
         String trxNo = MDC.get("trxNo");
 
-        Map<String, Object> requestMap = new HashMap<>();
 
         LocalDate yesterday = LocalDate.now().minusDays(1);
         String date = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-
-        requestMap.put("date", date);
-        requestMap.put("charge", "B");
-        requestMap.put("reversal", "C");
-        requestMap.put("refund", "R");
+        GetRangeDayDto dto = new GetRangeDayDto(date, "B", "C", "R");
 
         log.info("[{}] 요청 = {} 일자 일 기간별 결제 현황 종합", trxNo, date);
 
-        List<RangeDay> rangeDayList = rangeDayMapper.getRangeDay(requestMap);
+        List<RangeDay> rangeDayList = rangeDayMapper.getRangeDay(dto);
 
         log.info("[{}] 응답 = 일 기간별 결제 현황 {} 건 종합 완료", trxNo, rangeDayList.size());
 

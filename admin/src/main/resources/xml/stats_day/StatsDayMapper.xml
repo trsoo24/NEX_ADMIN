@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.stats_day.mapper.StatsDayMapper">
-    <select id="getStatsDayList" parameterType="java.util.Map" resultType="com.example.admin.stats_day.dto.StatsDay">
+    <select id="getStatsDayList" parameterType="com.example.admin.stats_day.dto.GetStatDayDto" resultType="com.example.admin.stats_day.dto.StatsDay">
         SELECT
             YEAR || '-' || MONTH || '-' || DAY AS stat_day,
             SUM(CASE WHEN TRANSACTION_TYPE = #{charge} THEN CHARGE_AMT ELSE 0 END) AS b_stat,
@@ -16,7 +16,7 @@
             SUM(CASE WHEN TRANSACTION_TYPE = #{reversal} THEN CANCEL_AVG ELSE 0 END) AS r_stat,
             SUM(CASE WHEN TRANSACTION_TYPE = #{refund} THEN REFUND_AVG ELSE 0 END) AS t_stat
         FROM TB_AUTH_STATS_DAILY
-        WHERE TO_NUMBER(YEAR) = #{year} AND TO_NUMBER(MONTH) = #{month} AND TO_NUMBER(DAY) = #{day}
+        WHERE YEAR = #{year} AND MONTH = #{month} AND DAY = #{day}
         GROUP BY YEAR || '-' || MONTH || '-' || DAY
     </select>
 </mapper>

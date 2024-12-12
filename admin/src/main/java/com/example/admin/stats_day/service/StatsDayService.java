@@ -1,6 +1,7 @@
 package com.example.admin.stats_day.service;
 
 import com.example.admin.common.service.FunctionUtil;
+import com.example.admin.stats_day.dto.GetStatDayDto;
 import com.example.admin.stats_day.dto.StatsDay;
 import com.example.admin.stats_day.mapper.*;
 import lombok.RequiredArgsConstructor;
@@ -24,21 +25,14 @@ public class StatsDayService {
         List<StatsDay> statsDayList = new ArrayList<>();
 
         try {
-            Map<String, Object> requestMap = new HashMap<>();
-
             String year = FunctionUtil.yearOfYesterday();
             String month = FunctionUtil.monthOfYesterday();
             String day = FunctionUtil.yesterday();
 
-            requestMap.put("year", year);
-            requestMap.put("month", month);
-            requestMap.put("day", day);
-            requestMap.put("charge", "B");
-            requestMap.put("reversal", "C");
-            requestMap.put("refund", "R");
+            GetStatDayDto dto = new GetStatDayDto(year, month, day, "B", "C", "R");
 
             log.info("[{}] 요청 = {} 일별 결제 현황 종합", trxNo, year + "-" + month + "-" + day);
-            statsDayList = statsDayMapper.getStatsDayList(requestMap);
+            statsDayList = statsDayMapper.getStatsDayList(dto);
 
             if (!statsDayList.isEmpty()) {
                 log.info("[{}] 응답 = 일별 결제 현황 {} 건 종합 완료", trxNo, statsDayList.size());

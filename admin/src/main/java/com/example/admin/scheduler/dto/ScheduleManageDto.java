@@ -5,13 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetScheduleManageResponse {
+public class ScheduleManageDto {
     private final String dcb = "GDCB";
     private String scheduleCd;
     private String scheduleServer;

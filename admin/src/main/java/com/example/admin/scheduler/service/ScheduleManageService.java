@@ -1,7 +1,7 @@
 package com.example.admin.scheduler.service;
 
 import com.example.admin.scheduler.dto.ModifyScheduleManageRequest;
-import com.example.admin.scheduler.dto.GetScheduleManageResponse;
+import com.example.admin.scheduler.dto.ScheduleManageDto;
 import com.example.admin.scheduler.mapper.ScheduleManageMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +19,10 @@ public class ScheduleManageService {
 
 
     // 스케줄러 기동 현황을 조회한다.
-    public List<GetScheduleManageResponse> getSchedulerStatus() {
+    public List<ScheduleManageDto> getSchedulerStatus() {
         String trxNo = MDC.get("trxNo");
 
-        List<GetScheduleManageResponse> scheduleManageResponseList = scheduleManageMapper.getSchedulerStatus();
+        List<ScheduleManageDto> scheduleManageResponseList = scheduleManageMapper.getSchedulerStatus();
 
         log.info("[{}] ADMIN 스케줄러 {} 건 호출", trxNo, scheduleManageResponseList.size());
 

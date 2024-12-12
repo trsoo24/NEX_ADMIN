@@ -1,6 +1,7 @@
 package com.example.admin.product.service;
 
 import com.example.admin.common.service.FunctionUtil;
+import com.example.admin.product.dto.GetProductStatDto;
 import com.example.admin.product.dto.ProductStatsDaily;
 import com.example.admin.product.mapper.ProductStatsDailyMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,18 +20,15 @@ public class ProductStatsDailyService {
     public List<ProductStatsDaily> getProductStatsDailyList() {
         String trxNo = MDC.get("trxNo");
 
-        Map<String, Object> requestMap = new HashMap<>();
         String year = FunctionUtil.yearOfYesterday();
         String month = FunctionUtil.monthOfYesterday();
         String day = FunctionUtil.yesterday();
 
-        requestMap.put("year", year);
-        requestMap.put("month", month);
-        requestMap.put("day", day);
+        GetProductStatDto dto = new GetProductStatDto(year, month, day);
 
         log.info("[{}] 요청 = {} 일자 상품 일별 판매 현황 종합", trxNo, year + "-" + month + "-" + day);
 
-        List<ProductStatsDaily> productStatsDailyList =  productStatsDailyMapper.getProductDayStats(requestMap);
+        List<ProductStatsDaily> productStatsDailyList =  productStatsDailyMapper.getProductDayStats(dto);
 
         log.info("[{}] 응답 = 상품 일별 판매 현황 {} 건 종합 완료", trxNo, productStatsDailyList.size());
 
