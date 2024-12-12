@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class PaymentAttemptHistory {
     private String ctn;
     private String createDt;
+    private String uniqueKey;
     private String productName;
     private Double amount;
     private String resultCode;

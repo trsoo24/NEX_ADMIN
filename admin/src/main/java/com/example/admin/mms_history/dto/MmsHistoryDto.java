@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class MmsHistoryDto {
     private String createDt;
     private String ctn;
+    private String uniqueKey;
     private String content;
     private String sendResult;
 
