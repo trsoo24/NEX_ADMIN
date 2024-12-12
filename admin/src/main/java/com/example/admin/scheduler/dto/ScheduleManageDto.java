@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ScheduleManageDto {
-    private final String dcb = "GDCB";
     private String scheduleCd;
     private String scheduleServer;
     private String redId;
