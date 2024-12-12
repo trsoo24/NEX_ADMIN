@@ -1,5 +1,7 @@
 package com.example.admin.scheduler.controller;
 
+import com.example.admin.common.response.ListResult;
+import com.example.admin.common.response.StatusResult;
 import com.example.admin.scheduler.dto.ModifyScheduleManageRequest;
 import com.example.admin.scheduler.dto.GetScheduleManageResponse;
 import com.example.admin.scheduler.service.ScheduleManageService;
@@ -24,15 +26,17 @@ public class ScheduleManageController {
 
     // 스케줄러의 기동 현황을 조회한다.
     @GetMapping()
-    public List<GetScheduleManageResponse> getSchedulerStatus() {
-        return scheduleManageService.getSchedulerStatus();
+    public ListResult<GetScheduleManageResponse> getSchedulerStatus() {
+        return new ListResult<>(true, scheduleManageService.getSchedulerStatus());
     }
 
 
     // 스케줄러의 기동 서버를 변경한다.
     @PutMapping()
-    public void updateSchedulerStatus(@RequestBody ModifyScheduleManageRequest request) {
+    public StatusResult updateSchedulerStatus(@RequestBody ModifyScheduleManageRequest request) {
         scheduleManageService.updateSchedulerStatus(request);
+
+        return new StatusResult(true);
     }
 
 }
