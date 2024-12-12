@@ -6,15 +6,15 @@
     <select id="getStatsDayList" parameterType="com.example.admin.stats_day.dto.GetStatDayDto" resultType="com.example.admin.stats_day.dto.StatsDay">
         SELECT
             YEAR || '-' || MONTH || '-' || DAY AS stat_day,
-            SUM(CASE WHEN TRANSACTION_TYPE = #{charge} THEN CHARGE_AMT ELSE 0 END) AS b_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = #{reversal} THEN CANCEL_AMT ELSE 0 END) AS d_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = #{refund} THEN REFUND_AMT ELSE 0 END) AS f_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = #{charge} THEN TRANSACTION_CNT ELSE 0 END) AS i_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = #{reversal} THEN TRANSACTION_CNT ELSE 0 END) AS k_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = #{refund} THEN TRANSACTION_CNT ELSE 0 END) AS m_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = #{charge} THEN CHARGE_AVG ELSE 0 END) AS p_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = #{reversal} THEN CANCEL_AVG ELSE 0 END) AS r_stat,
-            SUM(CASE WHEN TRANSACTION_TYPE = #{refund} THEN REFUND_AVG ELSE 0 END) AS t_stat
+            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN CHARGE_AMT ELSE 0 END) AS b_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN CANCEL_AMT ELSE 0 END) AS d_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN REFUND_AMT ELSE 0 END) AS f_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN TRANSACTION_CNT ELSE 0 END) AS i_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN TRANSACTION_CNT ELSE 0 END) AS k_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN TRANSACTION_CNT ELSE 0 END) AS m_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'B' THEN CHARGE_AVG ELSE 0 END) AS p_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'C' THEN CANCEL_AVG ELSE 0 END) AS r_stat,
+            SUM(CASE WHEN TRANSACTION_TYPE = 'R' THEN REFUND_AVG ELSE 0 END) AS t_stat
         FROM TB_AUTH_STATS_DAILY
         WHERE YEAR = #{year} AND MONTH = #{month} AND DAY = #{day}
         GROUP BY YEAR || '-' || MONTH || '-' || DAY

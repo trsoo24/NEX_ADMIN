@@ -16,13 +16,13 @@
             END) AS a_stat,
             COUNT(DISTINCT CTN) AS b_stat,
             COUNT(*) AS c_stat,
-            SUM(CASE WHEN API_TYPE = #{charge} THEN AMOUNT ELSE 0 END) AS d_stat,
-            SUM(CASE WHEN API_TYPE = #{refund} OR API_TYPE = #{reversal} THEN AMOUNT ELSE 0 END) AS e_stat,
+            SUM(CASE WHEN API_TYPE = 'B' THEN AMOUNT ELSE 0 END) AS d_stat,
+            SUM(CASE WHEN API_TYPE = 'C' OR API_TYPE = 'R' THEN AMOUNT ELSE 0 END) AS e_stat,
             SUM(CASE
-            WHEN API_TYPE = #{charge} THEN AMOUNT
-            WHEN API_TYPE = #{refund} OR API_TYPE = #{reversal} THEN -AMOUNT ELSE 0 END) AS f_stat,
+            WHEN API_TYPE = 'B' THEN AMOUNT
+            WHEN API_TYPE = 'C' OR API_TYPE = 'R' THEN -AMOUNT ELSE 0 END) AS f_stat,
             (CASE WHEN COUNT(DISTINCT CTN) > 0 THEN
-            SUM(CASE WHEN API_TYPE = #{charge} THEN AMOUNT ELSE 0 END) / COUNT(DISTINCT CTN)
+            SUM(CASE WHEN API_TYPE = 'B' THEN AMOUNT ELSE 0 END) / COUNT(DISTINCT CTN)
             ELSE 0 END) AS g_stat
             FROM TB_API_LOGS
             WHERE TO_CHAR(CREATE_DT, 'YYYY-MM-DD') = #{date}

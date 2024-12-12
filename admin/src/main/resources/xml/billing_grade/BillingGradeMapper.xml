@@ -11,9 +11,9 @@
                      WHEN CUST_GRD_CD IS NULL OR CUST_GRD_CD = '0' THEN 'E'
                      ELSE CUST_GRD_CD
                     END) AS CUST_GRD_CD,
-                SUM(CASE WHEN API_TYPE = #{charge} THEN AMOUNT ELSE 0 END) AS CHARGE,
-                SUM(CASE WHEN API_TYPE = #{reversal} THEN AMOUNT ELSE 0 END) AS REVERSAL,
-                SUM(CASE WHEN API_TYPE = #{refund} THEN AMOUNT ELSE 0 END) AS REFUND,
+                SUM(CASE WHEN API_TYPE = 'B' THEN AMOUNT ELSE 0 END) AS CHARGE,
+                SUM(CASE WHEN API_TYPE = 'C' THEN AMOUNT ELSE 0 END) AS REVERSAL,
+                SUM(CASE WHEN API_TYPE = 'R' THEN AMOUNT ELSE 0 END) AS REFUND,
                 COUNT(DISTINCT CTN) AS ACE_CNT,
                 COUNT(*) AS CNT,
                 BAN_UNPAID_YN_CODE
@@ -21,7 +21,7 @@
             WHERE
                 CREATE_DT BETWEEN TO_DATE(#{firstDay}, 'YYYYMMDDHH24MISS') AND TO_DATE(#{lastDay}, 'YYYYMMDDHH24MISS')
               AND RESULT_CODE = #{resultCode}
-              AND API_TYPE IN (#{charge}, #{reversal}, #{refund})
+              AND API_TYPE IN ('B', 'C', 'R')
             GROUP BY TO_CHAR(CREATE_DT, 'yyyyMM'),
                      (CASE WHEN CUST_GRD_CD IS NULL OR CUST_GRD_CD = '0' THEN 'E' ELSE CUST_GRD_CD END),
                      BAN_UNPAID_YN_CODE)
