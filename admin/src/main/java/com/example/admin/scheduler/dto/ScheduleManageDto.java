@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class ScheduleManageDto {
     private String scheduleCd;
     private String scheduleServer;
-    private String redId;
+    private String regId;
     private String regDt;
     private String creDt;
 }
