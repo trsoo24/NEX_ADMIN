@@ -21,17 +21,11 @@ import static com.example.admin.common.exception.enums.TestPhoneErrorCode.NOT_IN
 @RequiredArgsConstructor
 public class TestPhoneService {
     private final TestPhoneMapper testPhoneMapper;
-    private final TestPhoneReference testPhoneReference;
 
     public void insertTestPhone(InsertTestPhoneDto dto) {
         String trxNo = MDC.get("trxNo");
 
         log.info("[{}] 요청 = 테스트폰 생성", trxNo);
-
-        if (testPhoneReference.existsCtn(dto.getCtn())) {
-            log.info("[{}] 응답 = 이미 존재하는 테스트폰 입니다. 요청 CTN = {}", trxNo, dto.getCtn());
-            throw new TestPhoneException(DUPLICATED_CTN);
-        }
 
         boolean insertResponse = testPhoneMapper.insertTestPhone(dto);
 
@@ -61,7 +55,7 @@ public class TestPhoneService {
 
         log.info("[{}] 요청 = 테스트폰 {} 건 삭제", trxNo, ctnList.size());
         for (String ctn : ctnList) {
-            if (testPhoneReference.existsCtn(ctn)) {
+            if (existsCtn(ctn)) {
                 testPhoneMapper.deleteCtn(ctn);
             } else {
                 log.info("[{}] 응답 = DB에 존재하지 않는 테스트폰 입니다. CTN = {} ", trxNo, ctn);
@@ -69,5 +63,19 @@ public class TestPhoneService {
         }
 
         log.info("[{}] 응답 = 테스트폰 {} 건 삭제 완료", trxNo, ctnList.size());
+    }
+
+    public boolean existsCtn(String ctn) {
+        String trxNo = MDC.get("trxNo");
+
+        boolean result = testPhoneMapper.existsCtn(ctn);
+
+        if (result) {
+            log.info("[{}] 응답 = {} 는 이미 DB 에 존재하는 차단 테스트폰입니다", trxNo, ctn);
+        } else {
+            log.info("[{}] DB 내 중복 데이터 없음 ", trxNo);
+        }
+
+        return result;
     }
 }

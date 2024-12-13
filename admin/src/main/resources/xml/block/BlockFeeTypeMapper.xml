@@ -9,11 +9,9 @@
     </insert>
 
     <select id="existsFeeType" parameterType="String" resultType="boolean">
-        SELECT CASE WHEN EXISTS (
-            SELECT 1
-            FROM TB_BLOCK_FEE_TYPE
-            WHERE FEE_TYPE_CD = #{feeTypeCd}
-        ) THEN 1 ELSE 0 END AS IS_DUPLICATE
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS IS_DUPLICATE
+        FROM TB_BLOCK_FEE_TYPE
+        WHERE FEE_TYPE_CD = #{feeTypeCode}
     </select>
 
     <select id="getAllBlockFeeType" resultType="com.example.admin.block.fee_type.dto.BlockFeeTypeDto">

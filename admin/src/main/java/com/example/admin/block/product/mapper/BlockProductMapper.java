@@ -12,4 +12,5 @@ public interface BlockProductMapper {
     boolean insertBlockProduct(InsertBlockProductDto insertBlockProductDto);
     List<BlockProductDto> getBlockProductList(Map<String, Object> map);
     boolean deleteBlockProduct(List<Long> productNos);
+    boolean existsProduct(String product);
 }

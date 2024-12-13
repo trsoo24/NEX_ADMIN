@@ -21,13 +21,9 @@ public class BlockCtnService {
         String trxNo = MDC.get("trxNo");
         log.info("[{}] 요청 = 차단 CTN 생성 ", trxNo);
 
-        if (!existBlockCtn(blockCtnDto.getCtn())) {
-            blockCtnMapper.insertBlockCtn(blockCtnDto);
+        blockCtnMapper.insertBlockCtn(blockCtnDto);
 
-            log.info("[{}] 응답 = {} CTN 차단 완료", trxNo, blockCtnDto.getCtn());
-        } else {
-            log.info("[{}] 응답 = {} 는 이미 존재하는 차단된 CTN 입니다.", trxNo, blockCtnDto.getCtn());
-        }
+        log.info("[{}] 응답 = {} CTN 차단 완료", trxNo, blockCtnDto.getCtn());
     }
 
     public List<BlockCtnDto> getAllBlockCtn() {
@@ -55,7 +51,16 @@ public class BlockCtnService {
         }
     }
 
-    private boolean existBlockCtn(String ctn) {
-        return blockCtnMapper.existsCtn(ctn);
+    public boolean existBlockCtn(String ctn) {
+        String trxNo = MDC.get("trxNo");
+
+        boolean result = blockCtnMapper.existsCtn(ctn);
+
+        if (result) {
+            log.info("[{}] 응답 = {} 는 이미 DB 에 존재하는 차단 CTN 입니다.", trxNo, ctn);
+        } else {
+            log.info("[{}] DB 내 중복 데이터 없음 ", trxNo);
+        }
+        return result;
     }
 }

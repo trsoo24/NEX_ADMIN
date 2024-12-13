@@ -61,4 +61,17 @@ public class BlockProductService {
             log.info("[{}] 응답 = 차단 상품 해제 실패", trxNo);
         }
     }
+
+    public boolean existsProduct(String product) {
+        String trxNo = MDC.get("trxNo");
+
+        boolean result = blockProductMapper.existsProduct(product);
+
+        if (result) {
+            log.info("[{}] 응답 = {} 는 이미 DB 에 존재하는 차단 상품입니다", trxNo, product);
+        } else {
+            log.info("[{}] DB 내 중복 데이터 없음 ", trxNo);
+        }
+        return result;
+    }
 }

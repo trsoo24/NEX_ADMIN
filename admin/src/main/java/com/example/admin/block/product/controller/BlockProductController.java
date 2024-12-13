@@ -36,4 +36,11 @@ public class BlockProductController {
 
         return new StatusResult(true);
     }
+
+    @GetMapping("/check")
+    public StatusResult checkBlockProduct(@RequestParam("product") String product) {
+        boolean result = blockProductService.existsProduct(product);
+
+        return new StatusResult(result);
+    }
 }

@@ -39,4 +39,11 @@ public class TestPhoneController {
 
         return new StatusResult(true);
     }
+
+    @GetMapping("/check")
+    public StatusResult checkExistTestPhone(@RequestParam("ctn") String ctn) {
+        boolean result = testPhoneService.existsCtn(ctn);
+
+        return new StatusResult(result);
+    }
 }

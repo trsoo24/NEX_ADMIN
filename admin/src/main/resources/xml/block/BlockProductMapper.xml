@@ -22,6 +22,12 @@
         ORDER BY ITEM_NM
     </select>
 
+    <select id="existsProduct" parameterType="String" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS IS_DUPLICATE
+        FROM TB_BLOCK_ITEM
+        WHERE ITEM_NM = #{product}
+    </select>
+
     <delete id="deleteBlockProduct" parameterType="java.util.List">
         DELETE FROM TB_BLOCK_ITEM
         WHERE ITEM_NO IN

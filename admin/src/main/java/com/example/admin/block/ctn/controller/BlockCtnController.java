@@ -36,4 +36,11 @@ public class BlockCtnController {
 
         return new StatusResult(true);
     }
+
+    @GetMapping("/check")
+    public StatusResult checkBlockCtn(@RequestParam("ctn") String ctn) {
+       boolean result = blockCtnService.existBlockCtn(ctn);
+
+       return new StatusResult(result);
+    }
 }

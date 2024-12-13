@@ -20,13 +20,9 @@ public class BlockFeeTypeService {
     public void insertBlockFeeType(InsertBlockFeeTypeDto blockFeeTypeDto) {
         String trxNo = MDC.get("trxNo");
 
-        if (!existFeeType(blockFeeTypeDto.getFeeTypeCode())) {
-            blockFeeTypeMapper.insertBlockFeeType(blockFeeTypeDto);
+        blockFeeTypeMapper.insertBlockFeeType(blockFeeTypeDto);
 
-            log.info("[{}] 응답 = {} 요금제 차단 완료", trxNo, blockFeeTypeDto.getFeeTypeName());
-        } else {
-            log.info("[{}] 응답 = {} 는 이미 존재하는 차단된 요금제 입니다.", trxNo, blockFeeTypeDto.getFeeTypeName());
-        }
+        log.info("[{}] 응답 = {} 요금제 차단 완료", trxNo, blockFeeTypeDto.getFeeTypeName());
     }
 
     public List<BlockFeeTypeDto> getAllBlockFeeType() {
@@ -57,7 +53,16 @@ public class BlockFeeTypeService {
         }
     }
 
-    private boolean existFeeType(String feeTypeCode) {
-        return blockFeeTypeMapper.existsFeeType(feeTypeCode);
+    public boolean existFeeType(String feeTypeCode) {
+        String trxNo = MDC.get("trxNo");
+
+        boolean result = blockFeeTypeMapper.existsFeeType(feeTypeCode);
+
+        if (result) {
+            log.info("[{}] 응답 = {} 는 이미 DB 에 존재하는 차단 요금제입니다. ", trxNo, feeTypeCode);
+        } else {
+            log.info("[{}] DB 내 중복 데이터 없음 ", trxNo);
+        }
+        return result;
     }
 }

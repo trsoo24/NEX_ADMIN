@@ -34,8 +34,9 @@ public class StatsDayService {
             log.info("[{}] 요청 = {} 일별 결제 현황 종합", trxNo, year + "-" + month + "-" + day);
             statsDayList = statsDayMapper.getStatsDayList(dto);
 
+            log.info("[{}] 응답 = 일별 결제 현황 {} 건 종합 완료", trxNo, statsDayList.size());
+
             if (!statsDayList.isEmpty()) {
-                log.info("[{}] 응답 = 일별 결제 현황 {} 건 종합 완료", trxNo, statsDayList.size());
                 // 내부 비율 계산
                 calculateStatDay(statsDayList);
             }
