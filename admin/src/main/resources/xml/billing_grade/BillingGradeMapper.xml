@@ -6,7 +6,7 @@
     <select id="generateBillingGrade" parameterType="com.example.admin.billing_grade.dto.GetBillingGradeDto" resultType="com.example.admin.billing_grade.dto.BillingGrade">
         WITH BASE_DATA AS (
             SELECT
-                TO_CHAR(CREATE_DT, 'yyyyMM') AS statYyMm,
+                TO_CHAR(CREATE_DT, 'YYYYMM') AS statYyMm,
                 (CASE
                      WHEN CUST_GRD_CD IS NULL OR CUST_GRD_CD = '0' THEN 'E'
                      ELSE CUST_GRD_CD
@@ -22,7 +22,7 @@
                 CREATE_DT BETWEEN TO_DATE(#{firstDay}, 'YYYYMMDDHH24MISS') AND TO_DATE(#{lastDay}, 'YYYYMMDDHH24MISS')
               AND RESULT_CODE = #{resultCode}
               AND API_TYPE IN ('B', 'C', 'R')
-            GROUP BY TO_CHAR(CREATE_DT, 'yyyyMM'),
+            GROUP BY TO_CHAR(CREATE_DT, 'YYYYMM'),
                      (CASE WHEN CUST_GRD_CD IS NULL OR CUST_GRD_CD = '0' THEN 'E' ELSE CUST_GRD_CD END),
                      BAN_UNPAID_YN_CODE)
         SELECT

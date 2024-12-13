@@ -31,9 +31,9 @@ public class BillingGradeService {
         String resultCode = BillingGradeResultCode.SUCCESS.getValue();
         String firstDay = statYyMm + "01000000";
         String lastDay = statYyMm + cal.getActualMaximum(Calendar.DAY_OF_MONTH) +"235959";
-        String charge = "charge";
-        String reversal = "reversal";
-        String refund = "refund";
+        String charge = "B";
+        String reversal = "C";
+        String refund = "R";
         String paid = "N";
         String unpaid = "Y";
 
