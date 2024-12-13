@@ -1,0 +1,16 @@
+<configuration>
+    <appender name="service-log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/logs/gdcb/admin/service/service.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/logs/gdcb/admin/service/service_%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss SSS} [%level] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="service-log" />
+    </root>
+</configuration>
