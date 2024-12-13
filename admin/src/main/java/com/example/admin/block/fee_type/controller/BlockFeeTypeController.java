@@ -38,7 +38,7 @@ public class BlockFeeTypeController {
     }
 
     @GetMapping("/check")
-    public StatusResult checkFeeType(@RequestParam("feeTypeCd") String feeTypeCode) {
+    public StatusResult checkFeeType(@RequestParam("feeTypeCode") String feeTypeCode) {
         boolean result = blockFeeTypeService.existFeeType(feeTypeCode);
 
         return new StatusResult(result);
