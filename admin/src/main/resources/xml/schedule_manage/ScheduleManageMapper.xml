@@ -6,9 +6,9 @@
 <mapper namespace="com.example.admin.scheduler.mapper.ScheduleManageMapper">
     <select id="getSchedulerStatus" resultType="com.example.admin.scheduler.dto.ScheduleManageDto">
         SELECT
-            SCHEDULE_CD,
-            SCHEDULE_SERVER,
-            REG_ID,
+            SCHEDULE_CD AS scheduleCd,
+            SCHEDULE_SERVER AS scheduleServer,
+            REG_ID AS regId,
             TO_CHAR(REG_DT, 'YYYY-MM-DD HH24:MI:SS') AS regDt,
             TO_CHAR(CRE_DT, 'YYYY-MM-DD HH24:MI:SS') AS creDt
         FROM
@@ -23,7 +23,7 @@
         SET
             SCHEDULE_SERVER = #{scheduleServer},
             REG_ID = #{modifier},
-            REG_DT = current_timestamp()
+            REG_DT = SYSDATE
         WHERE
             SCHEDULE_CD = #{scheduleCd}
     </update>

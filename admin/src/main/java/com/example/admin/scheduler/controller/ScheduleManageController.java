@@ -26,8 +26,8 @@ public class ScheduleManageController {
 
     // 스케줄러의 기동 현황을 조회한다.
     @GetMapping()
-    public List<ScheduleManageDto> getSchedulerStatus() {
-        return scheduleManageService.getSchedulerStatus();
+    public ListResult<ScheduleManageDto> getSchedulerStatus() {
+        return new ListResult<>(true, scheduleManageService.getSchedulerStatus());
     }
 
 

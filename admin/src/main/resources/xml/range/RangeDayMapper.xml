@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.admin.range_day.mapper.RangeDayMapper">
-    <select id="getRangeDay" parameterType="com.example.admin.range_day.dto.GetRangeDayDto" resultType="com.example.admin.range_day.dto.RangeDay">
+    <select id="getRangeDay" parameterType="com.example.admin.range_day.dto.GetRangeDayDto" resultMap="rangeDayMap">
         SELECT
             TO_CHAR(CREATE_DT, 'YYYY-MM-DD') AS stat_day,
             (CASE
@@ -36,4 +36,15 @@
                          ELSE 'O'
                          END
     </select>
+
+    <resultMap id="rangeDayMap" type="com.example.admin.range_day.dto.RangeDay">
+        <result column="STAT_DAY" property="stat_day"/>
+        <result column="A_STAT" property="a_stat"/>
+        <result column="B_STAT" property="b_stat"/>
+        <result column="C_STAT" property="c_stat"/>
+        <result column="D_STAT" property="d_stat"/>
+        <result column="E_STAT" property="e_stat"/>
+        <result column="F_STAT" property="f_stat"/>
+        <result column="G_STAT" property="g_stat"/>
+    </resultMap>
 </mapper>
