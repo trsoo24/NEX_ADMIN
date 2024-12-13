@@ -1,0 +1,95 @@
+spring:
+  application:
+    name: admin
+  profiles:
+    active: qa1
+
+---
+spring:
+  config:
+    activate:
+      on-profile: qa1
+  datasource:
+    jndi-name: java:comp/env/jdbc/gdcb
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+mybatis:
+  mapper-locations: classpath:xml/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+LGUDCB:
+  BILLING:
+    IP: 192.168.238.39
+    PORT: 22
+    ID: lgudcb
+    PWD: gdcb019!
+    TLO: /log/billing_logs/tlo
+    CSV: /log/billing_file/backUpFile
+
+PGP:
+  LG:
+    PrivateKey: /home/lgudcb/manage_app/WEB-INF/keyFile/pgp.lg.private_key.gpg
+  Google:
+    PublicKey: /home/lgudcb/manage_app/WEB-INF/keyFile/pgp.google.public_key-2015-05-22.gpg
+  Password: lguplus4321
+
+FTP:
+  Google:
+    IP: partnerupload.google.com
+    Port: 19321
+    Account: amb-lgu-kr-batch
+    keyFile: /home/lgudcb/manage_app/WEB-INF/keyFile/google_sftp_private_server.ppk
+    Upload:
+      Path: /incoming
+
+Billing:
+  Work:
+    Path: /svc/lgudcb/billingFiles
+
+---
+spring:
+  config:
+    activate:
+      on-profile: qa2
+  datasource:
+    jndi-name: java:comp/env/jdbc/gdcb
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+mybatis:
+  mapper-locations: classpath:xml/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+LGUDCB:
+  BILLING:
+    IP: 192.168.238.39
+    PORT: 22
+    ID: lgudcb
+    PWD: gdcb019!
+    TLO: /log/billing_logs/tlo
+    CSV: /log/billing_file/backUpFile
+
+PGP:
+  LG:
+    PrivateKey: /home/lgudcb/manage_app/WEB-INF/keyFile/pgp.lg.private_key.gpg
+  Google:
+    PublicKey: /home/lgudcb/manage_app/WEB-INF/keyFile/pgp.google.public_key-2015-05-22.gpg
+  Password: lguplus4321
+
+FTP:
+  Google:
+    IP: partnerupload.google.com
+    Port: 19321
+    Account: amb-lgu-kr-batch
+    keyFile: /home/lgudcb/manage_app/WEB-INF/keyFile/google_sftp_private_server.ppk
+    Upload:
+      Path: /incoming
+
+Billing:
+  Work:
+    Path: /svc/lgudcb/billingFiles
