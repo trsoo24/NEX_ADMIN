@@ -9,11 +9,9 @@
     </insert>
 
     <select id="existsCtn" parameterType="String" resultType="boolean">
-        SELECT CASE WHEN EXISTS (
-            SELECT 1
-            FROM TB_BLOCK_CTN
-            WHERE CTN = #{ctn}
-        ) THEN 1 ELSE 0 END AS IS_DUPLICATE
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS IS_DUPLICATE
+        FROM TB_BLOCK_CTN
+        WHERE CTN = #{ctn}
     </select>
 
     <select id="getAllBlockCtn" parameterType="map" resultType="com.example.admin.block.ctn.dto.BlockCtnDto">
