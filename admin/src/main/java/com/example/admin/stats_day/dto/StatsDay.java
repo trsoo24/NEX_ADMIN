@@ -34,6 +34,7 @@ public class StatsDay {
 
     public void calculateStat() {
         this.a_stat = calculateTotal(this.b_stat, this.d_stat, this.f_stat);
+        this.h_stat = this.i_stat + this.k_stat + this.m_stat;
         this.c_stat = calculatePercent(this.b_stat, this.a_stat);
         this.e_stat = calculatePercent(this.d_stat, this.a_stat);
         this.g_stat = calculatePercent(this.f_stat, this.a_stat);

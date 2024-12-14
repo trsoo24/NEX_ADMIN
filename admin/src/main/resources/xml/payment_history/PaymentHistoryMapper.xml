@@ -13,8 +13,9 @@
         ITEMNAME,
         MERCHANTNAME
         FROM TB_AUTH_INFO
-        WHERE CTN = ${ctn}
+        WHERE PARTITION_ID IN (TO_NUMBER(SUBSTR(#{startDate}, 5, 2)) - 1, TO_NUMBER(SUBSTR(#{endDate}, 5, 2)) - 1)
         AND TRANSACTION_DT BETWEEN TO_DATE(#{startDate}, 'YYYYMMDDHH24MISS') AND TO_DATE(#{endDate}, 'YYYYMMDDHH24MISS')
+        AND CTN = ${ctn}
         ORDER BY TRANSACTION_DT
     </select>
 </mapper>

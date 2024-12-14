@@ -12,7 +12,10 @@
             CONTENT AS content,
             SEND_RESULT AS sendResult
         FROM TB_MMS_SEND_HIS
-        WHERE TO_CTN = #{ctn}
-            AND CREATE_DT BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
+        WHERE
+            PARTITION_ID IN (TO_NUMBER(SUBSTR(#{startDate}, 6, 2)), TO_NUMBER(SUBSTR(#{endDate}, 6, 2)))
+          AND CREATE_DT BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
+            AND TO_CTN = #{ctn}
+        ORDER BY CREATE_DT DESC
     </select>
 </mapper>
