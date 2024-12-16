@@ -1,5 +1,6 @@
 package com.example.admin.payment_attempt_history.service;
 
+import com.example.admin.common.service.FunctionUtil;
 import com.example.admin.payment_attempt_history.dto.PaymentAttemptHistory;
 import com.example.admin.payment_attempt_history.dto.PaymentAttemptHistoryDto;
 import com.example.admin.payment_attempt_history.mapper.PaymentAttemptHistoryMapper;
@@ -24,7 +25,7 @@ public class PaymentAttemptHistoryService {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("startDate", startDate);
         requestMap.put("endDate", endDate);
-        requestMap.put("ctn", ctn);
+        requestMap.put("ctn", FunctionUtil.trans12Ctn(ctn));
 
         return paymentAttemptHistoryMapper.getPaymentAttemptHistoryList(requestMap);
     }

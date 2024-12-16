@@ -39,7 +39,7 @@ public class PaymentHistoryService {
         endDate = FunctionUtil.montEndTransToYYYYmmDDHH24MISS(endDate);
         requestMap.put("startDate", startDate);
         requestMap.put("endDate", endDate);
-        requestMap.put("ctn", ctn);
+        requestMap.put("ctn", FunctionUtil.trans12Ctn(ctn));
 
         List<PaymentHistory> response = paymentHistoryMapper.getPaymentHistoryList(requestMap);
 

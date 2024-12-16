@@ -14,16 +14,35 @@ import java.util.List;
 public class FunctionUtil {
     private static final DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
 
-    public String transCtn(String ctn) {
+    public static String transCtn(String ctn) {
+        // 하이픈 제거
         if (ctn.contains("-")) {
             ctn = ctn.replace("-", "");
         }
 
+        // 12 자리일 경우 11자리로 변경
         if (ctn.length() == 12) {
-            return ctn.replace(ctn.charAt(3) + "", "");
+            return ctn.substring(0, 3) + ctn.substring(4);
         } else {
             return ctn;
         }
+    }
+
+    public static String trans12Ctn(String ctn) {
+        if (ctn.contains("-")) {
+            ctn = ctn.replace("-", "");
+        }
+
+        if (ctn.length() == 11) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(ctn.substring(0, 3));
+            sb.append("0");
+            sb.append(ctn.substring(3));
+
+            return sb.toString();
+        }
+
+        return ctn;
     }
 
     public String maskingCtn(String ctn) {

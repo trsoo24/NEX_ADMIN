@@ -38,4 +38,8 @@ public class MmsHistoryDto {
     public void setSendResult(String sendResult) {
         this.sendResult = sendResult;
     }
+
+    public void setCtn(String ctn) {
+        this.ctn = ctn;
+    }
 }

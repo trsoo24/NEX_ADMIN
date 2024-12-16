@@ -12,4 +12,8 @@ import java.util.List;
 public class DeleteBlockCtnDto {
     private String dcb;
     private List<String> ctns;
+
+    public void setCtns(List<String> ctns) {
+        this.ctns = ctns;
+    }
 }

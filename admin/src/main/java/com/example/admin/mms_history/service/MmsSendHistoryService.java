@@ -1,5 +1,6 @@
 package com.example.admin.mms_history.service;
 
+import com.example.admin.common.service.FunctionUtil;
 import com.example.admin.mms_history.dto.MmsHistoryDto;
 import com.example.admin.mms_history.dto.type.SendResultCode;
 import com.example.admin.mms_history.mapper.MmsSendMapper;
@@ -30,7 +31,7 @@ public class MmsSendHistoryService {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("startDate", startDate);
         requestMap.put("endDate", endDate);
-        requestMap.put("ctn", ctn);
+        requestMap.put("ctn", FunctionUtil.trans12Ctn(ctn));
 
         log.info("[{}] 요청 = {} 부터 {} 까지 CTN = {} 문자 발송 이력 조회 ", trxNo, startDate, endDate, ctn);
 
@@ -38,12 +39,17 @@ public class MmsSendHistoryService {
 
         for (MmsHistoryDto mmsHistoryDto : mmsHistoryDtoList) {
 //            mmsHistoryDto.setCtnBlind();
+            setCtnLength(mmsHistoryDto);
             mappingResultCode(mmsHistoryDto);
         }
 
         log.info("[{}] 응답 = 문자 발송 이력 {} 건 조회 완료", trxNo, mmsHistoryDtoList.size());
 
         return mmsHistoryDtoList;
+    }
+
+    private void setCtnLength(MmsHistoryDto dto) {
+        dto.setCtn(FunctionUtil.transCtn(dto.getCtn()));
     }
 
     private void mappingResultCode(MmsHistoryDto mmsHistoryDto) {

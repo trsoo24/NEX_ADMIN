@@ -11,4 +11,8 @@ public class InsertBlockCtnDto {
     private String dcb;
     private String ctn;
     private String mbrId;
+
+    public void setCtn(String ctn) {
+        this.ctn = ctn;
+    }
 }

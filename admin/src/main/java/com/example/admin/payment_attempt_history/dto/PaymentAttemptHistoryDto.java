@@ -1,5 +1,6 @@
 package com.example.admin.payment_attempt_history.dto;
 
+import com.example.admin.common.service.FunctionUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class PaymentAttemptHistoryDto {
 
     public static PaymentAttemptHistoryDto toDto(PaymentAttemptHistory paymentAttemptHistory) {
         return PaymentAttemptHistoryDto.builder()
-                .ctn(paymentAttemptHistory.getCtn())
+                .ctn(FunctionUtil.transCtn(paymentAttemptHistory.getCtn()))
                 .createDt(paymentAttemptHistory.getCreateDt())
                 .dcb("GDCB")
                 .productName(paymentAttemptHistory.getProductName())

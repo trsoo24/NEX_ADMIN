@@ -12,4 +12,8 @@ public class BlockCtnDto {
     private String regDt;
     private String mbrId;
     private final String dcb = "GDCB";
+
+    public void setCtn(String ctn) {
+        this.ctn = ctn;
+    }
 }
