@@ -1,4 +1,4 @@
-package com.example.admin.voc.dto.type;
+package com.example.admin.conversion.dto.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
