@@ -1,6 +1,6 @@
-package com.example.admin.voc.dto;
+package com.example.admin.conversion.dto;
 
-import com.example.admin.voc.dto.type.Classification;
+import com.example.admin.conversion.dto.type.Classification;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

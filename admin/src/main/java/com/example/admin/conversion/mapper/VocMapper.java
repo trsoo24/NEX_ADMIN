@@ -1,8 +1,7 @@
-package com.example.admin.voc.mapper;
+package com.example.admin.conversion.mapper;
 
-import com.example.admin.voc.dto.ProvisionInfoDto;
-import com.example.admin.voc.dto.SmsInfoDto;
-import com.example.admin.voc.dto.ProvisioningInfo;
+import com.example.admin.conversion.dto.ProvisionInfoDto;
+import com.example.admin.conversion.dto.SmsInfoDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

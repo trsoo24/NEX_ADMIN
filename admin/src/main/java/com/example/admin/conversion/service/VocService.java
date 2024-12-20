@@ -1,8 +1,8 @@
-package com.example.admin.voc.service;
+package com.example.admin.conversion.service;
 
 import com.example.admin.common.service.FunctionUtil;
-import com.example.admin.voc.dto.*;
-import com.example.admin.voc.mapper.VocMapper;
+import com.example.admin.conversion.dto.*;
+import com.example.admin.conversion.mapper.VocMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;

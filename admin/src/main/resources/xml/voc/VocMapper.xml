@@ -3,8 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.admin.voc.mapper.VocMapper">
-    <select id="selectSmsmoListByCtn" parameterType="map" resultType="com.example.admin.voc.dto.SmsInfoDto">
+<mapper namespace="com.example.admin.conversion.mapper.VocMapper">
+    <select id="selectSmsmoListByCtn" parameterType="map" resultType="com.example.admin.conversion.dto.SmsInfoDto">
         SELECT
         GOOGLE_USER_TOKEN googleUserToken,
         OPERATOR_USER_TOKEN operatorUserToken,
@@ -16,7 +16,7 @@
     </select>
 
     <select id="selectProvisioningListByCtn" parameterType="map"
-            resultType="com.example.admin.voc.dto.ProvisionInfoDto">
+            resultType="com.example.admin.conversion.dto.ProvisionInfoDto">
         SELECT
         SUB_NO subNo,
         ISPROVISIONED isProvisioned,

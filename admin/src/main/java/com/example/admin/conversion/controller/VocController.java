@@ -1,7 +1,7 @@
-package com.example.admin.voc.controller;
+package com.example.admin.conversion.controller;
 
 import com.example.admin.common.response.MapResult;
-import com.example.admin.voc.service.VocService;
+import com.example.admin.conversion.service.VocService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
