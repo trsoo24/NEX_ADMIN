@@ -15,7 +15,7 @@ public class BillingGradeController {
     private final BillingGradeService billingGradeService;
 
     @GetMapping("/raw")
-    public List<BillingGrade> getBillingGradeListForScheduler() {
-        return billingGradeService.generateBillingGradeList();
+    public List<BillingGrade> getBillingGradeListForScheduler(@RequestParam("yyyyMm") String yyyyMm) {
+        return billingGradeService.generateBillingGradeList(yyyyMm);
     }
 }

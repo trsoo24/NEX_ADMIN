@@ -21,16 +21,16 @@ import java.util.*;
 public class BillingGradeService {
     private final BillingGradeMapper billingGradeMapper;
 
-    public List<BillingGrade> generateBillingGradeList() {
+    public List<BillingGrade> generateBillingGradeList(String yyyyMm) {
         String trxNo = MDC.get("trxNo");
 
         Map<String, Object> requestMap = new HashMap<>();
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, -1);
-        String statYyMm = new SimpleDateFormat("yyyyMM").format(cal.getTime());
+
         String resultCode = BillingGradeResultCode.SUCCESS.getValue();
-        String firstDay = statYyMm + "01000000";
-        String lastDay = statYyMm + cal.getActualMaximum(Calendar.DAY_OF_MONTH) +"235959";
+        String firstDay = yyyyMm + "01000000";
+        String lastDay = yyyyMm + cal.getActualMaximum(Calendar.DAY_OF_MONTH) +"235959";
         String charge = "B";
         String reversal = "C";
         String refund = "R";

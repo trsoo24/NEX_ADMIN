@@ -17,12 +17,8 @@ import java.util.*;
 public class ProductStatsDailyService {
     private final ProductStatsDailyMapper productStatsDailyMapper;
 
-    public List<ProductStatsDaily> getProductStatsDailyList() {
+    public List<ProductStatsDaily> getProductStatsDailyList(String year, String month, String day) {
         String trxNo = MDC.get("trxNo");
-
-        String year = FunctionUtil.yearOfYesterday();
-        String month = FunctionUtil.monthOfYesterday();
-        String day = FunctionUtil.yesterday();
 
         GetProductStatDto dto = new GetProductStatDto(year, month, day);
 

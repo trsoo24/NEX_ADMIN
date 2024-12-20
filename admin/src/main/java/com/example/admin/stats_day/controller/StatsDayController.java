@@ -16,7 +16,9 @@ public class StatsDayController {
 
     // 통합 ADMIN 스케줄러 호출용 API
     @GetMapping("/raw")
-    public List<StatsDay> getDayPaymentsForScheduler() {
-        return statsDayService.getStatsDayList();
+    public List<StatsDay> getDayPaymentsForScheduler(@RequestParam("year") String year,
+                                                     @RequestParam("month") String month,
+                                                     @RequestParam("day") String day) {
+        return statsDayService.getStatsDayList(year, month, day);
     }
 }

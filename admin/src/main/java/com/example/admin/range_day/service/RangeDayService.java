@@ -20,12 +20,8 @@ import java.util.*;
 public class RangeDayService {
     private final RangeDayMapper rangeDayMapper;
 
-    public List<RangeDay> getRangeDay() {
+    public List<RangeDay> getRangeDay(String date) {
         String trxNo = MDC.get("trxNo");
-
-
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-        String date = yesterday.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         GetRangeDayDto dto = new GetRangeDayDto(date, "B", "C", "R");
 

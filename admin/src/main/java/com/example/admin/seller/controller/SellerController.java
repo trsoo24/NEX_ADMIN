@@ -47,7 +47,9 @@ public class SellerController {
 
     // 통합 ADMIN 스케줄러 호출용 API
     @GetMapping("/day/raw")
-    public List<SellerDayStat> getSellerStatsDailyList() {
-        return sellerStatDailyService.getSellerStatsDaily();
+    public List<SellerDayStat> getSellerStatsDailyList(@RequestParam("year") String year,
+                                                       @RequestParam("month") String month,
+                                                       @RequestParam("day") String day) {
+        return sellerStatDailyService.getSellerStatsDaily(year, month, day);
     }
 }

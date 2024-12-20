@@ -16,7 +16,7 @@ public class RangeDayController {
 
     // 통합 ADMIN 스케줄러 호출용 API
     @GetMapping("/raw")
-    public List<RangeDay> getRangeDayList() {
-        return rangeDayService.getRangeDay();
+    public List<RangeDay> getRangeDayList(@RequestParam("date") String date) {
+        return rangeDayService.getRangeDay(date);
     }
 }

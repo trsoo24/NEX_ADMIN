@@ -19,16 +19,12 @@ public class StatsDayService {
     private final StatsDayMapper statsDayMapper;
 
     // 통합 ADMIN 일별 결제 현황 데이터 수집
-    public List<StatsDay> getStatsDayList() {
+    public List<StatsDay> getStatsDayList(String year, String month, String day) {
         String trxNo = MDC.get("trxNo");
 
         List<StatsDay> statsDayList = new ArrayList<>();
 
         try {
-            String year = FunctionUtil.yearOfYesterday();
-            String month = FunctionUtil.monthOfYesterday();
-            String day = FunctionUtil.yesterday();
-
             GetStatDayDto dto = new GetStatDayDto(year, month, day, "B", "C", "R");
 
             log.info("[{}] 요청 = {} 일별 결제 현황 종합", trxNo, year + "-" + month + "-" + day);

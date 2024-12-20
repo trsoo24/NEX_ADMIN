@@ -36,7 +36,9 @@ public class ProductController {
     }
 
     @GetMapping("/day/raw")
-    public List<ProductStatsDaily> getProductStatsDailyList() {
-        return productStatsDailyService.getProductStatsDailyList();
+    public List<ProductStatsDaily> getProductStatsDailyList(@RequestParam("year") String year,
+                                                            @RequestParam("month") String month,
+                                                            @RequestParam("day") String day) {
+        return productStatsDailyService.getProductStatsDailyList(year, month, day);
     }
 }

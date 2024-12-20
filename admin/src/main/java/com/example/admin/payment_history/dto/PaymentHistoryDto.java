@@ -1,5 +1,6 @@
 package com.example.admin.payment_history.dto;
 
+import com.example.admin.common.service.FunctionUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class PaymentHistoryDto {
 
     public static PaymentHistoryDto toDto(PaymentHistory paymentHistory) {
         return PaymentHistoryDto.builder()
-                .ctn(paymentHistory.getCtn())
+                .ctn(FunctionUtil.transCtn(paymentHistory.getCtn()))
                 .transactionDt(paymentHistory.getTransactionDt())
                 .cancelNotificationDt(paymentHistory.getCancelNotificationDt())
                 .total(paymentHistory.getTotal())

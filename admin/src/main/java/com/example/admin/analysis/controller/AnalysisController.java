@@ -16,7 +16,7 @@ public class AnalysisController {
 
     // 통합 ADMIN 스케줄러 호출 API
     @GetMapping("/payment/day/raw")
-    public List<DayAnalysis> getAnalysisStatistics(@RequestParam("day") String day) {
-        return dayAnalysisStatisticService.getAnalysisStatisticsList(day);
+    public List<DayAnalysis> getAnalysisStatistics(@RequestParam("date") String date) {
+        return dayAnalysisStatisticService.getAnalysisStatisticsList(date);
     }
 }

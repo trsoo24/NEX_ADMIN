@@ -17,12 +17,8 @@ import java.util.*;
 public class SellerStatDailyService {
     private final SellerStatsDailyMapper sellerStatsDailyMapper;
 
-    public List<SellerDayStat> getSellerStatsDaily() {
+    public List<SellerDayStat> getSellerStatsDaily(String year, String month, String day) {
         String trxNo = MDC.get("trxNo");
-
-        String year = FunctionUtil.yearOfYesterday();
-        String month = FunctionUtil.monthOfYesterday();
-        String day = FunctionUtil.yesterday();
 
         log.info("[{}] 요청 = {} 일자 판매자 일별 판매 현황 종합", trxNo, year + "-" + month + "-" + day);
 

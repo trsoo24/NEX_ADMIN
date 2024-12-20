@@ -31,10 +31,10 @@ public class DayAnalysisStatisticService {
     }
 
     // 통계 분석 생성 스케줄러
-    public List<DayAnalysis> getAnalysisStatisticsList(String day) {
+    public List<DayAnalysis> getAnalysisStatisticsList(String date) {
         String trxNo = MDC.get("trxNo");
 
-        GetDayAnalysisDto dto = putYesterdayDateTime(trxNo, day);
+        GetDayAnalysisDto dto = putYesterdayDateTime(trxNo, date);
 
         List<DayAnalysis> dayAnalysisList = analysisStatisticsMapper.generateAnalysisStatistics(dto);
 
