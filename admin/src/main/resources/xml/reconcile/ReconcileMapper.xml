@@ -89,7 +89,7 @@
             SUM(TAX_SUM) AS taxSum,
             SUM(TOTAL_AMOUNT_SUM) AS totalAmountSum,
             SUM(REV_SHARE_SUM) AS revShareSum
-        FROM G_MONTHLY_INVOICE_SUM
+        FROM TB_G_MONTHLY_INVOICE_SUM
         WHERE YEAR = #{year}
         AND MONTH = #{month}
         GROUP BY YEAR, MONTH, REVS_CATEGORY
