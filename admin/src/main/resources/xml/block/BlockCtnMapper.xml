@@ -15,16 +15,16 @@
     </select>
 
     <select id="getAllBlockCtn" parameterType="map" resultType="com.example.admin.block.ctn.dto.BlockCtnDto">
-    SELECT *
+    SELECT
+        CTN,
+        TO_CHAR(REG_DT, 'YYYY-MM-DD') AS regDt,
+        MBR_ID
         FROM TB_BLOCK_CTN
         ORDER BY REG_DT DESC
     </select>
 
-    <delete id="deleteBlockCtn" parameterType="java.util.List">
+    <delete id="deleteBlockCtn" parameterType="String">
         DELETE FROM TB_BLOCK_CTN
-        WHERE CTN IN
-        <foreach item="ctn" collection="ctns" open="(" separator="," close=")">
-            #{ctn}
-        </foreach>
+        WHERE CTN = #{ctn}
     </delete>
 </mapper>

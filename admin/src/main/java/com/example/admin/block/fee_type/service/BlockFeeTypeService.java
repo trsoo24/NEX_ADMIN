@@ -44,7 +44,18 @@ public class BlockFeeTypeService {
 
         List<String> feeTypeCode = dto.getFeeTypeCodes();
 
-        boolean deleteResponse = blockFeeTypeMapper.deleteBlockFeeType(feeTypeCode);
+        boolean deleteResponse = false;
+
+        for (String feeTypeCd : feeTypeCode) {
+            boolean delete = blockFeeTypeMapper.deleteBlockFeeType(feeTypeCd);
+
+            if (delete) {
+                deleteResponse = true;
+            } else {
+                deleteResponse = false;
+                break;
+            }
+        }
 
         if (deleteResponse) {
             log.info("[{}] 응답 = 차단 요금제 {} 건 차단 해제 완료", trxNo, dto.getFeeTypeCodes().size());

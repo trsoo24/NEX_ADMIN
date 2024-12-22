@@ -30,13 +30,8 @@
         A.FILE_PATH || '/' || A.FILE_NAME AS fullPath
         FROM TB_CREATE_FILE_INFO A
         LEFT JOIN TB_CODE B ON B.CODE_GUBUN = 'FILE_NAME' AND A.FILE_TYPE = B.CODE
-        WHERE 1 = 1
-        <if test="fileName != null and fileName != ''">
-            AND A.FILE_NAME = #{fileName}
-        </if>
-        <if test="fileType != null and fileType != ''">
-            AND B.CODE_VALUE = #{fileType}
-        </if>
+        WHERE A.FILE_NAME = #{fileName}
+        AND B.CODE_VALUE = #{fileType}
         AND A.YEAR_MONTH = REPLACE(#{yearMonth}, '-', '')
     </select>
 

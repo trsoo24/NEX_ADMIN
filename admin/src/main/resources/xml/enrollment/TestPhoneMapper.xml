@@ -16,7 +16,10 @@
     </select>
 
     <select id="getAllTestPhone" resultType="com.example.admin.testphone.dto.TestPhone">
-        SELECT *
+        SELECT
+            CTN,
+            TO_CHAR(REG_DT, 'YYYY-MM-DD') AS regDt,
+            REG_ID
         FROM TB_ENROLLMENT_PHONE
         ORDER BY REG_DT
     </select>
