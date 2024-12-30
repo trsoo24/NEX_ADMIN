@@ -1,10 +1,6 @@
 package com.example.admin.billing_grade.dto;
 
-import com.example.admin.billing_grade.dto.type.BillingGradeResultCode;
 import lombok.*;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 @Getter
 @Setter
