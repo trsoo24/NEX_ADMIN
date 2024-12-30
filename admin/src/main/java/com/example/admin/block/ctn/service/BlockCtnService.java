@@ -50,7 +50,18 @@ public class BlockCtnService {
 
         List<String> ctns = dto.getCtns();
 
-        boolean deleteResponse = blockCtnMapper.deleteBlockCtn(ctns);
+        boolean deleteResponse = false;
+
+        for (String ctn : ctns) {
+            boolean delete = blockCtnMapper.deleteBlockCtn(ctn);
+            if (delete) {
+                deleteResponse = true;
+            } else {
+                deleteResponse = false;
+                break;
+            }
+        }
+
 
         if(deleteResponse) {
             log.info("[{}] 응답 = 차단 CTN {} 건 차단 해제 완료", trxNo, ctns.size());

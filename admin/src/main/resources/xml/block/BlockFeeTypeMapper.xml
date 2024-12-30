@@ -20,11 +20,8 @@
         ORDER BY REG_DT
     </select>
 
-    <delete id="deleteBlockFeeType" parameterType="java.util.List">
+    <delete id="deleteBlockFeeType" parameterType="String">
         DELETE FROM TB_BLOCK_FEE_TYPE
-        WHERE FEE_TYPE_CD IN
-        <foreach item="feeTypeCd" collection="feeTypeCds" open="(" separator="," close=")">
-            #{feeTypeCd}
-        </foreach>
+        WHERE FEE_TYPE_CD = #{feeTypeCd}
     </delete>
 </mapper>

@@ -6,7 +6,9 @@
 <mapper namespace="com.example.admin.analysis.mapper.AnalysisStatisticsMapper">
     <select id="generateAnalysisStatistics" parameterType="com.example.admin.analysis.dto.GetDayAnalysisDto" resultType="com.example.admin.analysis.dto.DayAnalysis">
     WITH FILTER AS (
-    SELECT *
+    SELECT
+        CREATE_DT,
+        RESULT_CODE
         FROM TB_API_LOGS
         WHERE CREATE_DT BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD HH24:MI:SS')
             AND TO_DATE(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'))

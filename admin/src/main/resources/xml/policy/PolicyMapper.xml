@@ -14,6 +14,9 @@
 
     <!-- 전체 결제 정책 목록 조회 -->
     <select id="selectAllPolicyInfo" resultType="com.example.admin.policy.dto.PolicyInfo">
-        SELECT * FROM TB_POLICY_INFO
+        SELECT
+            POLICY_NAME,
+            FLAG
+            FROM TB_POLICY_INFO
     </select>
 </mapper>

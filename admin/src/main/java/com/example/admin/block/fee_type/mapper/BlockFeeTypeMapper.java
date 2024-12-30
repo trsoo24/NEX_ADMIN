@@ -15,5 +15,5 @@ public interface BlockFeeTypeMapper {
 
     List<BlockFeeTypeDto> getAllBlockFeeType();
 
-    boolean deleteBlockFeeType(List<String> feeTypeCds);
+    boolean deleteBlockFeeType(String feeTypeCd);
 }
