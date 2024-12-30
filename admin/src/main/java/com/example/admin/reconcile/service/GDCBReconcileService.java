@@ -1,6 +1,7 @@
 package com.example.admin.reconcile.service;
 
 import com.example.admin.reconcile.dto.Reconcile;
+import com.example.admin.reconcile.dto.type.FileType;
 import com.example.admin.reconcile.mapper.ReconcileMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class GDCBReconcileService {
 
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("yearMonth", month);
-        requestMap.put("fileType", fileType);
+        requestMap.put("fileType", getMatchingCodeRealName(fileType));
 
         List<Reconcile> reconcileList = reconcileMapper.getGDCBReconcileList(requestMap);
 
@@ -122,5 +123,18 @@ public class GDCBReconcileService {
 
             throw new RuntimeException(e);
         }
+    }
+
+    private String getMatchingCodeRealName(String fileTypeParameter) {
+
+        if (fileTypeParameter != null && !fileTypeParameter.isEmpty()) {
+            for (FileType fileType : FileType.values()) {
+                if (fileType.getCodeName().equals(fileTypeParameter) || fileType.getCodeRealName().equals(fileTypeParameter)) {
+                    return fileType.getCodeRealName();
+                }
+            }
+        }
+
+        return fileTypeParameter;
     }
 }
