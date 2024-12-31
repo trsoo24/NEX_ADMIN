@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum SendResultCode {
-    Success("1000", "메시지가 성공적으로 처리 되었음"),
-    PartialSuccess("1100", "메시지가 부분적으로 실행 되었으나 일부는 처리되지 못했음"),
+    Success("1000", "성공"),
+    PartialSuccess("1100", "부분 성공"),
     ClientError("2000", "Client 가 잘못된 응답을 보냄"),
     OperationRestricted("2001", "허용되지 않은 command 실행에 의해 메시지가 거부됨"),
     AddressError("2002", "메시지에 있는 주소가 잘못된 형식이거나 유효하지 않음. 메시지 수신자가 다수일 경우 적어도 한 개의 주소가 잘못되어도 응답을 줌"),
