@@ -153,15 +153,18 @@ public class GDCBInvoiceDetailService {
 
     private List<GoogleMonthlyInvoiceSum> getGoogleMonthlySum(Map<String, Object> requestMap) {
         List<GoogleMonthlyInvoiceSum> sumList = reconcileMapper.selectGoogleSummary(requestMap);
-        GoogleMonthlyInvoiceSum total = GoogleMonthlyInvoiceSum.toRevsCategoryTotal(sumList.get(0).getYear(), sumList.get(0).getMonth());
 
-        for (GoogleMonthlyInvoiceSum sum : sumList) {
-            total.addItemPriceSum(sum.getItemPriceSum());
-            total.addTaxSum(sum.getTaxSum());
-            total.addTotalAmountSum(sum.getTotalAmountSum());
-            total.addRevShareSum(sum.getRevShareSum());
+        if (!sumList.isEmpty()) { // 빈 List 체크
+            GoogleMonthlyInvoiceSum total = GoogleMonthlyInvoiceSum.toRevsCategoryTotal(sumList.get(0).getYear(), sumList.get(0).getMonth());
+
+            for (GoogleMonthlyInvoiceSum sum : sumList) {
+                total.addItemPriceSum(sum.getItemPriceSum());
+                total.addTaxSum(sum.getTaxSum());
+                total.addTotalAmountSum(sum.getTotalAmountSum());
+                total.addRevShareSum(sum.getRevShareSum());
+            }
+            sumList.add(sumList.size() - 1, total);
         }
-        sumList.add(sumList.size() - 1, total);
 
         return sumList;
     }
