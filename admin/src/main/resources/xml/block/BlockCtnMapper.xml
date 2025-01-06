@@ -18,7 +18,7 @@
     SELECT
         CTN,
         TO_CHAR(REG_DT, 'YYYY-MM-DD') AS regDt,
-        MBR_ID
+        REG_ID AS mbrId
         FROM TB_BLOCK_CTN
         ORDER BY REG_DT DESC
     </select>

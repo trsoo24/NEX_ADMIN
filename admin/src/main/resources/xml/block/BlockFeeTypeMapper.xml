@@ -15,7 +15,7 @@
     </select>
 
     <select id="getAllBlockFeeType" resultType="com.example.admin.block.fee_type.dto.BlockFeeTypeDto">
-        SELECT FEE_TYPE_CD AS feeTypeCode, REG_DT, REG_ID, FEE_TYPE_NM AS feeTypeName
+        SELECT FEE_TYPE_CD AS feeTypeCode, TO_CHAR(REG_DT, 'YYYY-MM-DD') AS regDt, REG_ID, FEE_TYPE_NM AS feeTypeName
         FROM TB_BLOCK_FEE_TYPE
         ORDER BY REG_DT
     </select>
