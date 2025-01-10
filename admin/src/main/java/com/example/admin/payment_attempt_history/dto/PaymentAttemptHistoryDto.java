@@ -14,6 +14,7 @@ public class PaymentAttemptHistoryDto {
     private String ctn;
     private String createDt;
     private String dcb;
+    private String uniqueKey;
     private String productName;
     private Double amount;
     private String resultCode;
@@ -22,6 +23,7 @@ public class PaymentAttemptHistoryDto {
         return PaymentAttemptHistoryDto.builder()
                 .ctn(FunctionUtil.transCtn(paymentAttemptHistory.getCtn()))
                 .createDt(paymentAttemptHistory.getCreateDt())
+                .uniqueKey(paymentAttemptHistory.getUniqueKey())
                 .dcb("GDCB")
                 .productName(paymentAttemptHistory.getProductName())
                 .amount(paymentAttemptHistory.getAmount())

@@ -18,7 +18,7 @@ public class GDCBInvoiceDetailService {
     private final ReconcileMapper reconcileMapper;
 
     private final String[] revsCategoryArray = {"APP", "APP_SUBSCRIPTION", "CONTENT", "NA", "SPECIAL_APP"};
-    private final String[] paymentTypeArray = {"Invoice Details(DCB + 소액결제 + 기타)", "Invoice Details(DCB)", "Invoice Details(소액결제)", "Invoice Details(기타)"};
+    private final String[] paymentTypeArray = {"Invoice Details(DCB + 기타)", "Invoice Details(DCB)", "Invoice Details(소액결제)", "Invoice Details(기타)"};
 
     public Map<String, List<GDCBDetailCompare>> getGDCBInvoiceDetailMap(String month) {
         String trxNo = MDC.get("trxNo");
@@ -36,7 +36,8 @@ public class GDCBInvoiceDetailService {
 
         gdcbMonthlyInvoiceSumToGDCBCompareDtoList(month, paymentTypeArray[0], getDetails("전체", requestMap), responseList);
         gdcbMonthlyInvoiceSumToGDCBCompareDtoList(month, paymentTypeArray[1], getDetails("00", requestMap), responseList);
-        gdcbMonthlyInvoiceSumToGDCBCompareDtoList(month, paymentTypeArray[2], getDetails("PG", requestMap), responseList);
+        // 소액결제 부분 제거 2025.01.09
+//        gdcbMonthlyInvoiceSumToGDCBCompareDtoList(month, paymentTypeArray[2], getDetails("PG", requestMap), responseList);
         gdcbMonthlyInvoiceSumToGDCBCompareDtoList(month, paymentTypeArray[3], getDetails("99", requestMap), responseList);
 
         responseMap.put("invoiceDetailsFileContents", responseList);
